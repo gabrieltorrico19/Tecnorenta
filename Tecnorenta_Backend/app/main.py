@@ -2,7 +2,21 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.routers import usuario, auth, rol, categoria_activo, cliente
+from app.routers import (
+    usuario,
+    auth,
+    rol,
+    categoria_activo,
+    cliente,
+    activo,
+    contrato,
+    pago,
+    asignacion_activo,
+    historial_ubicacion,
+    checklist_estado,
+    reporte_incidencia,
+    mantenimiento,
+)
 
 app = FastAPI(title=settings.APP_NAME, version=settings.VERSION)
 
@@ -19,6 +33,14 @@ app.include_router(auth.router, prefix="/api/v1")
 app.include_router(rol.router, prefix="/api/v1")
 app.include_router(categoria_activo.router, prefix="/api/v1")
 app.include_router(cliente.router, prefix="/api/v1")
+app.include_router(activo.router, prefix="/api/v1")
+app.include_router(contrato.router, prefix="/api/v1")
+app.include_router(pago.router, prefix="/api/v1")
+app.include_router(asignacion_activo.router, prefix="/api/v1")
+app.include_router(historial_ubicacion.router, prefix="/api/v1")
+app.include_router(checklist_estado.router, prefix="/api/v1")
+app.include_router(reporte_incidencia.router, prefix="/api/v1")
+app.include_router(mantenimiento.router, prefix="/api/v1")
 
 
 @app.get("/api/v1/health")
