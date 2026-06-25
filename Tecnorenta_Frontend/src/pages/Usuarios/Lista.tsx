@@ -1,57 +1,97 @@
-import { useUsuarios } from "../../hooks/useUsuarios";
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { usuarioApi, type Usuario } from "../../api/usuario.api";
+import DataTable from "../../components/common/DataTable";
+import Badge from "../../components/common/Badge";
+import { formatDate } from "../../utils/helpers";
 
 export default function ListaUsuarios() {
-  const { usuarios, loading, error, eliminar } = useUsuarios();
+  const navigate = useNavigate();
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  if (loading) return <p>Cargando usuarios...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  const listar = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await usuarioApi.listar();
+      setUsuarios(res.data);
+    } catch {
+      setError("Error al cargar usuarios");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { listar(); }, [listar]);
+
+  const eliminar = async (id: number) => {
+    if (!window.confirm("¿Eliminar este usuario?")) return;
+    try {
+      await usuarioApi.eliminar(id);
+      setUsuarios((prev) => prev.filter((u) => u.id !== id));
+    } catch {
+      alert("Error al eliminar usuario");
+    }
+  };
+
+  const columns = [
+    { key: "id", label: "ID" },
+    { key: "nombre", label: "Nombre" },
+    { key: "email", label: "Email" },
+    { key: "telefono", label: "Teléfono", render: (row: Usuario) => row.telefono || "—" },
+    {
+      key: "activo", label: "Estado",
+      render: (row: Usuario) => row.activo
+        ? <Badge variant="success">Activo</Badge>
+        : <Badge variant="danger">Inactivo</Badge>,
+    },
+    {
+      key: "created_at", label: "Creado",
+      render: (row: Usuario) => formatDate(row.created_at),
+    },
+  ];
 
   return (
     <div>
-      <h2>Usuarios</h2>
-      <table style={tableStyle}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Teléfono</th>
-            <th>Activo</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {usuarios.map((u) => (
-            <tr key={u.id}>
-              <td>{u.id}</td>
-              <td>{u.nombre}</td>
-              <td>{u.email}</td>
-              <td>{u.telefono || "—"}</td>
-              <td>{u.activo ? "✅" : "❌"}</td>
-              <td>
-                <button onClick={() => eliminar(u.id)} style={btnStyle}>
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div style={styles.topBar}>
+        <h2 style={styles.title}>Usuarios</h2>
+        <button onClick={() => navigate("/usuarios/nuevo")} style={styles.btnNuevo}>
+          + Nuevo Usuario
+        </button>
+      </div>
+      <DataTable
+        columns={columns}
+        data={usuarios}
+        loading={loading}
+        error={error}
+        onEdit={(row) => navigate(`/usuarios/editar/${row.id}`)}
+        onDelete={(row) => eliminar(row.id)}
+      />
     </div>
   );
 }
 
-const tableStyle: React.CSSProperties = {
-  width: "100%",
-  borderCollapse: "collapse",
-  marginTop: "1rem",
-};
-
-const btnStyle: React.CSSProperties = {
-  background: "#e74c3c",
-  color: "#fff",
-  border: "none",
-  padding: "0.3rem 0.8rem",
-  borderRadius: "4px",
-  cursor: "pointer",
+const styles: Record<string, React.CSSProperties> = {
+  topBar: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "1.5rem",
+  },
+  title: {
+    fontSize: "1.4rem",
+    fontWeight: 700,
+    color: "var(--text-primary)",
+  },
+  btnNuevo: {
+    background: "var(--accent)",
+    color: "#fff",
+    border: "none",
+    padding: "0.5rem 1rem",
+    borderRadius: "var(--radius-sm)",
+    fontWeight: 600,
+    cursor: "pointer",
+  },
 };

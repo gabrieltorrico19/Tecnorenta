@@ -1,28 +1,55 @@
-import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <header style={styles.header}>
-      <h1 style={styles.title}>
-        <Link to="/" style={styles.link}>Tecnorenta</Link>
-      </h1>
-      <nav>
-        <Link to="/usuarios" style={styles.navLink}>Usuarios</Link>
-      </nav>
+      <span style={styles.user}>
+        {user?.nombre || "Usuario"}
+      </span>
+      <button onClick={handleLogout} style={styles.logout}>
+        Cerrar sesión
+      </button>
     </header>
   );
 }
 
 const styles: Record<string, React.CSSProperties> = {
   header: {
-    background: "#1a73e8",
-    color: "#fff",
-    padding: "1rem 2rem",
+    height: "56px",
+    background: "var(--bg-secondary)",
+    borderBottom: "1px solid var(--border)",
     display: "flex",
-    justifyContent: "space-between",
     alignItems: "center",
+    justifyContent: "flex-end",
+    padding: "0 2rem",
+    gap: "1rem",
+    position: "fixed",
+    top: 0,
+    left: "220px",
+    right: 0,
+    zIndex: 100,
   },
-  title: { fontSize: "1.5rem" },
-  link: { color: "#fff", textDecoration: "none" },
-  navLink: { color: "#fff", textDecoration: "none", marginLeft: "1rem" },
+  user: {
+    color: "var(--text-primary)",
+    fontSize: "0.9rem",
+    fontWeight: 600,
+  },
+  logout: {
+    background: "none",
+    border: "1px solid var(--border)",
+    color: "var(--text-secondary)",
+    padding: "0.35rem 0.75rem",
+    borderRadius: "var(--radius-sm)",
+    cursor: "pointer",
+    fontSize: "0.8rem",
+  },
 };
