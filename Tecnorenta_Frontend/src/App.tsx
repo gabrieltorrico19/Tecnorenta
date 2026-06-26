@@ -21,6 +21,8 @@ import ListaReportes from "./pages/Reportes/Lista";
 import FormularioReporte from "./pages/Reportes/Formulario";
 import ListaMantenimientos from "./pages/Mantenimientos/Lista";
 import FormularioMantenimiento from "./pages/Mantenimientos/Formulario";
+import ListaCategorias from "./pages/Categorias/Lista";
+import FormularioCategoria from "./pages/Categorias/Formulario";
 
 function App() {
   return (
@@ -57,6 +59,9 @@ function App() {
             <Route path="/mantenimientos" element={<ListaMantenimientos />} />
             <Route path="/mantenimientos/nuevo" element={<FormularioMantenimiento />} />
             <Route path="/mantenimientos/editar/:id" element={<FormularioMantenimiento />} />
+            <Route path="/categorias" element={<ListaCategorias />} />
+            <Route path="/categorias/nuevo" element={<FormularioCategoria />} />
+            <Route path="/categorias/editar/:id" element={<FormularioCategoria />} />
           </Route>
         </Routes>
       </AuthProvider>

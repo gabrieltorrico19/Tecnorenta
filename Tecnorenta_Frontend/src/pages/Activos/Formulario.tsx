@@ -2,6 +2,7 @@ import { useState, useEffect, type FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { activosApi, type ActivoCreate, type ActivoUpdate } from "../../api/activos.api";
 import FormField from "../../components/common/FormField";
+import MapPicker from "../../components/MapPicker";
 
 const ESTADOS = ["Disponible", "Asignado", "En Mantenimiento", "Inactivo", "Reservado", "Baja"];
 
@@ -20,6 +21,8 @@ export default function FormularioActivo() {
     valor_adquisicion: 0,
     fecha_adquisicion: "",
     ubicacion_actual: "",
+    latitud: null,
+    longitud: null,
   });
 
   useEffect(() => {
@@ -36,6 +39,8 @@ export default function FormularioActivo() {
         valor_adquisicion: a.valor_adquisicion ?? 0,
         fecha_adquisicion: a.fecha_adquisicion || "",
         ubicacion_actual: a.ubicacion_actual || "",
+        latitud: a.latitud,
+        longitud: a.longitud,
       });
     }).catch(() => alert("Error al cargar activo"));
   }, [id]);
@@ -143,11 +148,18 @@ export default function FormularioActivo() {
           />
         </FormField>
 
-        <FormField label="Ubicación Actual">
-          <input
-            style={inputStyle}
-            value={form.ubicacion_actual}
-            onChange={(e) => handleChange("ubicacion_actual", e.target.value)}
+        <FormField label="Ubicación (mapa)">
+          <div style={{ marginBottom: "0.5rem", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+            {form.latitud && form.longitud
+              ? `${form.latitud.toFixed(4)}, ${form.longitud.toFixed(4)}`
+              : "Haz clic en el mapa o arrastra el marcador"}
+          </div>
+          <MapPicker
+            latitud={form.latitud ?? null}
+            longitud={form.longitud ?? null}
+            onChange={(lat, lng) => {
+              setForm((prev) => ({ ...prev, latitud: lat, longitud: lng }));
+            }}
           />
         </FormField>
 

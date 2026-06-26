@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import Card from "../components/common/Card";
@@ -54,7 +55,10 @@ export default function Dashboard() {
     return acc;
   }, {});
 
-  const ultimosContratos = contratos.slice(-5).reverse();
+  const contratosPorEstado = contratos.reduce<Record<string, number>>((acc, c) => {
+    acc[c.estado] = (acc[c.estado] || 0) + 1;
+    return acc;
+  }, {});
 
   const mantenimientosPendientes = mantenimientos.filter(
     (m) => m.estado === "Pendiente" || m.estado === "En progreso"
@@ -99,18 +103,25 @@ export default function Dashboard() {
         </div>
 
         <div style={styles.cardWrapper}>
-          <Card title="Últimos contratos">
-            {ultimosContratos.length === 0 ? (
+          <Card title="Contratos por estado">
+            {Object.keys(contratosPorEstado).length === 0 ? (
               <p style={styles.emptyText}>Sin contratos</p>
             ) : (
-              <div style={styles.list}>
-                {ultimosContratos.map((c, i) => (
-                  <div key={i} style={styles.listItem}>
-                    <span style={styles.listItemText}>{c.numero_contrato}</span>
-                    <Badge variant={badgeVariant(c.estado)}>{c.estado}</Badge>
-                  </div>
-                ))}
-              </div>
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={Object.entries(contratosPorEstado).map(([name, value]) => ({ name, value }))}>
+                  <XAxis dataKey="name" tick={{ fill: "var(--text-secondary)", fontSize: 12 }} />
+                  <YAxis tick={{ fill: "var(--text-secondary)", fontSize: 12 }} />
+                  <Tooltip
+                    contentStyle={{ background: "var(--bg-secondary)", border: "1px solid var(--border)", borderRadius: 4 }}
+                    labelStyle={{ color: "var(--text-primary)" }}
+                  />
+                  <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                    {Object.entries(contratosPorEstado).map(([estado]) => (
+                      <Cell key={estado} fill={chartColors[estado] || "#666"} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
             )}
           </Card>
         </div>
@@ -120,14 +131,24 @@ export default function Dashboard() {
             {Object.keys(activosPorEstado).length === 0 ? (
               <p style={styles.emptyText}>Sin activos</p>
             ) : (
-              <div style={styles.list}>
-                {Object.entries(activosPorEstado).map(([estado, count]) => (
-                  <div key={estado} style={styles.estadoRow}>
-                    <Badge variant={badgeVariant(estado)}>{estado}</Badge>
-                    <span style={styles.estadoCount}>{count}</span>
-                  </div>
-                ))}
-              </div>
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={Object.entries(activosPorEstado).map(([name, value]) => ({ name, value }))}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={70}
+                    label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
+                  >
+                    {Object.entries(activosPorEstado).map(([estado]) => (
+                      <Cell key={estado} fill={chartColors[estado] || "#666"} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
             )}
           </Card>
         </div>
@@ -211,6 +232,16 @@ export default function Dashboard() {
     </div>
   );
 }
+
+const chartColors: Record<string, string> = {
+  disponible: "#22c55e",
+  rentado: "#3b82f6",
+  mantenimiento: "#f59e0b",
+  baja: "#ef4444",
+  activo: "#22c55e",
+  vencido: "#ef4444",
+  cancelado: "#6b6b6b",
+};
 
 const styles: Record<string, React.CSSProperties> = {
   page: {

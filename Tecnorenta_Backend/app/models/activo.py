@@ -24,6 +24,8 @@ class Activo(Base):
     fecha_compra = Column(Date, nullable=True)
     valor_depreciado = Column(Float, default=0.0)
     id_categoria = Column(Integer, ForeignKey("categorias_activo.id"), nullable=True)
+    latitud = Column(Float, nullable=True)
+    longitud = Column(Float, nullable=True)
     creado_por = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
     modificado_por = Column(Integer, ForeignKey("usuarios.id"), nullable=True)

@@ -10,6 +10,8 @@ class ActivoBase(BaseModel):
     fecha_compra: date | None = None
     valor_depreciado: float = 0.0
     id_categoria: int | None = None
+    latitud: float | None = None
+    longitud: float | None = None
 
 
 class ActivoCreate(ActivoBase):
@@ -24,6 +26,8 @@ class ActivoUpdate(BaseModel):
     fecha_compra: date | None = None
     valor_depreciado: float | None = None
     id_categoria: int | None = None
+    latitud: float | None = None
+    longitud: float | None = None
 
 
 class ActivoOut(ActivoBase):

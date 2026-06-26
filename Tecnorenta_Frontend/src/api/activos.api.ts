@@ -13,6 +13,8 @@ export interface Activo {
   valor_adquisicion: number | null;
   fecha_adquisicion: string | null;
   ubicacion_actual: string | null;
+  latitud: number | null;
+  longitud: number | null;
   activo: boolean;
   created_at: string;
   updated_at: string;
@@ -28,6 +30,8 @@ export interface ActivoCreate {
   valor_adquisicion?: number;
   fecha_adquisicion?: string;
   ubicacion_actual?: string;
+  latitud?: number | null;
+  longitud?: number | null;
 }
 
 export interface ActivoUpdate {
@@ -39,6 +43,8 @@ export interface ActivoUpdate {
   valor_adquisicion?: number;
   fecha_adquisicion?: string;
   ubicacion_actual?: string;
+  latitud?: number | null;
+  longitud?: number | null;
   activo?: boolean;
 }
 
