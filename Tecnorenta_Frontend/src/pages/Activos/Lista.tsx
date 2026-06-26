@@ -24,6 +24,16 @@ export default function ListaActivos() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Activo | null>(null);
+  const [fotosMap, setFotosMap] = useState<Record<number, string>>({});
+
+  const cargarPrimeraFoto = useCallback(async (activo: Activo) => {
+    try {
+      const res = await activosApi.listarFotos(activo.id);
+      if (res.data.length > 0) {
+        setFotosMap((prev) => ({ ...prev, [activo.id]: res.data[0].url }));
+      }
+    } catch { /* ignore */ }
+  }, []);
 
   const listar = useCallback(async () => {
     setLoading(true);
@@ -40,6 +50,10 @@ export default function ListaActivos() {
 
   useEffect(() => { listar(); }, [listar]);
 
+  useEffect(() => {
+    activos.forEach((a) => { if (!fotosMap[a.id]) cargarPrimeraFoto(a); });
+  }, [activos, fotosMap, cargarPrimeraFoto]);
+
   const eliminar = async (activo: Activo) => {
     try {
       await activosApi.eliminar(activo.id);
@@ -52,6 +66,18 @@ export default function ListaActivos() {
   };
 
   const columns = [
+    {
+      key: "foto",
+      label: "Foto",
+      render: (row: Activo) => {
+        const url = fotosMap[row.id];
+        return url ? (
+          <img src={`http://localhost:8000/${url}`} alt="" style={thumbCol} />
+        ) : (
+          <span style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>—</span>
+        );
+      },
+    },
     { key: "id", label: "ID" },
     { key: "codigo", label: "Código" },
     { key: "nombre", label: "Nombre" },
@@ -81,6 +107,14 @@ export default function ListaActivos() {
     </div>
   );
 }
+
+const thumbCol: React.CSSProperties = {
+  width: 40,
+  height: 40,
+  borderRadius: "var(--radius-sm)",
+  objectFit: "cover",
+  border: "1px solid var(--border)",
+};
 
 const headerStyle: React.CSSProperties = {
   display: "flex",

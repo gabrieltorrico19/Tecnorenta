@@ -16,3 +16,4 @@ from app.models.mantenimiento import (
     MantenimientoCorrectivo,
     TipoMantenimiento,
 )
+from app.models.activo_foto import ActivoFoto

@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     DEBUG: bool = True
     SECRET_KEY: str = "supersecretkey_cambiar_en_produccion"
     DATABASE_URL: str = "mysql+pymysql://root:root@localhost:3306/tecnorenta"
+    UPLOAD_DIR: str = "static/img"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

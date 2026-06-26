@@ -48,6 +48,14 @@ export interface ActivoUpdate {
   activo?: boolean;
 }
 
+export interface ActivoFoto {
+  id: number;
+  id_activo: number;
+  url: string;
+  orden: number;
+  fecha_subida: string | null;
+}
+
 export const activosApi = {
   listar: () => api.get<Activo[]>(ENDPOINTS.ACTIVOS),
   obtener: (id: number) => api.get<Activo>(`${ENDPOINTS.ACTIVOS}/${id}`),
@@ -55,4 +63,12 @@ export const activosApi = {
   actualizar: (id: number, data: ActivoUpdate) =>
     api.patch<Activo>(`${ENDPOINTS.ACTIVOS}/${id}`, data),
   eliminar: (id: number) => api.delete(`${ENDPOINTS.ACTIVOS}/${id}`),
+  listarFotos: (activoId: number) => api.get<ActivoFoto[]>(`${ENDPOINTS.ACTIVOS}/${activoId}/fotos`),
+  subirFoto: (activoId: number, file: File) => {
+    const fd = new FormData();
+    fd.append("file", file);
+    return api.post<ActivoFoto>(`${ENDPOINTS.ACTIVOS}/${activoId}/fotos`, fd);
+  },
+  eliminarFoto: (activoId: number, fotoId: number) =>
+    api.delete(`${ENDPOINTS.ACTIVOS}/${activoId}/fotos/${fotoId}`),
 };

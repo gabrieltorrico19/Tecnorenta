@@ -1,18 +1,23 @@
-import { useState, useEffect, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { activosApi, type ActivoCreate, type ActivoUpdate } from "../../api/activos.api";
+import { activosApi, type ActivoCreate, type ActivoUpdate, type ActivoFoto } from "../../api/activos.api";
 import FormField from "../../components/common/FormField";
 import Button from "../../components/common/Button";
 import MapPicker from "../../components/MapPicker";
-import { Save, ArrowLeft } from "lucide-react";
+import CameraCapture from "../../components/CameraCapture";
+import { useToast } from "../../context/ToastContext";
+import { Save, ArrowLeft, Trash2 } from "lucide-react";
 
 const ESTADOS = ["Disponible", "Asignado", "En Mantenimiento", "Inactivo", "Reservado", "Baja"];
 
 export default function FormularioActivo() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const isEdit = Boolean(id);
   const [loading, setLoading] = useState(false);
+  const [fotos, setFotos] = useState<ActivoFoto[]>([]);
+  const [uploadingFoto, setUploadingFoto] = useState(false);
 
   const [form, setForm] = useState<ActivoCreate>({
     codigo: "",
@@ -27,6 +32,13 @@ export default function FormularioActivo() {
     latitud: null,
     longitud: null,
   });
+
+  const cargarFotos = useCallback(async (activoId: number) => {
+    try {
+      const res = await activosApi.listarFotos(activoId);
+      setFotos(res.data);
+    } catch { /* ignore */ }
+  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -45,8 +57,34 @@ export default function FormularioActivo() {
         latitud: a.latitud,
         longitud: a.longitud,
       });
+      cargarFotos(Number(id));
     }).catch(() => alert("Error al cargar activo"));
-  }, [id]);
+  }, [id, cargarFotos]);
+
+  const handleSubirFoto = async (file: File) => {
+    if (!id) return;
+    setUploadingFoto(true);
+    try {
+      await activosApi.subirFoto(Number(id), file);
+      toast("Foto subida correctamente", "success");
+      cargarFotos(Number(id));
+    } catch {
+      toast("Error al subir la foto", "error");
+    } finally {
+      setUploadingFoto(false);
+    }
+  };
+
+  const handleEliminarFoto = async (foto: ActivoFoto) => {
+    if (!id) return;
+    try {
+      await activosApi.eliminarFoto(Number(id), foto.id);
+      setFotos((prev) => prev.filter((f) => f.id !== foto.id));
+      toast("Foto eliminada", "success");
+    } catch {
+      toast("Error al eliminar la foto", "error");
+    }
+  };
 
   const handleChange = (field: keyof ActivoCreate, value: string | number) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -110,6 +148,25 @@ export default function FormularioActivo() {
           </div>
           <MapPicker latitud={form.latitud ?? null} longitud={form.longitud ?? null} onChange={(lat, lng) => setForm((prev) => ({ ...prev, latitud: lat, longitud: lng }))} />
         </FormField>
+
+        {isEdit && (
+          <FormField label="Fotos">
+            <div style={fotosGrid}>
+              {fotos.map((foto) => (
+                <div key={foto.id} style={fotoThumb}>
+                  <img src={`http://localhost:8000/${foto.url}`} alt={`Foto ${foto.orden}`} style={thumbImg} />
+                  <button type="button" style={deleteFotoBtn} onClick={() => handleEliminarFoto(foto)} title="Eliminar foto">
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: "0.5rem" }}>
+              <CameraCapture onUpload={handleSubirFoto} uploading={uploadingFoto} />
+            </div>
+          </FormField>
+        )}
+
         <div style={actionsStyle}>
           <Button type="submit" loading={loading} icon={<Save size={16} />}>Guardar</Button>
           <Button type="button" variant="secondary" icon={<ArrowLeft size={16} />} onClick={() => navigate("/activos")}>Cancelar</Button>
@@ -134,6 +191,43 @@ const inputStyle: React.CSSProperties = {
   background: "var(--bg-secondary)",
   color: "var(--text-primary)",
   fontSize: "var(--font-size-md)",
+};
+
+const fotosGrid: React.CSSProperties = {
+  display: "flex",
+  gap: "0.5rem",
+  flexWrap: "wrap",
+};
+
+const fotoThumb: React.CSSProperties = {
+  position: "relative",
+  width: 100,
+  height: 100,
+  borderRadius: "var(--radius-sm)",
+  overflow: "hidden",
+  border: "1px solid var(--border)",
+};
+
+const thumbImg: React.CSSProperties = {
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+};
+
+const deleteFotoBtn: React.CSSProperties = {
+  position: "absolute",
+  top: 4,
+  right: 4,
+  background: "rgba(0,0,0,0.6)",
+  color: "#fff",
+  border: "none",
+  borderRadius: "50%",
+  width: 24,
+  height: 24,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer",
 };
 
 const actionsStyle: React.CSSProperties = {

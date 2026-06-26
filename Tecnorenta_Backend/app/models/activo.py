@@ -35,3 +35,4 @@ class Activo(Base):
     asignaciones = relationship("AsignacionActivo", back_populates="activo")
     reportes = relationship("ReporteIncidencia", back_populates="activo")
     mantenimientos = relationship("Mantenimiento", back_populates="activo")
+    fotos = relationship("ActivoFoto", back_populates="activo", cascade="all, delete-orphan")
