@@ -12,6 +12,11 @@ class HistorialUbicacionCreate(HistorialUbicacionBase):
     pass
 
 
+class HistorialUbicacionUpdate(BaseModel):
+    latitud: float | None = None
+    longitud: float | None = None
+
+
 class HistorialUbicacionOut(HistorialUbicacionBase):
     id: int
     timestamp: datetime | None = None

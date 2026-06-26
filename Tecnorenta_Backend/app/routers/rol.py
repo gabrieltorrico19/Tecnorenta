@@ -5,7 +5,7 @@ from app.core.database import get_db
 from app.dependencies.auth import require_role
 from app.repositories.rol import RolRepository, PermisoRepository
 from app.services.rol import RolService, PermisoService
-from app.schemas.rol import RolCreate, RolOut, PermisoOut, RolAsignarPermiso
+from app.schemas.rol import RolCreate, RolUpdate, RolOut, PermisoOut, RolAsignarPermiso
 
 router = APIRouter(prefix="/roles", tags=["Roles y Permisos"])
 
@@ -23,6 +23,11 @@ def obtener(rol_id: int, db: Session = Depends(get_db)):
 @router.post("/", response_model=RolOut, status_code=201, dependencies=[Depends(require_role("Administrador"))])
 def crear(data: RolCreate, db: Session = Depends(get_db)):
     return RolService(RolRepository(db)).crear(data)
+
+
+@router.patch("/{rol_id}", response_model=RolOut, dependencies=[Depends(require_role("Administrador"))])
+def actualizar(rol_id: int, data: RolUpdate, db: Session = Depends(get_db)):
+    return RolService(RolRepository(db)).actualizar(rol_id, data)
 
 
 @router.delete("/{rol_id}", status_code=204, dependencies=[Depends(require_role("Administrador"))])

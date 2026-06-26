@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Users, Shield, Building2, Monitor, FileText, DollarSign, ClipboardList, AlertTriangle, Wrench, FolderTree } from "lucide-react";
+import { LayoutDashboard, Users, Shield, Building2, Monitor, FileText, DollarSign, ClipboardList, AlertTriangle, Wrench, FolderTree, MapPin, ClipboardCheck } from "lucide-react";
 import type { ReactNode } from "react";
 
 interface LinkItem {
@@ -20,6 +20,8 @@ const links: LinkItem[] = [
   { to: "/asignaciones", label: "Asignaciones", icon: <ClipboardList size={18} /> },
   { to: "/reportes", label: "Reportes", icon: <AlertTriangle size={18} /> },
   { to: "/mantenimientos", label: "Mantenimiento", icon: <Wrench size={18} /> },
+  { to: "/historial-ubicacion", label: "Historial Ubicación", icon: <MapPin size={18} /> },
+  { to: "/checklist", label: "Checklist Estado", icon: <ClipboardCheck size={18} /> },
 ];
 
 export default function Sidebar() {

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.repositories.pago import PagoRepository
 from app.services.pago import PagoService
-from app.schemas.pago import PagoCreate, PagoOut
+from app.schemas.pago import PagoCreate, PagoUpdate, PagoOut
 
 router = APIRouter(prefix="/pagos", tags=["Pagos"])
 
@@ -27,6 +27,11 @@ def obtener(pago_id: int, db: Session = Depends(get_db)):
 @router.post("/", response_model=PagoOut, status_code=201)
 def crear(data: PagoCreate, db: Session = Depends(get_db)):
     return PagoService(PagoRepository(db)).crear(data)
+
+
+@router.patch("/{pago_id}", response_model=PagoOut)
+def actualizar(pago_id: int, data: PagoUpdate, db: Session = Depends(get_db)):
+    return PagoService(PagoRepository(db)).actualizar(pago_id, data)
 
 
 @router.delete("/{pago_id}", status_code=204)

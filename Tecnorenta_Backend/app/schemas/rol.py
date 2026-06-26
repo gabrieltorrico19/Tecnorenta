@@ -9,6 +9,10 @@ class RolCreate(RolBase):
     pass
 
 
+class RolUpdate(BaseModel):
+    nombre: str | None = None
+
+
 class RolOut(RolBase):
     id: int
 

@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 
 from app.models.checklist_estado import ChecklistEstado
 from app.repositories.checklist_estado import ChecklistEstadoRepository
-from app.schemas.checklist_estado import ChecklistEstadoCreate
+from app.schemas.checklist_estado import ChecklistEstadoCreate, ChecklistEstadoUpdate
 
 
 class ChecklistEstadoService:
@@ -20,3 +20,13 @@ class ChecklistEstadoService:
 
     def crear(self, data: ChecklistEstadoCreate) -> ChecklistEstado:
         return self.repo.create(ChecklistEstado(**data.model_dump()))
+
+    def actualizar(self, checklist_id: int, data: ChecklistEstadoUpdate) -> ChecklistEstado:
+        checklist = self.obtener(checklist_id)
+        for field, value in data.model_dump(exclude_unset=True).items():
+            setattr(checklist, field, value)
+        return self.repo.update(checklist)
+
+    def eliminar(self, checklist_id: int) -> None:
+        checklist = self.obtener(checklist_id)
+        self.repo.delete(checklist)

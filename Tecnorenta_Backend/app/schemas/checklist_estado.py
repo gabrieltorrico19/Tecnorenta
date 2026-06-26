@@ -18,6 +18,16 @@ class ChecklistEstadoCreate(ChecklistEstadoBase):
     pass
 
 
+class ChecklistEstadoUpdate(BaseModel):
+    momento: str | None = None
+    pantalla: str | None = None
+    teclado: str | None = None
+    carcasa: str | None = None
+    cargador: bool | None = None
+    observaciones: str | None = None
+    url_fotos: str | None = None
+
+
 class ChecklistEstadoOut(ChecklistEstadoBase):
     id: int
     fecha_registro: datetime | None = None

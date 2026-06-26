@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 
 from app.models.pago import Pago
 from app.repositories.pago import PagoRepository
-from app.schemas.pago import PagoCreate
+from app.schemas.pago import PagoCreate, PagoUpdate
 
 
 class PagoService:
@@ -23,6 +23,12 @@ class PagoService:
 
     def crear(self, data: PagoCreate) -> Pago:
         return self.repo.create(Pago(**data.model_dump()))
+
+    def actualizar(self, pago_id: int, data: PagoUpdate) -> Pago:
+        pago = self.obtener(pago_id)
+        for field, value in data.model_dump(exclude_unset=True).items():
+            setattr(pago, field, value)
+        return self.repo.update(pago)
 
     def eliminar(self, pago_id: int) -> None:
         pago = self.obtener(pago_id)

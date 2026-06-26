@@ -23,3 +23,7 @@ class ChecklistEstadoRepository:
         self.db.commit()
         self.db.refresh(checklist)
         return checklist
+
+    def delete(self, checklist: ChecklistEstado) -> None:
+        self.db.delete(checklist)
+        self.db.commit()

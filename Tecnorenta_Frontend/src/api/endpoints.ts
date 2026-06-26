@@ -16,5 +16,7 @@ export const ENDPOINTS = {
   ASIGNACIONES: `${API_URL}/asignaciones-activo`,
   REPORTES: `${API_URL}/reportes-incidencia`,
   MANTENIMIENTOS: `${API_URL}/mantenimientos`,
+  HISTORIAL_UBICACION: `${API_URL}/historial-ubicacion`,
+  CHECKLIST_ESTADO: `${API_URL}/checklist`,
   HEALTH: `${API_URL}/health`,
 };

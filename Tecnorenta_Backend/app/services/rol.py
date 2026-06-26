@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 
 from app.models.rol import Rol, Permiso
 from app.repositories.rol import RolRepository, PermisoRepository
-from app.schemas.rol import RolCreate
+from app.schemas.rol import RolCreate, RolUpdate
 
 
 class RolService:
@@ -23,6 +23,12 @@ class RolService:
         if existente:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="El rol ya existe")
         return self.repo.create(Rol(**data.model_dump()))
+
+    def actualizar(self, rol_id: int, data: RolUpdate) -> Rol:
+        rol = self.obtener(rol_id)
+        for field, value in data.model_dump(exclude_unset=True).items():
+            setattr(rol, field, value)
+        return self.repo.update(rol)
 
     def eliminar(self, rol_id: int) -> None:
         rol = self.obtener(rol_id)

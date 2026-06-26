@@ -24,6 +24,10 @@ import ListaMantenimientos from "./pages/Mantenimientos/Lista";
 import FormularioMantenimiento from "./pages/Mantenimientos/Formulario";
 import ListaCategorias from "./pages/Categorias/Lista";
 import FormularioCategoria from "./pages/Categorias/Formulario";
+import ListaHistorialUbicacion from "./pages/HistorialUbicacion/Lista";
+import FormularioHistorialUbicacion from "./pages/HistorialUbicacion/Formulario";
+import ListaChecklistEstado from "./pages/ChecklistEstado/Lista";
+import FormularioChecklistEstado from "./pages/ChecklistEstado/Formulario";
 
 function App() {
   return (
@@ -64,6 +68,12 @@ function App() {
             <Route path="/categorias" element={<ListaCategorias />} />
             <Route path="/categorias/nuevo" element={<FormularioCategoria />} />
             <Route path="/categorias/editar/:id" element={<FormularioCategoria />} />
+            <Route path="/historial-ubicacion" element={<ListaHistorialUbicacion />} />
+            <Route path="/historial-ubicacion/nuevo" element={<FormularioHistorialUbicacion />} />
+            <Route path="/historial-ubicacion/editar/:id" element={<FormularioHistorialUbicacion />} />
+            <Route path="/checklist" element={<ListaChecklistEstado />} />
+            <Route path="/checklist/nuevo" element={<FormularioChecklistEstado />} />
+            <Route path="/checklist/editar/:id" element={<FormularioChecklistEstado />} />
           </Route>
         </Routes>
         </ToastProvider>

@@ -14,6 +14,13 @@ class PagoCreate(PagoBase):
     pass
 
 
+class PagoUpdate(BaseModel):
+    concepto: str | None = None
+    monto: float | None = None
+    fecha: date | None = None
+    estado: str | None = None
+
+
 class PagoOut(PagoBase):
     id: int
 
