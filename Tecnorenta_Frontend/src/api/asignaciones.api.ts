@@ -11,6 +11,8 @@ export interface Asignacion {
   fecha_devolucion: string | null;
   motivo: string | null;
   estado: string;
+  latitud: number | null;
+  longitud: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -22,12 +24,16 @@ export interface AsignacionCreate {
   fecha_devolucion?: string;
   motivo?: string;
   estado: string;
+  latitud?: number | null;
+  longitud?: number | null;
 }
 
 export interface AsignacionUpdate {
   fecha_devolucion?: string;
   motivo?: string;
   estado?: string;
+  latitud?: number | null;
+  longitud?: number | null;
 }
 
 export const asignacionesApi = {

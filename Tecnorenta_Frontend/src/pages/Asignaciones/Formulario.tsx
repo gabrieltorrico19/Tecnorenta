@@ -7,6 +7,7 @@ import FormField from "../../components/common/FormField";
 import FormSection from "../../components/common/FormSection";
 import Button from "../../components/common/Button";
 import SearchableSelect from "../../components/common/SearchableSelect";
+import MapPicker from "../../components/MapPicker";
 import { useToast } from "../../context/ToastContext";
 import { Save, ArrowLeft } from "lucide-react";
 
@@ -25,6 +26,8 @@ export default function FormularioAsignacion() {
     fecha_devolucion: "",
     motivo: "",
     estado: "Activa",
+    latitud: null,
+    longitud: null,
   });
 
   useEffect(() => {
@@ -38,6 +41,8 @@ export default function FormularioAsignacion() {
         fecha_devolucion: a.fecha_devolucion || "",
         motivo: a.motivo || "",
         estado: a.estado,
+        latitud: a.latitud,
+        longitud: a.longitud,
       });
     }).catch(() => toast("Error al cargar asignación", "error"));
   }, [id, toast]);
@@ -109,6 +114,14 @@ export default function FormularioAsignacion() {
           <FormField label="Motivo">
             <textarea style={inputStyle} value={form.motivo} onChange={(e) => handleChange("motivo", e.target.value)} rows={3} />
           </FormField>
+        </FormSection>
+        <FormSection title="Ubicación">
+          <div style={{ gridColumn: "1 / -1" }}>
+            <div style={{ marginBottom: "var(--space-sm)", fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+              {form.latitud && form.longitud ? `${form.latitud.toFixed(4)}, ${form.longitud.toFixed(4)}` : "Haz clic en el mapa o arrastra el marcador"}
+            </div>
+            <MapPicker latitud={form.latitud ?? null} longitud={form.longitud ?? null} onChange={(lat, lng) => setForm((prev) => ({ ...prev, latitud: lat, longitud: lng }))} />
+          </div>
         </FormSection>
         <div style={actionsStyle}>
           <Button type="submit" icon={<Save size={16} />}>Guardar</Button>

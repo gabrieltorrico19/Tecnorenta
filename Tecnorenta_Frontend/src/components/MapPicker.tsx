@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L, { type LatLng } from "leaflet";
 
-const DEFAULT_CENTER: [number, number] = [-16.5, -68.15];
+const DEFAULT_CENTER: [number, number] = [-17.8, -63.19];
 const DEFAULT_ZOOM = 6;
 
 const redIcon = L.divIcon({

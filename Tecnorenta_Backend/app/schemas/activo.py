@@ -32,5 +32,6 @@ class ActivoUpdate(BaseModel):
 
 class ActivoOut(ActivoBase):
     id: int
+    categoria_nombre: str | None = None
 
     model_config = {"from_attributes": True}

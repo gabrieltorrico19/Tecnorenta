@@ -37,7 +37,7 @@ class ActivoFotoService:
         content = file.read()
         filepath.write_bytes(content)
 
-        rel_path = f"static/img/activos/{filename}"
+        rel_path = f"activos/{filename}"
         fotos = self.repo.get_by_activo(activo_id)
         orden = max((f.orden for f in fotos), default=-1) + 1
 

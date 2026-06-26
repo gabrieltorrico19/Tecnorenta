@@ -10,12 +10,16 @@ class ActivoService:
         self.repo = repo
 
     def listar(self) -> list[Activo]:
-        return self.repo.get_all()
+        activos = self.repo.get_all()
+        for a in activos:
+            a.categoria_nombre = a.categoria.nombre if a.categoria else None
+        return activos
 
     def obtener(self, activo_id: int) -> Activo:
         activo = self.repo.get_by_id(activo_id)
         if not activo:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activo no encontrado")
+        activo.categoria_nombre = activo.categoria.nombre if activo.categoria else None
         return activo
 
     def crear(self, data: ActivoCreate) -> Activo:

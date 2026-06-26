@@ -165,7 +165,7 @@ export default function FormularioActivo() {
               <div style={fotosGrid}>
                 {fotos.map((foto) => (
                   <div key={foto.id} style={fotoThumb}>
-                    <img src={`http://localhost:8000/${foto.url}`} alt={`Foto ${foto.orden}`} style={thumbImg} />
+                    <img src={`http://localhost:8000/static/${foto.url}`} alt={`Foto ${foto.orden}`} style={thumbImg} />
                     <button type="button" style={deleteFotoBtn} onClick={() => handleEliminarFoto(foto)} title="Eliminar foto">
                       <Trash2 size={14} />
                     </button>
