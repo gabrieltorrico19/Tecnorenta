@@ -3,49 +3,43 @@ import { ENDPOINTS } from "./endpoints";
 
 export interface Activo {
   id: number;
-  codigo: string;
-  nombre: string;
-  descripcion: string | null;
-  categoria_id: number;
-  categoria_nombre?: string;
+  codigo_inventario: string;
+  modelo: string;
+  numero_serie: string;
   estado: string;
-  numero_serie: string | null;
-  valor_adquisicion: number | null;
-  fecha_adquisicion: string | null;
-  ubicacion_actual: string | null;
+  fecha_compra: string | null;
+  valor_depreciado: number;
+  id_categoria: number | null;
+  categoria_nombre?: string;
   latitud: number | null;
   longitud: number | null;
-  activo: boolean;
-  created_at: string;
-  updated_at: string;
+  creado_por: number | null;
+  fecha_creacion: string;
+  modificado_por: number | null;
+  fecha_modificacion: string | null;
 }
 
 export interface ActivoCreate {
-  codigo: string;
-  nombre: string;
-  descripcion?: string;
-  categoria_id: number;
+  codigo_inventario: string;
+  modelo: string;
+  numero_serie: string;
   estado: string;
-  numero_serie?: string;
-  valor_adquisicion?: number;
-  fecha_adquisicion?: string;
-  ubicacion_actual?: string;
+  fecha_compra?: string | null;
+  valor_depreciado?: number;
+  id_categoria?: number | null;
   latitud?: number | null;
   longitud?: number | null;
 }
 
 export interface ActivoUpdate {
-  nombre?: string;
-  descripcion?: string;
-  categoria_id?: number;
-  estado?: string;
+  modelo?: string;
   numero_serie?: string;
-  valor_adquisicion?: number;
-  fecha_adquisicion?: string;
-  ubicacion_actual?: string;
+  estado?: string;
+  fecha_compra?: string | null;
+  valor_depreciado?: number;
+  id_categoria?: number | null;
   latitud?: number | null;
   longitud?: number | null;
-  activo?: boolean;
 }
 
 export interface ActivoFoto {

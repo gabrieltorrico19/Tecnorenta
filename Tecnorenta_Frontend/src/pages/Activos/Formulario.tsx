@@ -1,14 +1,17 @@
 import { useState, useEffect, type FormEvent, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { activosApi, type ActivoCreate, type ActivoUpdate, type ActivoFoto } from "../../api/activos.api";
+import { categoriasApi } from "../../api/categorias.api";
 import FormField from "../../components/common/FormField";
+import FormSection from "../../components/common/FormSection";
 import Button from "../../components/common/Button";
+import SearchableSelect from "../../components/common/SearchableSelect";
 import MapPicker from "../../components/MapPicker";
 import CameraCapture from "../../components/CameraCapture";
 import { useToast } from "../../context/ToastContext";
 import { Save, ArrowLeft, Trash2 } from "lucide-react";
 
-const ESTADOS = ["Disponible", "Asignado", "En Mantenimiento", "Inactivo", "Reservado", "Baja"];
+const ESTADOS = ["disponible", "rentado", "mantenimiento", "baja"];
 
 export default function FormularioActivo() {
   const { id } = useParams<{ id: string }>();
@@ -20,15 +23,13 @@ export default function FormularioActivo() {
   const [uploadingFoto, setUploadingFoto] = useState(false);
 
   const [form, setForm] = useState<ActivoCreate>({
-    codigo: "",
-    nombre: "",
-    descripcion: "",
-    categoria_id: 0,
-    estado: "Disponible",
+    codigo_inventario: "",
+    modelo: "",
     numero_serie: "",
-    valor_adquisicion: 0,
-    fecha_adquisicion: "",
-    ubicacion_actual: "",
+    estado: "disponible",
+    fecha_compra: null,
+    valor_depreciado: 0,
+    id_categoria: null,
     latitud: null,
     longitud: null,
   });
@@ -45,21 +46,43 @@ export default function FormularioActivo() {
     activosApi.obtener(Number(id)).then((res) => {
       const a = res.data;
       setForm({
-        codigo: a.codigo,
-        nombre: a.nombre,
-        descripcion: a.descripcion || "",
-        categoria_id: a.categoria_id,
+        codigo_inventario: a.codigo_inventario,
+        modelo: a.modelo,
+        numero_serie: a.numero_serie,
         estado: a.estado,
-        numero_serie: a.numero_serie || "",
-        valor_adquisicion: a.valor_adquisicion ?? 0,
-        fecha_adquisicion: a.fecha_adquisicion || "",
-        ubicacion_actual: a.ubicacion_actual || "",
+        fecha_compra: a.fecha_compra,
+        valor_depreciado: a.valor_depreciado,
+        id_categoria: a.id_categoria,
         latitud: a.latitud,
         longitud: a.longitud,
       });
       cargarFotos(Number(id));
     }).catch(() => alert("Error al cargar activo"));
   }, [id, cargarFotos]);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      if (isEdit) {
+        const payload: ActivoUpdate = {};
+        for (const [k, v] of Object.entries(form)) {
+          if (v !== undefined && v !== "" && v !== null) (payload as Record<string, unknown>)[k] = v;
+        }
+        delete (payload as Record<string, unknown>).codigo_inventario;
+        await activosApi.actualizar(Number(id), payload);
+        toast("Activo actualizado correctamente", "success");
+      } else {
+        await activosApi.crear(form);
+        toast("Activo creado correctamente", "success");
+      }
+      navigate("/activos");
+    } catch {
+      toast(`Error al ${isEdit ? "actualizar" : "crear"} el activo`, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubirFoto = async (file: File) => {
     if (!id) return;
@@ -86,85 +109,74 @@ export default function FormularioActivo() {
     }
   };
 
-  const handleChange = (field: keyof ActivoCreate, value: string | number) => {
+  const set = (field: keyof ActivoCreate) => (value: string | number | null | boolean) =>
     setForm((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      if (isEdit) {
-        const payload: ActivoUpdate = {};
-        for (const [k, v] of Object.entries(form)) {
-          if (v !== undefined && v !== "") (payload as Record<string, unknown>)[k] = v;
-        }
-        delete (payload as Record<string, unknown>).codigo;
-        await activosApi.actualizar(Number(id), payload);
-      } else {
-        await activosApi.crear(form);
-      }
-      navigate("/activos");
-    } catch {
-      alert("Error al guardar activo");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div>
       <h2>{isEdit ? "Editar Activo" : "Nuevo Activo"}</h2>
-      <form onSubmit={handleSubmit} style={formStyle}>
-        <FormField label="Código" required>
-          <input style={inputStyle} value={form.codigo} onChange={(e) => handleChange("codigo", e.target.value)} required />
-        </FormField>
-        <FormField label="Nombre" required>
-          <input style={inputStyle} value={form.nombre} onChange={(e) => handleChange("nombre", e.target.value)} required />
-        </FormField>
-        <FormField label="Descripción">
-          <textarea style={inputStyle} value={form.descripcion} onChange={(e) => handleChange("descripcion", e.target.value)} rows={3} />
-        </FormField>
-        <FormField label="Categoría ID" required>
-          <input type="number" style={inputStyle} value={form.categoria_id} onChange={(e) => handleChange("categoria_id", Number(e.target.value))} required />
-        </FormField>
-        <FormField label="Estado" required>
-          <select style={inputStyle} value={form.estado} onChange={(e) => handleChange("estado", e.target.value)} required>
-            {ESTADOS.map((e) => (<option key={e} value={e}>{e}</option>))}
-          </select>
-        </FormField>
-        <FormField label="Número de Serie">
-          <input style={inputStyle} value={form.numero_serie} onChange={(e) => handleChange("numero_serie", e.target.value)} />
-        </FormField>
-        <FormField label="Valor de Adquisición">
-          <input type="number" style={inputStyle} value={form.valor_adquisicion} onChange={(e) => handleChange("valor_adquisicion", Number(e.target.value))} />
-        </FormField>
-        <FormField label="Fecha de Adquisición">
-          <input type="date" style={inputStyle} value={form.fecha_adquisicion} onChange={(e) => handleChange("fecha_adquisicion", e.target.value)} />
-        </FormField>
-        <FormField label="Ubicación (mapa)">
-          <div style={{ marginBottom: "var(--space-sm)", fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
-            {form.latitud && form.longitud ? `${form.latitud.toFixed(4)}, ${form.longitud.toFixed(4)}` : "Haz clic en el mapa o arrastra el marcador"}
+      <form onSubmit={handleSubmit}>
+        <FormSection title="Información General">
+          <FormField label="Código de Inventario" required>
+            <input style={inputStyle} value={form.codigo_inventario} onChange={(e) => set("codigo_inventario")(e.target.value)} required />
+          </FormField>
+          <FormField label="Modelo" required>
+            <input style={inputStyle} value={form.modelo} onChange={(e) => set("modelo")(e.target.value)} required />
+          </FormField>
+          <FormField label="Número de Serie" required>
+            <input style={inputStyle} value={form.numero_serie} onChange={(e) => set("numero_serie")(e.target.value)} required />
+          </FormField>
+          <FormField label="Categoría">
+            <SearchableSelect
+              value={form.id_categoria ?? null}
+              onChange={(v) => set("id_categoria")(v ?? null)}
+              loadOptions={async () => {
+                const res = await categoriasApi.listar();
+                return res.data.map((c: { id: number; nombre: string }) => ({ id: c.id, label: c.nombre }));
+              }}
+              placeholder="Seleccionar categoría..."
+            />
+          </FormField>
+          <FormField label="Estado" required>
+            <select style={inputStyle} value={form.estado} onChange={(e) => set("estado")(e.target.value)} required>
+              {ESTADOS.map((e) => (<option key={e} value={e}>{e}</option>))}
+            </select>
+          </FormField>
+          <FormField label="Valor Depreciado">
+            <input type="number" step="0.01" style={inputStyle} value={form.valor_depreciado} onChange={(e) => set("valor_depreciado")(Number(e.target.value))} />
+          </FormField>
+          <FormField label="Fecha de Compra">
+            <input type="date" style={inputStyle} value={form.fecha_compra ?? ""} onChange={(e) => set("fecha_compra")(e.target.value || null)} />
+          </FormField>
+        </FormSection>
+
+        <FormSection title="Ubicación">
+          <div style={{ gridColumn: "1 / -1" }}>
+            <div style={{ marginBottom: "var(--space-sm)", fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+              {form.latitud && form.longitud ? `${form.latitud.toFixed(4)}, ${form.longitud.toFixed(4)}` : "Haz clic en el mapa o arrastra el marcador"}
+            </div>
+            <MapPicker latitud={form.latitud ?? null} longitud={form.longitud ?? null} onChange={(lat, lng) => setForm((prev) => ({ ...prev, latitud: lat, longitud: lng }))} />
           </div>
-          <MapPicker latitud={form.latitud ?? null} longitud={form.longitud ?? null} onChange={(lat, lng) => setForm((prev) => ({ ...prev, latitud: lat, longitud: lng }))} />
-        </FormField>
+        </FormSection>
 
         {isEdit && (
-          <FormField label="Fotos">
-            <div style={fotosGrid}>
-              {fotos.map((foto) => (
-                <div key={foto.id} style={fotoThumb}>
-                  <img src={`http://localhost:8000/${foto.url}`} alt={`Foto ${foto.orden}`} style={thumbImg} />
-                  <button type="button" style={deleteFotoBtn} onClick={() => handleEliminarFoto(foto)} title="Eliminar foto">
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              ))}
+          <FormSection title="Fotos">
+            <div style={{ gridColumn: "1 / -1" }}>
+              <div style={fotosGrid}>
+                {fotos.map((foto) => (
+                  <div key={foto.id} style={fotoThumb}>
+                    <img src={`http://localhost:8000/${foto.url}`} alt={`Foto ${foto.orden}`} style={thumbImg} />
+                    <button type="button" style={deleteFotoBtn} onClick={() => handleEliminarFoto(foto)} title="Eliminar foto">
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop: "0.5rem" }}>
+                <CameraCapture onUpload={handleSubirFoto} uploading={uploadingFoto} />
+              </div>
             </div>
-            <div style={{ marginTop: "0.5rem" }}>
-              <CameraCapture onUpload={handleSubirFoto} uploading={uploadingFoto} />
-            </div>
-          </FormField>
+          </FormSection>
         )}
 
         <div style={actionsStyle}>
@@ -176,14 +188,6 @@ export default function FormularioActivo() {
   );
 }
 
-const formStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "var(--space-md)",
-  maxWidth: "500px",
-  marginTop: "var(--space-md)",
-};
-
 const inputStyle: React.CSSProperties = {
   padding: "0.6rem",
   border: "1px solid var(--border)",
@@ -191,6 +195,8 @@ const inputStyle: React.CSSProperties = {
   background: "var(--bg-secondary)",
   color: "var(--text-primary)",
   fontSize: "var(--font-size-md)",
+  width: "100%",
+  boxSizing: "border-box",
 };
 
 const fotosGrid: React.CSSProperties = {
@@ -233,5 +239,5 @@ const deleteFotoBtn: React.CSSProperties = {
 const actionsStyle: React.CSSProperties = {
   display: "flex",
   gap: "0.75rem",
-  marginTop: "0.5rem",
+  marginTop: "var(--space-lg)",
 };

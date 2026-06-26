@@ -9,12 +9,10 @@ import { useToast } from "../../context/ToastContext";
 import { Plus } from "lucide-react";
 
 const estadoVariant: Record<string, "success" | "warning" | "danger" | "info" | "default"> = {
-  Disponible: "success",
-  Asignado: "warning",
-  "En Mantenimiento": "warning",
-  Inactivo: "danger",
-  Baja: "danger",
-  Reservado: "info",
+  disponible: "success",
+  rentado: "warning",
+  mantenimiento: "warning",
+  baja: "danger",
 };
 
 export default function ListaActivos() {
@@ -79,12 +77,11 @@ export default function ListaActivos() {
       },
     },
     { key: "id", label: "ID" },
-    { key: "codigo", label: "Código" },
-    { key: "nombre", label: "Nombre" },
+    { key: "codigo_inventario", label: "Código" },
+    { key: "modelo", label: "Modelo" },
     { key: "categoria_nombre", label: "Categoría", render: (row: Activo) => <>{row.categoria_nombre || "—"}</> },
     { key: "estado", label: "Estado", render: (row: Activo) => <Badge variant={estadoVariant[row.estado] || "default"}>{row.estado}</Badge> },
     { key: "numero_serie", label: "Serie", render: (row: Activo) => <>{row.numero_serie || "—"}</> },
-    { key: "ubicacion_actual", label: "Ubicación", render: (row: Activo) => <>{row.ubicacion_actual || "—"}</> },
   ];
 
   return (
@@ -100,7 +97,7 @@ export default function ListaActivos() {
       <ConfirmDialog
         open={!!deleteTarget}
         title="Eliminar activo"
-        message={`¿Está seguro de eliminar el activo "${deleteTarget?.nombre}"?`}
+        message={`¿Está seguro de eliminar el activo "${deleteTarget?.modelo}"?`}
         onConfirm={() => deleteTarget && eliminar(deleteTarget)}
         onCancel={() => setDeleteTarget(null)}
       />

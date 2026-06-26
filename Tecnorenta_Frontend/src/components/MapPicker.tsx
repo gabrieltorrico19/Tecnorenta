@@ -5,6 +5,13 @@ import L, { type LatLng } from "leaflet";
 const DEFAULT_CENTER: [number, number] = [-16.5, -68.15];
 const DEFAULT_ZOOM = 6;
 
+const redIcon = L.divIcon({
+  className: "",
+  html: `<div style="width:22px;height:22px;background:#ef4444;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3)"></div>`,
+  iconSize: [22, 22],
+  iconAnchor: [11, 11],
+});
+
 interface MapPickerProps {
   latitud: number | null;
   longitud: number | null;
@@ -23,6 +30,7 @@ function DraggableMarker({ position, onChange }: { position: LatLng; onChange: (
 
   return (
     <Marker
+      icon={redIcon}
       draggable
       position={marker}
       eventHandlers={{

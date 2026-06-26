@@ -1,13 +1,20 @@
 import { type FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { contratosApi, type ContratoCreate } from "../../api/contratos.api";
+import { clientesApi } from "../../api/clientes.api";
 import FormField from "../../components/common/FormField";
+import FormSection from "../../components/common/FormSection";
+import Button from "../../components/common/Button";
+import SearchableSelect from "../../components/common/SearchableSelect";
+import { useToast } from "../../context/ToastContext";
+import { Save, ArrowLeft } from "lucide-react";
 
 const estados = ["Activo", "Pendiente", "Vencido", "Cancelado"];
 
 export default function FormularioContrato() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const isEdit = Boolean(id);
 
   const [form, setForm] = useState<ContratoCreate>({
@@ -31,141 +38,81 @@ export default function FormularioContrato() {
         monto_total: c.monto_total,
         estado: c.estado,
       });
-    });
-  }, [id]);
+    }).catch(() => toast("Error al cargar contrato", "error"));
+  }, [id, toast]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       if (isEdit) {
         await contratosApi.actualizar(Number(id), form);
+        toast("Contrato actualizado", "success");
       } else {
         await contratosApi.crear(form);
+        toast("Contrato creado", "success");
       }
       navigate("/contratos");
     } catch {
-      alert("Error al guardar contrato");
+      toast("Error al guardar contrato", "error");
     }
   };
 
   return (
     <div>
       <h2>{isEdit ? "Editar Contrato" : "Nuevo Contrato"}</h2>
-      <form onSubmit={handleSubmit} style={formStyle}>
-        <FormField label="Cliente ID" required>
-          <input
-            type="number"
-            value={form.cliente_id}
-            onChange={(e) => setForm({ ...form, cliente_id: Number(e.target.value) })}
-            required
-            style={inputStyle}
-          />
-        </FormField>
-
-        <FormField label="Número de Contrato" required>
-          <input
-            value={form.numero_contrato}
-            onChange={(e) => setForm({ ...form, numero_contrato: e.target.value })}
-            required
-            style={inputStyle}
-          />
-        </FormField>
-
-        <FormField label="Fecha Inicio" required>
-          <input
-            type="date"
-            value={form.fecha_inicio}
-            onChange={(e) => setForm({ ...form, fecha_inicio: e.target.value })}
-            required
-            style={inputStyle}
-          />
-        </FormField>
-
-        <FormField label="Fecha Fin" required>
-          <input
-            type="date"
-            value={form.fecha_fin}
-            onChange={(e) => setForm({ ...form, fecha_fin: e.target.value })}
-            required
-            style={inputStyle}
-          />
-        </FormField>
-
-        <FormField label="Monto Total" required>
-          <input
-            type="number"
-            step="0.01"
-            value={form.monto_total}
-            onChange={(e) => setForm({ ...form, monto_total: Number(e.target.value) })}
-            required
-            style={inputStyle}
-          />
-        </FormField>
-
-        <FormField label="Estado" required>
-          <select
-            value={form.estado}
-            onChange={(e) => setForm({ ...form, estado: e.target.value })}
-            required
-            style={inputStyle}
-          >
-            {estados.map((est) => (
-              <option key={est} value={est}>
-                {est}
-              </option>
-            ))}
-          </select>
-        </FormField>
-
+      <form onSubmit={handleSubmit}>
+        <FormSection title="Información del Contrato">
+          <FormField label="Cliente" required>
+            <SearchableSelect
+              value={form.cliente_id || null}
+              onChange={(v) => setForm({ ...form, cliente_id: v })}
+              loadOptions={async () => {
+                const res = await clientesApi.listar();
+                return res.data.map((c) => ({ id: c.id, label: c.nombre }));
+              }}
+              placeholder="Buscar cliente..."
+            />
+          </FormField>
+          <FormField label="Número de Contrato" required>
+            <input style={inputStyle} value={form.numero_contrato} onChange={(e) => setForm({ ...form, numero_contrato: e.target.value })} required />
+          </FormField>
+          <FormField label="Fecha Inicio" required>
+            <input type="date" style={inputStyle} value={form.fecha_inicio} onChange={(e) => setForm({ ...form, fecha_inicio: e.target.value })} required />
+          </FormField>
+          <FormField label="Fecha Fin" required>
+            <input type="date" style={inputStyle} value={form.fecha_fin} onChange={(e) => setForm({ ...form, fecha_fin: e.target.value })} required />
+          </FormField>
+          <FormField label="Monto Total" required>
+            <input type="number" step="0.01" style={inputStyle} value={form.monto_total} onChange={(e) => setForm({ ...form, monto_total: Number(e.target.value) })} required />
+          </FormField>
+          <FormField label="Estado" required>
+            <select style={inputStyle} value={form.estado} onChange={(e) => setForm({ ...form, estado: e.target.value })} required>
+              {estados.map((est) => (<option key={est} value={est}>{est}</option>))}
+            </select>
+          </FormField>
+        </FormSection>
         <div style={actionsStyle}>
-          <button type="submit" style={btnPrimary}>
-            {isEdit ? "Actualizar" : "Guardar"}
-          </button>
-          <button type="button" onClick={() => navigate("/contratos")} style={btnSecondary}>
-            Cancelar
-          </button>
+          <Button type="submit" icon={<Save size={16} />}>{isEdit ? "Actualizar" : "Guardar"}</Button>
+          <Button type="button" variant="secondary" icon={<ArrowLeft size={16} />} onClick={() => navigate("/contratos")}>Cancelar</Button>
         </div>
       </form>
     </div>
   );
 }
 
-const formStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "0.8rem",
-  maxWidth: "400px",
-  marginTop: "1rem",
-};
-
 const inputStyle: React.CSSProperties = {
   padding: "0.6rem",
-  border: "1px solid #ccc",
-  borderRadius: "4px",
-  fontSize: "0.9rem",
+  border: "1px solid var(--border)",
+  borderRadius: "var(--radius-sm)",
+  background: "var(--bg-secondary)",
+  color: "var(--text-primary)",
+  fontSize: "var(--font-size-md)",
+  width: "100%",
+  boxSizing: "border-box",
 };
 
 const actionsStyle: React.CSSProperties = {
   display: "flex",
-  gap: "0.8rem",
-  marginTop: "0.5rem",
-};
-
-const btnPrimary: React.CSSProperties = {
-  background: "var(--accent)",
-  color: "#fff",
-  border: "none",
-  padding: "0.6rem 1.2rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
-  fontWeight: 600,
-};
-
-const btnSecondary: React.CSSProperties = {
-  background: "transparent",
-  color: "var(--text-secondary)",
-  border: "1px solid var(--border)",
-  padding: "0.6rem 1.2rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
+  gap: "0.75rem",
+  marginTop: "var(--space-lg)",
 };

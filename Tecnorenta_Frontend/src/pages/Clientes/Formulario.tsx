@@ -1,17 +1,18 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  clientesApi,
-  type ClienteCreate,
-  type ClienteUpdate,
-} from "../../api/clientes.api";
+import { clientesApi, type ClienteCreate, type ClienteUpdate } from "../../api/clientes.api";
 import FormField from "../../components/common/FormField";
+import FormSection from "../../components/common/FormSection";
+import Button from "../../components/common/Button";
+import { useToast } from "../../context/ToastContext";
+import { Save, ArrowLeft } from "lucide-react";
 
 type Modo = "crear" | "editar";
 
 export default function FormularioCliente() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const modo: Modo = id ? "editar" : "crear";
 
   const [form, setForm] = useState<ClienteCreate>({
@@ -37,14 +38,15 @@ export default function FormularioCliente() {
         telefono: c.telefono ?? "",
         direccion: c.direccion ?? "",
       });
-    });
-  }, [id]);
+    }).catch(() => toast("Error al cargar cliente", "error"));
+  }, [id, toast]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       if (modo === "crear") {
         await clientesApi.crear(form);
+        toast("Cliente creado", "success");
       } else {
         const payload: ClienteUpdate = {
           nombre: form.nombre,
@@ -53,10 +55,11 @@ export default function FormularioCliente() {
           direccion: form.direccion,
         };
         await clientesApi.actualizar(Number(id), payload);
+        toast("Cliente actualizado", "success");
       }
       navigate("/clientes");
     } catch {
-      alert("Error al guardar cliente");
+      toast("Error al guardar cliente", "error");
     }
   };
 
@@ -65,129 +68,62 @@ export default function FormularioCliente() {
 
   return (
     <div>
-      <h2 style={titleStyle}>
-        {modo === "crear" ? "Nuevo Cliente" : "Editar Cliente"}
-      </h2>
-      <form onSubmit={handleSubmit} style={formStyle}>
-        <FormField label="Tipo de Persona" required>
-          <select value={form.tipo_persona} onChange={set("tipo_persona")} style={inputStyle}>
-            <option value="Natural">Natural</option>
-            <option value="Jurídica">Jurídica</option>
-          </select>
-        </FormField>
-
-        <FormField label="Tipo de Documento" required>
-          <select value={form.tipo_documento} onChange={set("tipo_documento")} style={inputStyle}>
-            <option value="DNI">DNI</option>
-            <option value="RUC">RUC</option>
-            <option value="Carné Extranjería">Carné Extranjería</option>
-          </select>
-        </FormField>
-
-        <FormField label="Número de Documento" required>
-          <input
-            type="text"
-            value={form.numero_documento}
-            onChange={set("numero_documento")}
-            required
-            style={inputStyle}
-          />
-        </FormField>
-
-        <FormField label="Nombre" required>
-          <input
-            type="text"
-            value={form.nombre}
-            onChange={set("nombre")}
-            required
-            style={inputStyle}
-          />
-        </FormField>
-
-        <FormField label="Email" required>
-          <input
-            type="email"
-            value={form.email}
-            onChange={set("email")}
-            required
-            style={inputStyle}
-          />
-        </FormField>
-
-        <FormField label="Teléfono">
-          <input
-            type="text"
-            value={form.telefono}
-            onChange={set("telefono")}
-            style={inputStyle}
-          />
-        </FormField>
-
-        <FormField label="Dirección">
-          <textarea
-            value={form.direccion}
-            onChange={set("direccion")}
-            style={{ ...inputStyle, minHeight: 80, resize: "vertical" }}
-          />
-        </FormField>
-
+      <h2>{modo === "crear" ? "Nuevo Cliente" : "Editar Cliente"}</h2>
+      <form onSubmit={handleSubmit}>
+        <FormSection title="Identificación">
+          <FormField label="Tipo de Persona" required>
+            <select value={form.tipo_persona} onChange={set("tipo_persona")} style={inputStyle}>
+              <option value="Natural">Natural</option>
+              <option value="Jurídica">Jurídica</option>
+            </select>
+          </FormField>
+          <FormField label="Tipo de Documento" required>
+            <select value={form.tipo_documento} onChange={set("tipo_documento")} style={inputStyle}>
+              <option value="DNI">DNI</option>
+              <option value="RUC">RUC</option>
+              <option value="Carné Extranjería">Carné Extranjería</option>
+            </select>
+          </FormField>
+          <FormField label="Número de Documento" required>
+            <input type="text" value={form.numero_documento} onChange={set("numero_documento")} required style={inputStyle} />
+          </FormField>
+        </FormSection>
+        <FormSection title="Información de Contacto">
+          <FormField label="Nombre" required>
+            <input type="text" value={form.nombre} onChange={set("nombre")} required style={inputStyle} />
+          </FormField>
+          <FormField label="Email" required>
+            <input type="email" value={form.email} onChange={set("email")} required style={inputStyle} />
+          </FormField>
+          <FormField label="Teléfono">
+            <input type="text" value={form.telefono} onChange={set("telefono")} style={inputStyle} />
+          </FormField>
+          <FormField label="Dirección">
+            <textarea value={form.direccion} onChange={set("direccion")} style={{ ...inputStyle, minHeight: 80, resize: "vertical" }} />
+          </FormField>
+        </FormSection>
         <div style={actionsStyle}>
-          <button type="submit" style={btnSaveStyle}>
-            Guardar
-          </button>
-          <button type="button" onClick={() => navigate("/clientes")} style={btnCancelStyle}>
-            Cancelar
-          </button>
+          <Button type="submit" icon={<Save size={16} />}>Guardar</Button>
+          <Button type="button" variant="secondary" icon={<ArrowLeft size={16} />} onClick={() => navigate("/clientes")}>Cancelar</Button>
         </div>
       </form>
     </div>
   );
 }
 
-const titleStyle: React.CSSProperties = {
-  marginBottom: "1.5rem",
-};
-
-const formStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "1rem",
-  maxWidth: "500px",
-};
-
 const inputStyle: React.CSSProperties = {
   padding: "0.6rem",
   border: "1px solid var(--border)",
   borderRadius: "var(--radius-sm)",
-  background: "var(--surface)",
-  color: "var(--text)",
-  fontSize: "0.9rem",
+  background: "var(--bg-secondary)",
+  color: "var(--text-primary)",
+  fontSize: "var(--font-size-md)",
+  width: "100%",
+  boxSizing: "border-box",
 };
 
 const actionsStyle: React.CSSProperties = {
   display: "flex",
   gap: "0.75rem",
-  marginTop: "0.5rem",
-};
-
-const btnSaveStyle: React.CSSProperties = {
-  background: "var(--accent)",
-  color: "#fff",
-  border: "none",
-  padding: "0.6rem 1.5rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
-  fontWeight: 600,
-  fontSize: "0.9rem",
-};
-
-const btnCancelStyle: React.CSSProperties = {
-  background: "transparent",
-  color: "var(--text-secondary)",
-  border: "1px solid var(--border)",
-  padding: "0.6rem 1.5rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
-  fontWeight: 600,
-  fontSize: "0.9rem",
+  marginTop: "var(--space-lg)",
 };
