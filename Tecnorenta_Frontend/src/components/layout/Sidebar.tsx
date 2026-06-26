@@ -1,23 +1,31 @@
 import { NavLink } from "react-router-dom";
+import { LayoutDashboard, Users, Shield, Building2, Monitor, FileText, DollarSign, ClipboardList, AlertTriangle, Wrench, FolderTree } from "lucide-react";
+import type { ReactNode } from "react";
 
-const links = [
-  { to: "/", label: "Dashboard", icon: "▦" },
-  { to: "/usuarios", label: "Usuarios", icon: "👤" },
-  { to: "/roles", label: "Roles", icon: "🔐" },
-  { to: "/clientes", label: "Clientes", icon: "👥" },
-  { to: "/activos", label: "Activos", icon: "💻" },
-  { to: "/categorias", label: "Categorías", icon: "📂" },
-  { to: "/contratos", label: "Contratos", icon: "📄" },
-  { to: "/pagos", label: "Pagos", icon: "💰" },
-  { to: "/asignaciones", label: "Asignaciones", icon: "📋" },
-  { to: "/reportes", label: "Reportes", icon: "⚠️" },
-  { to: "/mantenimientos", label: "Mantenimiento", icon: "🔧" },
+interface LinkItem {
+  to: string;
+  label: string;
+  icon: ReactNode;
+}
+
+const links: LinkItem[] = [
+  { to: "/", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
+  { to: "/usuarios", label: "Usuarios", icon: <Users size={18} /> },
+  { to: "/roles", label: "Roles", icon: <Shield size={18} /> },
+  { to: "/clientes", label: "Clientes", icon: <Building2 size={18} /> },
+  { to: "/activos", label: "Activos", icon: <Monitor size={18} /> },
+  { to: "/categorias", label: "Categorías", icon: <FolderTree size={18} /> },
+  { to: "/contratos", label: "Contratos", icon: <FileText size={18} /> },
+  { to: "/pagos", label: "Pagos", icon: <DollarSign size={18} /> },
+  { to: "/asignaciones", label: "Asignaciones", icon: <ClipboardList size={18} /> },
+  { to: "/reportes", label: "Reportes", icon: <AlertTriangle size={18} /> },
+  { to: "/mantenimientos", label: "Mantenimiento", icon: <Wrench size={18} /> },
 ];
 
 export default function Sidebar() {
   return (
     <aside style={styles.sidebar}>
-      <div style={styles.logo}>T</div>
+      <div style={styles.logo}>SIGTAR</div>
       <nav style={styles.nav}>
         {links.map((link) => (
           <NavLink
@@ -52,31 +60,33 @@ const styles: Record<string, React.CSSProperties> = {
     top: 0,
   },
   logo: {
-    fontSize: "1.5rem",
+    fontSize: "var(--font-size-xl)",
     fontWeight: 800,
     color: "var(--accent)",
-    padding: "1.25rem",
+    padding: "var(--space-lg)",
     textAlign: "center",
     borderBottom: "1px solid var(--border)",
+    letterSpacing: "0.05em",
   },
   nav: {
     display: "flex",
     flexDirection: "column",
-    padding: "0.5rem 0",
+    padding: "var(--space-sm) 0",
   },
   link: {
     display: "flex",
     alignItems: "center",
-    gap: "0.75rem",
-    padding: "0.65rem 1.25rem",
+    gap: "var(--space-md)",
+    padding: "var(--space-sm) var(--space-lg)",
     color: "var(--text-secondary)",
     textDecoration: "none",
-    fontSize: "0.9rem",
-    transition: "background .15s",
+    fontSize: "var(--font-size-md)",
+    transition: "background .15s, color .15s",
   },
   icon: {
-    fontSize: "1rem",
-    width: "1.25rem",
-    textAlign: "center",
+    display: "inline-flex",
+    alignItems: "center",
+    width: "20px",
+    justifyContent: "center",
   },
 };

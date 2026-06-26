@@ -5,30 +5,13 @@ import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import Card from "../components/common/Card";
 import Badge from "../components/common/Badge";
+import Button from "../components/common/Button";
+import { UserPlus, Building2, Monitor, FileText } from "lucide-react";
 
-interface Contrato {
-  numero_contrato: string;
-  estado: string;
-}
-
-interface Activo {
-  estado: string;
-}
-
-interface Mantenimiento {
-  id: number;
-  activo_id: number;
-  tipo_mantenimiento: string;
-  estado: string;
-  fecha_programada: string;
-}
-
-interface Incidencia {
-  id: number;
-  tipo_incidencia: string;
-  estado: string;
-  fecha_reporte: string;
-}
+interface Contrato { numero_contrato: string; estado: string }
+interface Activo { estado: string }
+interface Mantenimiento { id: number; activo_id: number; tipo_mantenimiento: string; estado: string; fecha_programada: string }
+interface Incidencia { id: number; tipo_incidencia: string; estado: string; fecha_reporte: string }
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -111,14 +94,9 @@ export default function Dashboard() {
                 <BarChart data={Object.entries(contratosPorEstado).map(([name, value]) => ({ name, value }))}>
                   <XAxis dataKey="name" tick={{ fill: "var(--text-secondary)", fontSize: 12 }} />
                   <YAxis tick={{ fill: "var(--text-secondary)", fontSize: 12 }} />
-                  <Tooltip
-                    contentStyle={{ background: "var(--bg-secondary)", border: "1px solid var(--border)", borderRadius: 4 }}
-                    labelStyle={{ color: "var(--text-primary)" }}
-                  />
+                  <Tooltip contentStyle={{ background: "var(--bg-secondary)", border: "1px solid var(--border)", borderRadius: 4 }} labelStyle={{ color: "var(--text-primary)" }} />
                   <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-                    {Object.entries(contratosPorEstado).map(([estado]) => (
-                      <Cell key={estado} fill={chartColors[estado] || "#666"} />
-                    ))}
+                    {Object.entries(contratosPorEstado).map(([estado]) => (<Cell key={estado} fill={chartColors[estado] || "#666"} />))}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
@@ -133,18 +111,9 @@ export default function Dashboard() {
             ) : (
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
-                  <Pie
-                    data={Object.entries(activosPorEstado).map(([name, value]) => ({ name, value }))}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={70}
-                    label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
-                  >
-                    {Object.entries(activosPorEstado).map(([estado]) => (
-                      <Cell key={estado} fill={chartColors[estado] || "#666"} />
-                    ))}
+                  <Pie data={Object.entries(activosPorEstado).map(([name, value]) => ({ name, value }))} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70}
+                    label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}>
+                    {Object.entries(activosPorEstado).map(([estado]) => (<Cell key={estado} fill={chartColors[estado] || "#666"} />))}
                   </Pie>
                   <Tooltip />
                 </PieChart>
@@ -159,15 +128,11 @@ export default function Dashboard() {
               <p style={styles.emptyText}>Sin mantenimientos pendientes</p>
             ) : (
               <>
-                <p style={styles.pendingCount}>
-                  {mantenimientosPendientes.length} en total
-                </p>
+                <p style={styles.pendingCount}>{mantenimientosPendientes.length} en total</p>
                 <div style={styles.list}>
                   {mantenimientosPendientes.slice(0, 5).map((m) => (
                     <div key={m.id} style={styles.listItem}>
-                      <span style={styles.listItemText}>
-                        {m.tipo_mantenimiento}
-                      </span>
+                      <span style={styles.listItemText}>{m.tipo_mantenimiento}</span>
                       <Badge variant="warning">{m.estado}</Badge>
                     </div>
                   ))}
@@ -185,12 +150,8 @@ export default function Dashboard() {
               <div style={styles.list}>
                 {incidenciasRecientes.map((inc) => (
                   <div key={inc.id} style={styles.listItem}>
-                    <span style={styles.listItemText}>
-                      {inc.tipo_incidencia}
-                    </span>
-                    <Badge variant={badgeVariant(inc.estado)}>
-                      {inc.estado}
-                    </Badge>
+                    <span style={styles.listItemText}>{inc.tipo_incidencia}</span>
+                    <Badge variant={badgeVariant(inc.estado)}>{inc.estado}</Badge>
                   </div>
                 ))}
               </div>
@@ -201,30 +162,10 @@ export default function Dashboard() {
         <div style={styles.cardWrapper}>
           <Card title="Acceso rápido">
             <div style={styles.quickAccessGrid}>
-              <button
-                style={styles.quickBtn}
-                onClick={() => navigate("/usuarios/nuevo")}
-              >
-                + Usuario
-              </button>
-              <button
-                style={styles.quickBtn}
-                onClick={() => navigate("/clientes/nuevo")}
-              >
-                + Cliente
-              </button>
-              <button
-                style={styles.quickBtn}
-                onClick={() => navigate("/activos/nuevo")}
-              >
-                + Activo
-              </button>
-              <button
-                style={styles.quickBtn}
-                onClick={() => navigate("/contratos/nuevo")}
-              >
-                + Contrato
-              </button>
+              <Button variant="secondary" icon={<UserPlus size={16} />} onClick={() => navigate("/usuarios/nuevo")}>Usuario</Button>
+              <Button variant="secondary" icon={<Building2 size={16} />} onClick={() => navigate("/clientes/nuevo")}>Cliente</Button>
+              <Button variant="secondary" icon={<Monitor size={16} />} onClick={() => navigate("/activos/nuevo")}>Activo</Button>
+              <Button variant="secondary" icon={<FileText size={16} />} onClick={() => navigate("/contratos/nuevo")}>Contrato</Button>
             </div>
           </Card>
         </div>
@@ -245,111 +186,55 @@ const chartColors: Record<string, string> = {
 
 const styles: Record<string, React.CSSProperties> = {
   page: {
-    padding: "1.5rem",
+    padding: "var(--space-lg)",
     background: "var(--bg-primary)",
     minHeight: "100vh",
     color: "var(--text-primary)",
   },
   pageTitle: {
-    fontSize: "1.5rem",
+    fontSize: "var(--font-size-2xl)",
     fontWeight: 700,
-    marginBottom: "0.25rem",
+    marginBottom: "var(--space-xs)",
   },
   welcome: {
     color: "var(--text-secondary)",
-    marginBottom: "1.5rem",
-    fontSize: "0.9rem",
+    marginBottom: "var(--space-lg)",
+    fontSize: "var(--font-size-md)",
   },
   grid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr 1fr",
-    gap: "1rem",
+    gap: "var(--space-md)",
     gridAutoRows: "auto",
   },
-  cardWrapper: {
-    gridColumn: "span 1",
-  },
-  cardSpan2: {
-    gridColumn: "span 2",
-  },
+  cardWrapper: { gridColumn: "span 1" },
+  cardSpan2: { gridColumn: "span 2" },
   statsGrid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: "0.75rem",
+    gap: "var(--space-sm)",
   },
   statBox: {
     background: "var(--bg-tertiary)",
     borderRadius: "var(--radius-sm)",
-    padding: "1rem",
+    padding: "var(--space-md)",
     textAlign: "center",
     display: "flex",
     flexDirection: "column",
-    gap: "0.25rem",
+    gap: "var(--space-xs)",
   },
-  statNumber: {
-    fontSize: "1.75rem",
-    fontWeight: 700,
-    color: "var(--accent)",
-  },
-  statLabel: {
-    fontSize: "0.8rem",
-    color: "var(--text-muted)",
-  },
-  list: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.5rem",
-  },
+  statNumber: { fontSize: "var(--font-size-3xl)", fontWeight: 700, color: "var(--accent)" },
+  statLabel: { fontSize: "var(--font-size-sm)", color: "var(--text-muted)" },
+  list: { display: "flex", flexDirection: "column", gap: "var(--space-sm)" },
   listItem: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "0.5rem 0",
+    padding: "var(--space-sm) 0",
     borderBottom: "1px solid var(--border)",
   },
-  listItemText: {
-    color: "var(--text-primary)",
-    fontSize: "0.85rem",
-    fontWeight: 500,
-  },
-  emptyText: {
-    color: "var(--text-muted)",
-    fontSize: "0.85rem",
-    textAlign: "center",
-    padding: "1rem 0",
-  },
-  estadoRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "0.4rem 0",
-    borderBottom: "1px solid var(--border)",
-  },
-  estadoCount: {
-    color: "var(--text-primary)",
-    fontWeight: 600,
-    fontSize: "0.9rem",
-  },
-  pendingCount: {
-    color: "var(--warning)",
-    fontSize: "0.85rem",
-    fontWeight: 600,
-    marginBottom: "0.5rem",
-  },
-  quickAccessGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "0.5rem",
-  },
-  quickBtn: {
-    padding: "0.6rem",
-    borderRadius: "var(--radius-sm)",
-    border: "1px solid var(--border)",
-    background: "var(--bg-tertiary)",
-    color: "var(--text-primary)",
-    cursor: "pointer",
-    fontWeight: 500,
-    fontSize: "0.85rem",
-    textAlign: "center",
-  },
+  listItemText: { color: "var(--text-primary)", fontSize: "var(--font-size-md)", fontWeight: 500 },
+  emptyText: { color: "var(--text-muted)", fontSize: "var(--font-size-md)", textAlign: "center", padding: "var(--space-md) 0" },
+  pendingCount: { color: "var(--warning)", fontSize: "var(--font-size-md)", fontWeight: 600, marginBottom: "var(--space-sm)" },
+  quickAccessGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-sm)" },
 };

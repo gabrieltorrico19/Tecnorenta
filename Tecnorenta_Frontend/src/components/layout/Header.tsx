@@ -1,5 +1,7 @@
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import Button from "../common/Button";
+import { LogOut, User } from "lucide-react";
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -13,11 +15,12 @@ export default function Header() {
   return (
     <header style={styles.header}>
       <span style={styles.user}>
+        <User size={16} />
         {user?.nombre || "Usuario"}
       </span>
-      <button onClick={handleLogout} style={styles.logout}>
+      <Button variant="secondary" onClick={handleLogout} icon={<LogOut size={14} />}>
         Cerrar sesión
-      </button>
+      </Button>
     </header>
   );
 }
@@ -30,8 +33,8 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
-    padding: "0 2rem",
-    gap: "1rem",
+    padding: "0 var(--space-xl)",
+    gap: "var(--space-md)",
     position: "fixed",
     top: 0,
     left: "220px",
@@ -39,17 +42,11 @@ const styles: Record<string, React.CSSProperties> = {
     zIndex: 100,
   },
   user: {
+    display: "flex",
+    alignItems: "center",
+    gap: "var(--space-sm)",
     color: "var(--text-primary)",
-    fontSize: "0.9rem",
+    fontSize: "var(--font-size-md)",
     fontWeight: 600,
-  },
-  logout: {
-    background: "none",
-    border: "1px solid var(--border)",
-    color: "var(--text-secondary)",
-    padding: "0.35rem 0.75rem",
-    borderRadius: "var(--radius-sm)",
-    cursor: "pointer",
-    fontSize: "0.8rem",
   },
 };

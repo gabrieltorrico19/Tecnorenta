@@ -2,7 +2,9 @@ import { useState, useEffect, type FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { activosApi, type ActivoCreate, type ActivoUpdate } from "../../api/activos.api";
 import FormField from "../../components/common/FormField";
+import Button from "../../components/common/Button";
 import MapPicker from "../../components/MapPicker";
+import { Save, ArrowLeft } from "lucide-react";
 
 const ESTADOS = ["Disponible", "Asignado", "En Mantenimiento", "Inactivo", "Reservado", "Baja"];
 
@@ -10,6 +12,7 @@ export default function FormularioActivo() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isEdit = Boolean(id);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState<ActivoCreate>({
     codigo: "",
@@ -51,6 +54,7 @@ export default function FormularioActivo() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       if (isEdit) {
         const payload: ActivoUpdate = {};
@@ -65,6 +69,8 @@ export default function FormularioActivo() {
       navigate("/activos");
     } catch {
       alert("Error al guardar activo");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,99 +79,40 @@ export default function FormularioActivo() {
       <h2>{isEdit ? "Editar Activo" : "Nuevo Activo"}</h2>
       <form onSubmit={handleSubmit} style={formStyle}>
         <FormField label="Código" required>
-          <input
-            style={inputStyle}
-            value={form.codigo}
-            onChange={(e) => handleChange("codigo", e.target.value)}
-            required
-          />
+          <input style={inputStyle} value={form.codigo} onChange={(e) => handleChange("codigo", e.target.value)} required />
         </FormField>
-
         <FormField label="Nombre" required>
-          <input
-            style={inputStyle}
-            value={form.nombre}
-            onChange={(e) => handleChange("nombre", e.target.value)}
-            required
-          />
+          <input style={inputStyle} value={form.nombre} onChange={(e) => handleChange("nombre", e.target.value)} required />
         </FormField>
-
         <FormField label="Descripción">
-          <textarea
-            style={inputStyle}
-            value={form.descripcion}
-            onChange={(e) => handleChange("descripcion", e.target.value)}
-            rows={3}
-          />
+          <textarea style={inputStyle} value={form.descripcion} onChange={(e) => handleChange("descripcion", e.target.value)} rows={3} />
         </FormField>
-
         <FormField label="Categoría ID" required>
-          <input
-            type="number"
-            style={inputStyle}
-            value={form.categoria_id}
-            onChange={(e) => handleChange("categoria_id", Number(e.target.value))}
-            required
-          />
+          <input type="number" style={inputStyle} value={form.categoria_id} onChange={(e) => handleChange("categoria_id", Number(e.target.value))} required />
         </FormField>
-
         <FormField label="Estado" required>
-          <select
-            style={inputStyle}
-            value={form.estado}
-            onChange={(e) => handleChange("estado", e.target.value)}
-            required
-          >
-            {ESTADOS.map((e) => (
-              <option key={e} value={e}>{e}</option>
-            ))}
+          <select style={inputStyle} value={form.estado} onChange={(e) => handleChange("estado", e.target.value)} required>
+            {ESTADOS.map((e) => (<option key={e} value={e}>{e}</option>))}
           </select>
         </FormField>
-
         <FormField label="Número de Serie">
-          <input
-            style={inputStyle}
-            value={form.numero_serie}
-            onChange={(e) => handleChange("numero_serie", e.target.value)}
-          />
+          <input style={inputStyle} value={form.numero_serie} onChange={(e) => handleChange("numero_serie", e.target.value)} />
         </FormField>
-
         <FormField label="Valor de Adquisición">
-          <input
-            type="number"
-            style={inputStyle}
-            value={form.valor_adquisicion}
-            onChange={(e) => handleChange("valor_adquisicion", Number(e.target.value))}
-          />
+          <input type="number" style={inputStyle} value={form.valor_adquisicion} onChange={(e) => handleChange("valor_adquisicion", Number(e.target.value))} />
         </FormField>
-
         <FormField label="Fecha de Adquisición">
-          <input
-            type="date"
-            style={inputStyle}
-            value={form.fecha_adquisicion}
-            onChange={(e) => handleChange("fecha_adquisicion", e.target.value)}
-          />
+          <input type="date" style={inputStyle} value={form.fecha_adquisicion} onChange={(e) => handleChange("fecha_adquisicion", e.target.value)} />
         </FormField>
-
         <FormField label="Ubicación (mapa)">
-          <div style={{ marginBottom: "0.5rem", fontSize: "0.8rem", color: "var(--text-muted)" }}>
-            {form.latitud && form.longitud
-              ? `${form.latitud.toFixed(4)}, ${form.longitud.toFixed(4)}`
-              : "Haz clic en el mapa o arrastra el marcador"}
+          <div style={{ marginBottom: "var(--space-sm)", fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+            {form.latitud && form.longitud ? `${form.latitud.toFixed(4)}, ${form.longitud.toFixed(4)}` : "Haz clic en el mapa o arrastra el marcador"}
           </div>
-          <MapPicker
-            latitud={form.latitud ?? null}
-            longitud={form.longitud ?? null}
-            onChange={(lat, lng) => {
-              setForm((prev) => ({ ...prev, latitud: lat, longitud: lng }));
-            }}
-          />
+          <MapPicker latitud={form.latitud ?? null} longitud={form.longitud ?? null} onChange={(lat, lng) => setForm((prev) => ({ ...prev, latitud: lat, longitud: lng }))} />
         </FormField>
-
         <div style={actionsStyle}>
-          <button type="submit" style={btnPrimary}>Guardar</button>
-          <button type="button" onClick={() => navigate("/activos")} style={btnSecondary}>Cancelar</button>
+          <Button type="submit" loading={loading} icon={<Save size={16} />}>Guardar</Button>
+          <Button type="button" variant="secondary" icon={<ArrowLeft size={16} />} onClick={() => navigate("/activos")}>Cancelar</Button>
         </div>
       </form>
     </div>
@@ -175,9 +122,9 @@ export default function FormularioActivo() {
 const formStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
-  gap: "1rem",
+  gap: "var(--space-md)",
   maxWidth: "500px",
-  marginTop: "1rem",
+  marginTop: "var(--space-md)",
 };
 
 const inputStyle: React.CSSProperties = {
@@ -186,30 +133,11 @@ const inputStyle: React.CSSProperties = {
   borderRadius: "var(--radius-sm)",
   background: "var(--bg-secondary)",
   color: "var(--text-primary)",
-  fontSize: "0.9rem",
+  fontSize: "var(--font-size-md)",
 };
 
 const actionsStyle: React.CSSProperties = {
   display: "flex",
-  gap: "0.8rem",
+  gap: "0.75rem",
   marginTop: "0.5rem",
-};
-
-const btnPrimary: React.CSSProperties = {
-  background: "var(--accent)",
-  color: "#fff",
-  border: "none",
-  padding: "0.6rem 1.2rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
-  fontWeight: 600,
-};
-
-const btnSecondary: React.CSSProperties = {
-  background: "none",
-  border: "1px solid var(--border)",
-  color: "var(--text-secondary)",
-  padding: "0.6rem 1.2rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
 };

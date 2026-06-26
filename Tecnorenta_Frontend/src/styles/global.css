@@ -82,14 +82,15 @@ input, select, textarea {
   background: var(--bg-tertiary);
   border: 1px solid var(--border);
   color: var(--text-primary);
-  padding: 0.5rem 0.75rem;
+  padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-sm);
   outline: none;
-  transition: border-color .15s;
+  transition: border-color .15s, box-shadow .15s;
 }
 
 input:focus, select:focus, textarea:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59,130,246,.2);
 }
 
 table {
@@ -101,17 +102,18 @@ th {
   text-align: left;
   font-weight: 600;
   color: var(--text-secondary);
-  font-size: 0.8rem;
+  font-size: var(--font-size-sm);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 0.75rem 1rem;
+  padding: var(--space-md);
   border-bottom: 1px solid var(--border);
 }
 
 td {
-  padding: 0.75rem 1rem;
+  padding: var(--space-md);
   border-bottom: 1px solid var(--border);
   color: var(--text-primary);
+  font-size: var(--font-size-md);
 }
 
 tr:hover td {
@@ -134,4 +136,29 @@ tr:hover td {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--border-hover);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes skeletonPulse {
+  0%, 100% { opacity: .4; }
+  50% { opacity: .7; }
+}
+
+.skeleton {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  animation: skeletonPulse 1.4s ease-in-out infinite;
 }

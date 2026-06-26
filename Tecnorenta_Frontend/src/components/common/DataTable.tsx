@@ -1,4 +1,6 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
+import Button from "./Button";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface Column<T> {
   key: string;
@@ -15,6 +17,18 @@ interface DataTableProps<T> {
   onDelete?: (row: T) => void;
 }
 
+function SkeletonRow({ cols }: { cols: number }) {
+  return (
+    <tr>
+      {Array.from({ length: cols + 1 }).map((_, i) => (
+        <td key={i}>
+          <div className="skeleton" style={{ height: 14, width: i === cols ? 80 : `${60 + Math.random() * 30}%` }} />
+        </td>
+      ))}
+    </tr>
+  );
+}
+
 export default function DataTable<T extends { id: number }>({
   columns,
   data,
@@ -23,9 +37,48 @@ export default function DataTable<T extends { id: number }>({
   onEdit,
   onDelete,
 }: DataTableProps<T>) {
-  if (loading) return <p style={{ color: "var(--text-secondary)" }}>Cargando...</p>;
-  if (error) return <p style={{ color: "var(--danger)" }}>{error}</p>;
-  if (!data.length) return <p style={{ color: "var(--text-muted)" }}>Sin registros</p>;
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+
+  if (loading) return (
+    <div style={{ overflowX: "auto" }}>
+      <table>
+        <thead>
+          <tr>
+            {columns.map((col) => (
+              <th key={col.key}>{col.label}</th>
+            ))}
+            {(onEdit || onDelete) && <th style={{ width: 120 }}>Acciones</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <SkeletonRow key={i} cols={columns.length} />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  if (error) return (
+    <div style={{ color: "var(--danger)", padding: "var(--space-lg)", textAlign: "center", fontSize: "var(--font-size-md)" }}>
+      {error}
+    </div>
+  );
+
+  if (!data.length) return (
+    <div style={{ color: "var(--text-muted)", padding: "var(--space-xl)", textAlign: "center", fontSize: "var(--font-size-md)" }}>
+      Sin registros
+    </div>
+  );
+
+  const handleDelete = async (row: T) => {
+    setDeletingId(row.id);
+    try {
+      await onDelete?.(row);
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div style={{ overflowX: "auto" }}>
@@ -50,14 +103,19 @@ export default function DataTable<T extends { id: number }>({
                 <td>
                   <div style={{ display: "flex", gap: "0.5rem" }}>
                     {onEdit && (
-                      <button onClick={() => onEdit(row)} style={btnEdit}>
+                      <Button variant="ghost" icon={<Pencil size={14} />} onClick={() => onEdit(row)}>
                         Editar
-                      </button>
+                      </Button>
                     )}
                     {onDelete && (
-                      <button onClick={() => onDelete(row)} style={btnDelete}>
+                      <Button
+                        variant="ghost"
+                        icon={<Trash2 size={14} />}
+                        loading={deletingId === row.id}
+                        onClick={() => handleDelete(row)}
+                      >
                         Eliminar
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </td>
@@ -69,23 +127,3 @@ export default function DataTable<T extends { id: number }>({
     </div>
   );
 }
-
-const btnEdit: React.CSSProperties = {
-  background: "none",
-  border: "1px solid var(--border)",
-  color: "var(--accent)",
-  padding: "0.25rem 0.6rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
-  fontSize: "0.8rem",
-};
-
-const btnDelete: React.CSSProperties = {
-  background: "none",
-  border: "1px solid var(--border)",
-  color: "var(--danger)",
-  padding: "0.25rem 0.6rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
-  fontSize: "0.8rem",
-};

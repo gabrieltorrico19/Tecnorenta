@@ -1,7 +1,9 @@
 import { type FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FormField from "../../components/common/FormField";
+import Button from "../../components/common/Button";
 import { rolesApi, type RolCreate, type RolUpdate } from "../../api/roles.api";
+import { Save, ArrowLeft } from "lucide-react";
 
 export default function FormularioRol() {
   const { id } = useParams<{ id: string }>();
@@ -9,6 +11,7 @@ export default function FormularioRol() {
   const isEdit = Boolean(id);
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -20,6 +23,7 @@ export default function FormularioRol() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       if (isEdit) {
         const data: RolUpdate = { nombre, descripcion: descripcion || undefined };
@@ -31,6 +35,8 @@ export default function FormularioRol() {
       navigate("/roles");
     } catch {
       alert(`Error al ${isEdit ? "actualizar" : "crear"} el rol`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,8 +60,10 @@ export default function FormularioRol() {
           />
         </FormField>
         <div style={actionsStyle}>
-          <button type="submit" style={btnSave}>Guardar</button>
-          <button type="button" onClick={() => navigate("/roles")} style={btnCancel}>Cancelar</button>
+          <Button type="submit" loading={loading} icon={<Save size={16} />}>Guardar</Button>
+          <Button type="button" variant="secondary" icon={<ArrowLeft size={16} />} onClick={() => navigate("/roles")}>
+            Cancelar
+          </Button>
         </div>
       </form>
     </div>
@@ -65,9 +73,9 @@ export default function FormularioRol() {
 const formStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
-  gap: "1rem",
+  gap: "var(--space-md)",
   maxWidth: "500px",
-  marginTop: "1rem",
+  marginTop: "var(--space-md)",
 };
 
 const inputStyle: React.CSSProperties = {
@@ -76,30 +84,11 @@ const inputStyle: React.CSSProperties = {
   borderRadius: "var(--radius-sm)",
   background: "var(--bg-secondary)",
   color: "var(--text-primary)",
-  fontSize: "0.9rem",
+  fontSize: "var(--font-size-md)",
 };
 
 const actionsStyle: React.CSSProperties = {
   display: "flex",
   gap: "0.75rem",
   marginTop: "0.5rem",
-};
-
-const btnSave: React.CSSProperties = {
-  background: "var(--accent)",
-  color: "#fff",
-  border: "none",
-  padding: "0.6rem 1.5rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
-  fontWeight: 600,
-};
-
-const btnCancel: React.CSSProperties = {
-  background: "transparent",
-  color: "var(--text-secondary)",
-  border: "1px solid var(--border)",
-  padding: "0.6rem 1.5rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
 };

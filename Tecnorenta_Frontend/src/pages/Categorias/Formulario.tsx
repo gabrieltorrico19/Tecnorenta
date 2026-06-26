@@ -1,7 +1,9 @@
 import { type FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FormField from "../../components/common/FormField";
+import Button from "../../components/common/Button";
 import { categoriasApi, type Categoria, type CategoriaCreate, type CategoriaUpdate } from "../../api/categorias.api";
+import { Save, ArrowLeft } from "lucide-react";
 
 export default function FormularioCategoria() {
   const { id } = useParams<{ id: string }>();
@@ -12,6 +14,7 @@ export default function FormularioCategoria() {
   const [descripcion, setDescripcion] = useState("");
   const [idCategoriaPadre, setIdCategoriaPadre] = useState("");
   const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     categoriasApi.listar().then((res) => {
@@ -31,27 +34,20 @@ export default function FormularioCategoria() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       if (isEdit) {
-        const data: CategoriaUpdate = {
-          nombre,
-          nivel: nivel || undefined,
-          descripcion: descripcion || undefined,
-          id_categoria_padre: idCategoriaPadre ? Number(idCategoriaPadre) : null,
-        };
+        const data: CategoriaUpdate = { nombre, nivel: nivel || undefined, descripcion: descripcion || undefined, id_categoria_padre: idCategoriaPadre ? Number(idCategoriaPadre) : null };
         await categoriasApi.actualizar(Number(id), data);
       } else {
-        const data: CategoriaCreate = {
-          nombre,
-          nivel: nivel || undefined,
-          descripcion: descripcion || undefined,
-          id_categoria_padre: idCategoriaPadre ? Number(idCategoriaPadre) : null,
-        };
+        const data: CategoriaCreate = { nombre, nivel: nivel || undefined, descripcion: descripcion || undefined, id_categoria_padre: idCategoriaPadre ? Number(idCategoriaPadre) : null };
         await categoriasApi.crear(data);
       }
       navigate("/categorias");
     } catch {
       alert(`Error al ${isEdit ? "actualizar" : "crear"} la categoría`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,45 +56,25 @@ export default function FormularioCategoria() {
       <h2>{isEdit ? "Editar Categoría" : "Nueva Categoría"}</h2>
       <form onSubmit={handleSubmit} style={formStyle}>
         <FormField label="Nombre" required>
-          <input
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            required
-            style={inputStyle}
-          />
+          <input value={nombre} onChange={(e) => setNombre(e.target.value)} required style={inputStyle} />
         </FormField>
         <FormField label="Nivel">
-          <input
-            value={nivel}
-            onChange={(e) => setNivel(e.target.value)}
-            placeholder="Ej: 1, 2, 3..."
-            style={inputStyle}
-          />
+          <input value={nivel} onChange={(e) => setNivel(e.target.value)} placeholder="Ej: 1, 2, 3..." style={inputStyle} />
         </FormField>
         <FormField label="Descripción">
-          <textarea
-            value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
-            style={{ ...inputStyle, minHeight: 80, resize: "vertical" }}
-          />
+          <textarea value={descripcion} onChange={(e) => setDescripcion(e.target.value)} style={{ ...inputStyle, minHeight: 80, resize: "vertical" }} />
         </FormField>
         <FormField label="Categoría Padre">
-          <select
-            value={idCategoriaPadre}
-            onChange={(e) => setIdCategoriaPadre(e.target.value)}
-            style={inputStyle}
-          >
+          <select value={idCategoriaPadre} onChange={(e) => setIdCategoriaPadre(e.target.value)} style={inputStyle}>
             <option value="">-- Ninguna --</option>
             {categorias.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.nombre}
-              </option>
+              <option key={cat.id} value={cat.id}>{cat.nombre}</option>
             ))}
           </select>
         </FormField>
         <div style={actionsStyle}>
-          <button type="submit" style={btnSave}>Guardar</button>
-          <button type="button" onClick={() => navigate("/categorias")} style={btnCancel}>Cancelar</button>
+          <Button type="submit" loading={loading} icon={<Save size={16} />}>Guardar</Button>
+          <Button type="button" variant="secondary" icon={<ArrowLeft size={16} />} onClick={() => navigate("/categorias")}>Cancelar</Button>
         </div>
       </form>
     </div>
@@ -108,9 +84,9 @@ export default function FormularioCategoria() {
 const formStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
-  gap: "1rem",
+  gap: "var(--space-md)",
   maxWidth: "500px",
-  marginTop: "1rem",
+  marginTop: "var(--space-md)",
 };
 
 const inputStyle: React.CSSProperties = {
@@ -119,30 +95,11 @@ const inputStyle: React.CSSProperties = {
   borderRadius: "var(--radius-sm)",
   background: "var(--bg-secondary)",
   color: "var(--text-primary)",
-  fontSize: "0.9rem",
+  fontSize: "var(--font-size-md)",
 };
 
 const actionsStyle: React.CSSProperties = {
   display: "flex",
   gap: "0.75rem",
   marginTop: "0.5rem",
-};
-
-const btnSave: React.CSSProperties = {
-  background: "var(--accent)",
-  color: "#fff",
-  border: "none",
-  padding: "0.6rem 1.5rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
-  fontWeight: 600,
-};
-
-const btnCancel: React.CSSProperties = {
-  background: "transparent",
-  color: "var(--text-secondary)",
-  border: "1px solid var(--border)",
-  padding: "0.6rem 1.5rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
 };
