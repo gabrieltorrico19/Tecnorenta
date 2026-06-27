@@ -1,13 +1,16 @@
 from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
 
 from app.models.categoria_activo import CategoriaActivo
+from app.models.activo import Activo
 from app.repositories.categoria_activo import CategoriaActivoRepository
 from app.schemas.categoria_activo import CategoriaActivoCreate, CategoriaActivoUpdate
 
 
 class CategoriaActivoService:
-    def __init__(self, repo: CategoriaActivoRepository):
+    def __init__(self, repo: CategoriaActivoRepository, db: Session | None = None):
         self.repo = repo
+        self.db = db
 
     def listar(self) -> list[CategoriaActivo]:
         return self.repo.get_all()
@@ -33,4 +36,9 @@ class CategoriaActivoService:
 
     def eliminar(self, categoria_id: int) -> None:
         cat = self.obtener(categoria_id)
+        if self.db:
+            activos = self.db.query(Activo).filter(Activo.id_categoria == categoria_id).count()
+            if activos > 0:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                    detail="No se puede eliminar una categoría con activos asociados")
         self.repo.delete(cat)

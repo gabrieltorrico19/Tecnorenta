@@ -1,13 +1,16 @@
 from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
 
 from app.models.asignacion_activo import AsignacionActivo
+from app.models.activo import Activo, EstadoActivo
 from app.repositories.asignacion_activo import AsignacionActivoRepository
 from app.schemas.asignacion_activo import AsignacionActivoCreate, AsignacionActivoUpdate
 
 
 class AsignacionActivoService:
-    def __init__(self, repo: AsignacionActivoRepository):
+    def __init__(self, repo: AsignacionActivoRepository, db: Session | None = None):
         self.repo = repo
+        self.db = db
 
     def listar(self) -> list[AsignacionActivo]:
         return self.repo.get_all()
@@ -19,6 +22,11 @@ class AsignacionActivoService:
         return asignacion
 
     def crear(self, data: AsignacionActivoCreate) -> AsignacionActivo:
+        if self.db:
+            activo = self.db.query(Activo).filter(Activo.id == data.id_activo).first()
+            if activo and activo.estado == EstadoActivo.MANTENIMIENTO:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                    detail="No se puede asignar un activo que está en mantenimiento")
         return self.repo.create(AsignacionActivo(**data.model_dump()))
 
     def actualizar(self, asignacion_id: int, data: AsignacionActivoUpdate) -> AsignacionActivo:

@@ -6,7 +6,7 @@ import Badge from "../../components/common/Badge";
 import Button from "../../components/common/Button";
 import ConfirmDialog from "../../components/common/ConfirmDialog";
 import { useToast } from "../../context/ToastContext";
-import { Plus } from "lucide-react";
+import { Plus, Download } from "lucide-react";
 
 const estadoVariant: Record<string, "success" | "warning" | "danger" | "info" | "default"> = {
   disponible: "success",
@@ -88,7 +88,12 @@ export default function ListaActivos() {
     <div>
       <div style={headerStyle}>
         <h2>Activos</h2>
-        <Button onClick={() => navigate("/activos/nuevo")} icon={<Plus size={16} />}>Nuevo Activo</Button>
+        <div style={{ display: "flex", gap: "var(--space-sm)" }}>
+          <a href={activosApi.exportarCsv()} style={{ textDecoration: "none" }}>
+            <Button variant="secondary" icon={<Download size={16} />}>Exportar CSV</Button>
+          </a>
+          <Button onClick={() => navigate("/activos/nuevo")} icon={<Plus size={16} />}>Nuevo Activo</Button>
+        </div>
       </div>
       <DataTable columns={columns} data={activos} loading={loading} error={error}
         onEdit={(row) => navigate(`/activos/editar/${row.id}`)}

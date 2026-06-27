@@ -1,4 +1,5 @@
 from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
 
 from app.models.contrato import Contrato
 from app.repositories.contrato import ContratoRepository
@@ -19,6 +20,9 @@ class ContratoService:
         return contrato
 
     def crear(self, data: ContratoCreate) -> Contrato:
+        if data.fecha_fin <= data.fecha_inicio:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                detail="La fecha de fin debe ser posterior a la fecha de inicio")
         return self.repo.create(Contrato(**data.model_dump()))
 
     def actualizar(self, contrato_id: int, data: ContratoUpdate) -> Contrato:

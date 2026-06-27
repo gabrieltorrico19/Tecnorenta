@@ -72,11 +72,12 @@ export default function FormularioActivo() {
         delete (payload as Record<string, unknown>).codigo_inventario;
         await activosApi.actualizar(Number(id), payload);
         toast("Activo actualizado correctamente", "success");
+        navigate("/activos");
       } else {
-        await activosApi.crear(form);
-        toast("Activo creado correctamente", "success");
+        const res = await activosApi.crear(form);
+        toast("Activo creado correctamente. Ahora puedes agregar fotos.", "success");
+        navigate(`/activos/editar/${res.data.id}`);
       }
-      navigate("/activos");
     } catch {
       toast(`Error al ${isEdit ? "actualizar" : "crear"} el activo`, "error");
     } finally {

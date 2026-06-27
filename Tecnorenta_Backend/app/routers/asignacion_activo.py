@@ -21,7 +21,7 @@ def obtener(asignacion_id: int, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=AsignacionActivoOut, status_code=201)
 def crear(data: AsignacionActivoCreate, db: Session = Depends(get_db)):
-    return AsignacionActivoService(AsignacionActivoRepository(db)).crear(data)
+    return AsignacionActivoService(AsignacionActivoRepository(db), db=db).crear(data)
 
 
 @router.patch("/{asignacion_id}", response_model=AsignacionActivoOut)

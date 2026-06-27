@@ -18,5 +18,9 @@ export const ENDPOINTS = {
   MANTENIMIENTOS: `${API_URL}/mantenimientos`,
   HISTORIAL_UBICACION: `${API_URL}/historial-ubicacion`,
   CHECKLIST_ESTADO: `${API_URL}/checklist`,
+  DASHBOARD: {
+    STATS: `${API_URL}/dashboard/stats`,
+    CONTRATOS_PROXIMOS: `${API_URL}/dashboard/contratos-proximos-vencer`,
+  },
   HEALTH: `${API_URL}/health`,
 };

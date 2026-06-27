@@ -1,102 +1,97 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import Card from "../components/common/Card";
-import Badge from "../components/common/Badge";
 import Button from "../components/common/Button";
-import { UserPlus, Building2, Monitor, FileText } from "lucide-react";
-
-interface Contrato { numero_contrato: string; estado: string }
-interface Activo { estado: string }
-interface Mantenimiento { id: number; activo_id: number; tipo_mantenimiento: string; estado: string; fecha_programada: string }
-interface Incidencia { id: number; tipo_incidencia: string; estado: string; fecha_reporte: string }
+import { dashboardApi, type DashboardStats, type ContratoProximoVencer } from "../api/dashboard.api";
+import { UserPlus, Building2, Monitor, FileText, AlertTriangle, DollarSign, Users, Package, Calendar } from "lucide-react";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const [usuariosCount, setUsuariosCount] = useState(0);
-  const [clientesCount, setClientesCount] = useState(0);
-  const [activos, setActivos] = useState<Activo[]>([]);
-  const [contratos, setContratos] = useState<Contrato[]>([]);
-  const [mantenimientos, setMantenimientos] = useState<Mantenimiento[]>([]);
-  const [incidencias, setIncidencias] = useState<Incidencia[]>([]);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [proximosVencer, setProximosVencer] = useState<ContratoProximoVencer[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get("/api/v1/usuarios").then((r) => setUsuariosCount(r.data.length)).catch(() => {});
-    api.get("/api/v1/clientes").then((r) => setClientesCount(r.data.length)).catch(() => {});
-    api.get("/api/v1/activos").then((r) => setActivos(r.data)).catch(() => {});
-    api.get("/api/v1/contratos").then((r) => setContratos(r.data)).catch(() => {});
-    api.get("/api/v1/mantenimientos").then((r) => setMantenimientos(r.data)).catch(() => {});
-    api.get("/api/v1/reportes-incidencia").then((r) => setIncidencias(r.data)).catch(() => {});
+    Promise.all([
+      dashboardApi.stats(),
+      dashboardApi.contratosProximosVencer(30),
+    ]).then(([s, pv]) => {
+      setStats(s.data);
+      setProximosVencer(pv.data.filter((c) => c.dias_restantes <= 30 && c.dias_restantes >= 0));
+    }).catch(() => {}).finally(() => setLoading(false));
   }, []);
-
-  const activosPorEstado = activos.reduce<Record<string, number>>((acc, a) => {
-    acc[a.estado] = (acc[a.estado] || 0) + 1;
-    return acc;
-  }, {});
-
-  const contratosPorEstado = contratos.reduce<Record<string, number>>((acc, c) => {
-    acc[c.estado] = (acc[c.estado] || 0) + 1;
-    return acc;
-  }, {});
-
-  const mantenimientosPendientes = mantenimientos.filter(
-    (m) => m.estado === "Pendiente" || m.estado === "En progreso"
-  );
-
-  const incidenciasRecientes = incidencias.slice(-5).reverse();
-
-  const badgeVariant = (estado: string): "success" | "danger" | "warning" | "default" => {
-    if (estado === "Activo") return "success";
-    if (estado === "Inactivo" || estado === "Vencido") return "danger";
-    if (estado === "Pendiente") return "warning";
-    return "default";
-  };
 
   return (
     <div style={styles.page}>
       <h1 style={styles.pageTitle}>Panel Principal</h1>
       {user && <p style={styles.welcome}>Bienvenido, {user.nombre || user.email}</p>}
 
+      {proximosVencer.length > 0 && (
+        <div style={styles.alertBanner}>
+          <AlertTriangle size={20} />
+          <span style={{ flex: 1 }}>{proximosVencer.length} contrato(s) próximos a vencer en los próximos 30 días</span>
+          <Button variant="secondary" onClick={() => navigate("/contratos")}>Ver contratos</Button>
+        </div>
+      )}
+
       <div style={styles.grid}>
         <div style={{ ...styles.cardSpan2, ...styles.cardWrapper }}>
           <Card title="Resumen">
-            <div style={styles.statsGrid}>
-              <div style={styles.statBox}>
-                <span style={styles.statNumber}>{usuariosCount}</span>
-                <span style={styles.statLabel}>Usuarios activos</span>
+            {loading ? (
+              <p style={styles.emptyText}>Cargando...</p>
+            ) : (
+              <div style={styles.statsGrid}>
+                <div style={styles.statBox}>
+                  <Users size={20} style={{ color: "var(--accent)" }} />
+                  <span style={styles.statNumber}>{stats?.usuarios_count ?? 0}</span>
+                  <span style={styles.statLabel}>Usuarios</span>
+                </div>
+                <div style={styles.statBox}>
+                  <Building2 size={20} style={{ color: "var(--accent)" }} />
+                  <span style={styles.statNumber}>{stats?.clientes_count ?? 0}</span>
+                  <span style={styles.statLabel}>Clientes</span>
+                </div>
+                <div style={styles.statBox}>
+                  <Package size={20} style={{ color: "var(--accent)" }} />
+                  <span style={styles.statNumber}>{stats?.activos_count ?? 0}</span>
+                  <span style={styles.statLabel}>Activos</span>
+                </div>
+                <div style={styles.statBox}>
+                  <FileText size={20} style={{ color: "var(--accent)" }} />
+                  <span style={styles.statNumber}>{stats?.contratos_count ?? 0}</span>
+                  <span style={styles.statLabel}>Contratos</span>
+                </div>
+                <div style={styles.statBox}>
+                  <DollarSign size={20} style={{ color: "var(--accent)" }} />
+                  <span style={styles.statNumber}>${(stats?.total_ingresos_mensuales ?? 0).toLocaleString()}</span>
+                  <span style={styles.statLabel}>Ingresos/mes</span>
+                </div>
+                <div style={styles.statBox}>
+                  <Calendar size={20} style={{ color: "var(--accent)" }} />
+                  <span style={styles.statNumber}>{stats?.contratos_proximos_vencer ?? 0}</span>
+                  <span style={styles.statLabel}>Próximos a vencer</span>
+                </div>
               </div>
-              <div style={styles.statBox}>
-                <span style={styles.statNumber}>{clientesCount}</span>
-                <span style={styles.statLabel}>Clientes activos</span>
-              </div>
-              <div style={styles.statBox}>
-                <span style={styles.statNumber}>{activos.length}</span>
-                <span style={styles.statLabel}>Activos en uso</span>
-              </div>
-              <div style={styles.statBox}>
-                <span style={styles.statNumber}>{contratos.length}</span>
-                <span style={styles.statLabel}>Contratos activos</span>
-              </div>
-            </div>
+            )}
           </Card>
         </div>
 
         <div style={styles.cardWrapper}>
           <Card title="Contratos por estado">
-            {Object.keys(contratosPorEstado).length === 0 ? (
+            {!stats || Object.keys(stats.contratos_por_estado).length === 0 ? (
               <p style={styles.emptyText}>Sin contratos</p>
             ) : (
               <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={Object.entries(contratosPorEstado).map(([name, value]) => ({ name, value }))}>
+                <BarChart data={Object.entries(stats.contratos_por_estado).map(([name, value]) => ({ name, value }))}>
                   <XAxis dataKey="name" tick={{ fill: "var(--text-secondary)", fontSize: 12 }} />
                   <YAxis tick={{ fill: "var(--text-secondary)", fontSize: 12 }} />
                   <Tooltip contentStyle={{ background: "var(--bg-secondary)", border: "1px solid var(--border)", borderRadius: 4 }} labelStyle={{ color: "var(--text-primary)" }} />
                   <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-                    {Object.entries(contratosPorEstado).map(([estado]) => (<Cell key={estado} fill={chartColors[estado] || "#666"} />))}
+                    {Object.entries(stats.contratos_por_estado).map(([estado]) => (<Cell key={estado} fill={chartColors[estado] || "#666"} />))}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
@@ -106,14 +101,14 @@ export default function Dashboard() {
 
         <div style={styles.cardWrapper}>
           <Card title="Activos por estado">
-            {Object.keys(activosPorEstado).length === 0 ? (
+            {!stats || Object.keys(stats.activos_por_estado).length === 0 ? (
               <p style={styles.emptyText}>Sin activos</p>
             ) : (
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
-                  <Pie data={Object.entries(activosPorEstado).map(([name, value]) => ({ name, value }))} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70}
+                  <Pie data={Object.entries(stats.activos_por_estado).map(([name, value]) => ({ name, value }))} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70}
                     label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}>
-                    {Object.entries(activosPorEstado).map(([estado]) => (<Cell key={estado} fill={chartColors[estado] || "#666"} />))}
+                    {Object.entries(stats.activos_por_estado).map(([estado]) => (<Cell key={estado} fill={chartColors[estado] || "#666"} />))}
                   </Pie>
                   <Tooltip />
                 </PieChart>
@@ -124,40 +119,33 @@ export default function Dashboard() {
 
         <div style={styles.cardWrapper}>
           <Card title="Mantenimientos pendientes">
-            {mantenimientosPendientes.length === 0 ? (
+            {!stats || stats.mantenimientos_pendientes === 0 ? (
               <p style={styles.emptyText}>Sin mantenimientos pendientes</p>
             ) : (
               <>
-                <p style={styles.pendingCount}>{mantenimientosPendientes.length} en total</p>
-                <div style={styles.list}>
-                  {mantenimientosPendientes.slice(0, 5).map((m) => (
-                    <div key={m.id} style={styles.listItem}>
-                      <span style={styles.listItemText}>{m.tipo_mantenimiento}</span>
-                      <Badge variant="warning">{m.estado}</Badge>
-                    </div>
-                  ))}
-                </div>
+                <p style={styles.pendingCount}>{stats.mantenimientos_pendientes} en total</p>
               </>
             )}
           </Card>
         </div>
 
         <div style={styles.cardWrapper}>
-          <Card title="Incidencias recientes">
-            {incidenciasRecientes.length === 0 ? (
-              <p style={styles.emptyText}>Sin incidencias</p>
+          <Card title="Incidencias abiertas">
+            {!stats || stats.incidencias_abiertas === 0 ? (
+              <p style={styles.emptyText}>Sin incidencias abiertas</p>
             ) : (
-              <div style={styles.list}>
-                {incidenciasRecientes.map((inc) => (
-                  <div key={inc.id} style={styles.listItem}>
-                    <span style={styles.listItemText}>{inc.tipo_incidencia}</span>
-                    <Badge variant={badgeVariant(inc.estado)}>{inc.estado}</Badge>
-                  </div>
-                ))}
-              </div>
+              <p style={{ ...styles.pendingCount, color: "var(--danger)" }}>{stats.incidencias_abiertas} abiertas</p>
             )}
           </Card>
         </div>
+
+        {stats && stats.pagos_vencidos > 0 && (
+          <div style={styles.cardWrapper}>
+            <Card title="Pagos vencidos">
+              <p style={{ ...styles.pendingCount, color: "var(--danger)" }}>{stats.pagos_vencidos} pago(s) vencido(s)</p>
+            </Card>
+          </div>
+        )}
 
         <div style={styles.cardWrapper}>
           <Card title="Acceso rápido">
@@ -201,6 +189,17 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: "var(--space-lg)",
     fontSize: "var(--font-size-md)",
   },
+  alertBanner: {
+    display: "flex",
+    alignItems: "center",
+    gap: "var(--space-sm)",
+    padding: "var(--space-sm) var(--space-md)",
+    background: "var(--warning-bg, #fef3c7)",
+    border: "1px solid var(--warning-border, #f59e0b)",
+    borderRadius: "var(--radius-sm)",
+    color: "var(--warning-text, #92400e)",
+    marginBottom: "var(--space-md)",
+  },
   grid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr 1fr",
@@ -211,7 +210,7 @@ const styles: Record<string, React.CSSProperties> = {
   cardSpan2: { gridColumn: "span 2" },
   statsGrid: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: "1fr 1fr 1fr",
     gap: "var(--space-sm)",
   },
   statBox: {
@@ -222,6 +221,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     flexDirection: "column",
     gap: "var(--space-xs)",
+    alignItems: "center",
   },
   statNumber: { fontSize: "var(--font-size-3xl)", fontWeight: 700, color: "var(--accent)" },
   statLabel: { fontSize: "var(--font-size-sm)", color: "var(--text-muted)" },

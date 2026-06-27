@@ -31,4 +31,4 @@ def actualizar(categoria_id: int, data: CategoriaActivoUpdate, db: Session = Dep
 
 @router.delete("/{categoria_id}", status_code=204)
 def eliminar(categoria_id: int, db: Session = Depends(get_db)):
-    CategoriaActivoService(CategoriaActivoRepository(db)).eliminar(categoria_id)
+    CategoriaActivoService(CategoriaActivoRepository(db), db=db).eliminar(categoria_id)

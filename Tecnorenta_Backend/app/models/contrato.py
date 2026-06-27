@@ -23,6 +23,7 @@ class Contrato(Base):
     estado = Column(Enum(EstadoContrato), default=EstadoContrato.ACTIVO, nullable=False)
     monto_mensual = Column(Float, nullable=False)
     id_cliente = Column(Integer, ForeignKey("clientes.id"), nullable=False)
+    url_documento = Column(String(500), nullable=True)
     creado_por = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
     modificado_por = Column(Integer, ForeignKey("usuarios.id"), nullable=True)

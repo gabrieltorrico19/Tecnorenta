@@ -1,13 +1,16 @@
 from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
 
 from app.models.activo import Activo
+from app.models.asignacion_activo import AsignacionActivo
 from app.repositories.activo import ActivoRepository
 from app.schemas.activo import ActivoCreate, ActivoUpdate
 
 
 class ActivoService:
-    def __init__(self, repo: ActivoRepository):
+    def __init__(self, repo: ActivoRepository, db: Session | None = None):
         self.repo = repo
+        self.db = db
 
     def listar(self) -> list[Activo]:
         activos = self.repo.get_all()
@@ -36,4 +39,12 @@ class ActivoService:
 
     def eliminar(self, activo_id: int) -> None:
         activo = self.obtener(activo_id)
+        if self.db:
+            asignaciones = self.db.query(AsignacionActivo).filter(
+                AsignacionActivo.id_activo == activo_id,
+                AsignacionActivo.fecha_devolucion.is_(None),
+            ).count()
+            if asignaciones > 0:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                    detail="No se puede eliminar un activo con asignaciones activas")
         self.repo.delete(activo)

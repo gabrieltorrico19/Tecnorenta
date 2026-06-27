@@ -65,4 +65,5 @@ export const activosApi = {
   },
   eliminarFoto: (activoId: number, fotoId: number) =>
     api.delete(`${ENDPOINTS.ACTIVOS}/${activoId}/fotos/${fotoId}`),
+  exportarCsv: () => `${ENDPOINTS.ACTIVOS}/exportar/formato-csv`,
 };

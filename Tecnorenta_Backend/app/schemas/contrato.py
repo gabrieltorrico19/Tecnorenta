@@ -22,9 +22,11 @@ class ContratoUpdate(BaseModel):
     estado: str | None = None
     monto_mensual: float | None = None
     id_cliente: int | None = None
+    url_documento: str | None = None
 
 
 class ContratoOut(ContratoBase):
     id: int
+    url_documento: str | None = None
 
     model_config = {"from_attributes": True}
