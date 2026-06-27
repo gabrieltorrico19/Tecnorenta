@@ -2,41 +2,36 @@
 
 ## Objetivo
 
-Plataforma web diseñada para **TecnoRenta Latam**, PYME dedicada al alquiler de laptops a domicilio. El sistema centraliza la operación actual (inventario en Excel, entregas por WhatsApp, checklists en papel) en una sola plataforma con:
+Plataforma web diseñada para **TecnoRenta Latam**, PYME dedicada al alquiler de equipos tecnológicos. Centraliza la operación actual en una sola plataforma con:
 
-- Mapa de trazabilidad GPS
-- Historial por equipo
-- Contratos digitales
-- Control de mantenimiento
-- Dashboard con KPIs
-
-## Usuarios del sistema
-
-| Rol | Acceso |
-|---|---|
-| **Administrador** | Total: inventario, contratos, reportes, dashboard KPIs |
-| **Operador / Repartidor** | Móvil: checklists de entrega/devolución, fotos, GPS |
-| **Cliente** | Solo lectura: contrato activo, estado del equipo, historial de pagos |
+- Gestión de inventario con estados y categorías
+- Contratos digitales con alertas de vencimiento
+- Asignación de activos con checklist fotográfico
+- Mapa de trazabilidad GPS + historial por equipo
+- Dashboard con KPIs en tiempo real
+- Reportes de incidencias y mantenimiento
+- Control de pagos
 
 ## Stack tecnológico
 
 | Capa | Tecnología |
 |---|---|
-| Backend | Python 3.14+, FastAPI, SQLAlchemy 2.0, Alembic, PyMySQL |
-| Frontend | React 19, TypeScript, Vite, Axios, React Router DOM |
-| Base de datos | MySQL (local) / Railway (producción) |
+| Backend | Python 3.14+, FastAPI, SQLAlchemy 2.0, Alembic, PyMySQL, Pydantic v2 |
+| Base de datos | MySQL (MariaDB) |
 | Autenticación | JWT + bcrypt |
 | Mapas | Leaflet.js + OpenStreetMap |
 
 ## Módulos del sistema
 
-1. **Gestión de usuarios y roles** — registro, permisos, autenticación JWT, auditoría
-2. **Inventario de activos** — catálogo de laptops con estados fijos y categorías jerárquicas
-3. **Clientes y contratos** — registro con NIT único, contratos digitales, alertas de vencimiento, pagos
-4. **Asignación y checklist** — entrega/devolución con checklist fotográfico, comparación automática, cargos por daño
-5. **Mapa de trazabilidad** — ubicación actual + historial GPS por equipo, mapa de calor de entregas
-6. **Reportes de incidencia** — reportes con gravedad (leve, moderado, grave), ciclo de vida, escalado a correctivo
-7. **Mantenimiento** — preventivo programado por frecuencia, correctivo vinculado a incidencias, costos por equipo
+1. **Usuarios y roles** — autenticación JWT, roles (Administrador/Operador/Cliente), auditoría
+2. **Activos** — catálogo con códigos de inventario, estados fijos (disponible/rentado/mantenimiento/baja), categorías jerárquicas, fotos múltiples
+3. **Clientes** — registro con NIT único
+4. **Contratos** — contratos digitales con cliente y activos asociados, alertas de vencimiento, documento adjunto
+5. **Pagos** — control de pagos por contrato, detección de vencidos y próximos
+6. **Asignaciones** — entrega/devolución con ubicación GPS, checklist fotográfico
+7. **Incidencias** — reportes con gravedad (leve/moderado/grave), ciclo de vida
+8. **Mantenimiento** — preventivo programado, correctivo vinculado a incidencias
+9. **Dashboard** — panel con KPIs, gráficos, alertas de contratos próximos a vencer
 
 ## Estructura del backend
 
@@ -44,58 +39,62 @@ Plataforma web diseñada para **TecnoRenta Latam**, PYME dedicada al alquiler de
 Tecnorenta_Backend/
 ├── app/
 │   ├── core/          # Config, database, security
-│   ├── models/        # SQLAlchemy models (14 tablas)
+│   ├── models/        # SQLAlchemy models (15 tablas)
 │   ├── schemas/       # Pydantic request/response
-│   ├── repositories/  # Acceso a datos
-│   ├── services/      # Lógica de negocio
-│   ├── routers/       # Endpoints API REST
+│   ├── repositories/  # Acceso a datos (queries)
+│   ├── services/      # Lógica de negocio + validaciones
+│   ├── routers/       # Endpoints REST (API prefix /api/v1)
 │   └── dependencies/  # Inyección de dependencias
-├── alembic/           # Migraciones
+├── alembic/           # Migraciones DB
 │   └── versions/
-└── requirements.txt
+└── .env.example       # Template de configuración
 ```
 
-## Convenciones de desarrollo
+## Endpoints destacados (API v1)
 
-| Regla | Estándar |
-|---|---|
-| Idioma en código | Español (tablas, columnas, endpoints) |
-| Python | snake_case, PEP 8 |
-| API prefix | `/api/v1/...` |
-| Estados fijos | ENUMs de SQLAlchemy |
-| Arquitectura | Router → Service → Repository → Model |
-| Auditoría | `creado_por`, `fecha_creacion`, `modificado_por`, `fecha_modificacion` en tablas críticas |
-| Herencia | Single table inheritance (Mantenimiento) |
+- `GET /api/v1/dashboard/stats` — KPIs generales (conteos, ingresos, alertas)
+- `GET /api/v1/dashboard/contratos-proximos-vencer?dias=30` — contratos por vencer
+- `GET /api/v1/activos/exportar/formato-csv` — exportar activos a CSV
+- `GET /api/v1/pagos/vencidos` — pagos vencidos
+- `GET /api/v1/pagos/proximos` — pagos próximos (pendientes)
+- `POST /api/v1/contratos/{id}/documento` — subir documento a contrato
+- CRUD completo para: usuarios, roles, activos, categorías, clientes, contratos, pagos, asignaciones, incidencias, mantenimiento, checklist, historial ubicación
 
 ## Cómo ejecutar
 
 ```bash
 # Backend
 cd Tecnorenta_Backend
-venv\Scripts\activate
-uvicorn app.main:app --reload
+python -m venv venv
+venv\Scripts\activate    # Windows
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
 
-# Migraciones (cuando MySQL esté corriendo)
+# Migraciones
 alembic upgrade head
 
 # Frontend
-cd Tecnorenta_Frontend
+cd ../Tecnorenta_Frontend
+npm install
 npm run dev
 ```
 
-## Vinculación con ODS
+## Configuración
 
-- **ODS 8** — Trabajo decente y crecimiento económico
-- **ODS 9** — Industria, innovación e infraestructura
-- **ODS 12** — Producción y consumo responsables
+Copiar `.env.example` a `.env` y ajustar:
 
-## Fases del proyecto
+- `DATABASE_URL` — conexión MySQL (ej: `mysql+pymysql://root:root@localhost:3306/tecnorenta?charset=utf8mb4`)
+- `SECRET_KEY` — clave para JWT
 
-| Fase | Semanas | Módulos |
-|---|---|---|
-| 1 | 1-2 | Base de datos, autenticación, roles |
-| 2 | 3-4 | Inventario, clientes, contratos |
-| 3 | 5-6 | Asignación y checklist |
-| 4 | 7-8 | Mapa y trazabilidad |
-| 5 | 9-10 | Incidencias y mantenimiento |
-| 6 | 11-12 | Dashboard, pruebas, documentación |
+## Convenciones
+
+| Regla | Estándar |
+|---|---|
+| Idioma | Español (tablas, columnas, endpoints) |
+| Python | snake_case, PEP 8 |
+| API prefix | `/api/v1/...` |
+| Estados | ENUMs de SQLAlchemy |
+| Arquitectura | Router → Service → Repository → Model |
+| DI | `Depends(get_db)` |
+| Validaciones | En servicios (no en routers) |
+| Auditoría | `creado_por`, `fecha_creacion`, `modificado_por`, `fecha_modificacion` |

@@ -29,3 +29,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Informes y documentación generada
+*.docx
+capturas/
+SIGTAR_Sprint0*.docx
+generar_*.py

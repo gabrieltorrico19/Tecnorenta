@@ -1,32 +1,47 @@
-# React + TypeScript + Vite
+# SIGTAR — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Interfaz de usuario del Sistema de Gestión y Trazabilidad de Activos Rentados.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+React 19 + TypeScript + Vite + Axios + React Router DOM + Recharts + Leaflet + Lucide icons
 
-## React Compiler
+## Estructura
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```
+src/
+├── api/          # Capa de comunicación con backend (axios + endpoints)
+├── components/   # Componentes reutilizables (DataTable, Button, Card, etc.)
+├── context/      # Contextos (AuthContext, ToastContext)
+├── pages/        # Páginas por dominio (activos, contratos, dashboard, etc.)
+└── styles/       # Estilos globales
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Rutas principales
+
+- `/login` — autenticación
+- `/dashboard` — panel con KPIs, alertas de contratos próximos a vencer
+- `/activos` — listado, creación, edición con fotos
+- `/contratos` — gestión de contratos con documento adjunto
+- `/pagos` — control de pagos (vencidos, próximos)
+- `/asignaciones` — asignación con checklist y mapa GPS
+- `/mantenimientos` — preventivo y correctivo
+- `/reportes-incidencia` — reportes con gravedad
+- `/usuarios`, `/roles`, `/clientes`, `/categorias`, `/checklist`, `/historial-ubicacion`
+
+## Cómo ejecutar
+
+```bash
+cd Tecnorenta_Frontend
+npm install
+npm run dev     # desarrollo en localhost:5173
+npm run build   # producción
+```
+
+## Variables de entorno
+
+Copiar `.env.example` a `.env`:
+
+```
+VITE_API_URL=http://localhost:8000/api/v1
+```
