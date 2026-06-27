@@ -3,15 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { pagosApi, type Pago } from "../../api/pagos.api";
 import DataTable from "../../components/common/DataTable";
 import Badge from "../../components/common/Badge";
-import { formatDate } from "../../utils/helpers";
+import Button from "../../components/common/Button";
+import { Plus } from "lucide-react";
 
 const estadoVariant: Record<string, "success" | "warning" | "danger" | "default"> = {
-  Pagado: "success",
-  Completado: "success",
-  Pendiente: "warning",
-  Atrasado: "danger",
-  Rechazado: "danger",
+  pagado: "success",
+  pendiente: "warning",
+  atrasado: "danger",
+  rechazado: "danger",
+  anulado: "danger",
 };
+
+function formatDate(dateStr: string | null): string {
+  if (!dateStr) return "—";
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("es-MX", { year: "numeric", month: "2-digit", day: "2-digit" });
+}
 
 export default function ListaPagos() {
   const navigate = useNavigate();
@@ -49,21 +56,21 @@ export default function ListaPagos() {
   const columns = [
     { key: "id", label: "ID" },
     {
-      key: "contrato_numero",
+      key: "id_contrato",
       label: "Contrato",
-      render: (row: Pago) => <>{row.contrato_numero || "—"}</>,
+      render: (row: Pago) => <>{`#${row.id_contrato}`}</>,
     },
+    { key: "concepto", label: "Concepto" },
     {
       key: "monto",
       label: "Monto",
       render: (row: Pago) => <>{`$ ${row.monto}`}</>,
     },
     {
-      key: "fecha_pago",
-      label: "Fecha Pago",
-      render: (row: Pago) => <>{formatDate(row.fecha_pago)}</>,
+      key: "fecha",
+      label: "Fecha",
+      render: (row: Pago) => <>{formatDate(row.fecha)}</>,
     },
-    { key: "metodo_pago", label: "Método Pago" },
     {
       key: "estado",
       label: "Estado",
@@ -77,9 +84,7 @@ export default function ListaPagos() {
     <div>
       <div style={headerStyle}>
         <h2>Pagos</h2>
-        <button onClick={() => navigate("/pagos/nuevo")} style={btnPrimary}>
-          Nuevo Pago
-        </button>
+        <Button onClick={() => navigate("/pagos/nuevo")} icon={<Plus size={16} />}>Nuevo Pago</Button>
       </div>
       <DataTable
         columns={columns}
@@ -97,15 +102,5 @@ const headerStyle: React.CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  marginBottom: "1rem",
-};
-
-const btnPrimary: React.CSSProperties = {
-  background: "var(--accent)",
-  color: "#fff",
-  border: "none",
-  padding: "0.5rem 1rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
-  fontWeight: 600,
+  marginBottom: "var(--space-md)",
 };

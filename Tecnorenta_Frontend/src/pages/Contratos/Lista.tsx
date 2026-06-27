@@ -1,29 +1,44 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { contratosApi, type Contrato } from "../../api/contratos.api";
+import { clientesApi } from "../../api/clientes.api";
 import DataTable from "../../components/common/DataTable";
 import Badge from "../../components/common/Badge";
-import { formatDate } from "../../utils/helpers";
+import Button from "../../components/common/Button";
+import { Plus } from "lucide-react";
 
 const estadoVariant: Record<string, "success" | "warning" | "danger" | "default"> = {
-  Activo: "success",
-  Pendiente: "warning",
-  Vencido: "danger",
-  Cancelado: "danger",
+  activo: "success",
+  vencido: "danger",
+  cancelado: "danger",
+  renovado: "default",
 };
+
+function formatDate(dateStr: string | null): string {
+  if (!dateStr) return "—";
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("es-MX", { year: "numeric", month: "2-digit", day: "2-digit" });
+}
 
 export default function ListaContratos() {
   const navigate = useNavigate();
   const [contratos, setContratos] = useState<Contrato[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [clientesMap, setClientesMap] = useState<Record<number, string>>({});
 
   const listar = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await contratosApi.listar();
-      setContratos(res.data);
+      const [cRes, clRes] = await Promise.all([
+        contratosApi.listar(),
+        clientesApi.listar(),
+      ]);
+      setContratos(cRes.data);
+      const cm: Record<number, string> = {};
+      clRes.data.forEach((cl: { id: number; nombre: string }) => { cm[cl.id] = cl.nombre; });
+      setClientesMap(cm);
     } catch {
       setError("Error al cargar contratos");
     } finally {
@@ -50,11 +65,10 @@ export default function ListaContratos() {
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "numero_contrato", label: "Número" },
     {
-      key: "cliente_nombre",
+      key: "cliente",
       label: "Cliente",
-      render: (row: Contrato) => <>{row.cliente_nombre || "—"}</>,
+      render: (row: Contrato) => <>{clientesMap[row.id_cliente] || `ID ${row.id_cliente}`}</>,
     },
     {
       key: "fecha_inicio",
@@ -67,9 +81,9 @@ export default function ListaContratos() {
       render: (row: Contrato) => <>{formatDate(row.fecha_fin)}</>,
     },
     {
-      key: "monto_total",
-      label: "Monto Total",
-      render: (row: Contrato) => <>{`$ ${row.monto_total}`}</>,
+      key: "monto_mensual",
+      label: "Monto Mensual",
+      render: (row: Contrato) => <>{`$ ${row.monto_mensual}`}</>,
     },
     {
       key: "estado",
@@ -84,9 +98,7 @@ export default function ListaContratos() {
     <div>
       <div style={headerStyle}>
         <h2>Contratos</h2>
-        <button onClick={() => navigate("/contratos/nuevo")} style={btnPrimary}>
-          Nuevo Contrato
-        </button>
+        <Button onClick={() => navigate("/contratos/nuevo")} icon={<Plus size={16} />}>Nuevo Contrato</Button>
       </div>
       <DataTable
         columns={columns}
@@ -104,15 +116,5 @@ const headerStyle: React.CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  marginBottom: "1rem",
-};
-
-const btnPrimary: React.CSSProperties = {
-  background: "var(--accent)",
-  color: "#fff",
-  border: "none",
-  padding: "0.5rem 1rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
-  fontWeight: 600,
+  marginBottom: "var(--space-md)",
 };

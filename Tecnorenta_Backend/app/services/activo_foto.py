@@ -9,6 +9,9 @@ from app.models.activo_foto import ActivoFoto
 from app.repositories.activo_foto import ActivoFotoRepository
 from app.repositories.activo import ActivoRepository
 
+ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
+MAX_FILE_SIZE = 10 * 1024 * 1024
+
 
 class ActivoFotoService:
     def __init__(self, repo: ActivoFotoRepository, activo_repo: ActivoRepository):
@@ -28,13 +31,18 @@ class ActivoFotoService:
     async def subir(self, activo_id: int, file: UploadFile) -> ActivoFoto:
         self._get_activo(activo_id)
 
-        ext = Path(file.filename or "foto.jpg").suffix or ".jpg"
+        ext = (Path(file.filename or "foto.jpg").suffix or ".jpg").lower()
+        if ext not in ALLOWED_EXTENSIONS:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Formato de archivo no permitido: {ext}")
+
+        content = await file.read()
+        if len(content) > MAX_FILE_SIZE:
+            raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="Archivo demasiado grande (máx 10MB)")
+
         filename = f"{uuid.uuid4().hex}{ext}"
         subdir = Path(settings.UPLOAD_DIR) / "activos"
         subdir.mkdir(parents=True, exist_ok=True)
         filepath = subdir / filename
-
-        content = await file.read()
         filepath.write_bytes(content)
 
         rel_path = f"activos/{filename}"

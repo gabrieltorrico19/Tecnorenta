@@ -87,7 +87,7 @@ export default function FormularioAsignacion() {
               onChange={(v) => handleChange("id_contrato", v)}
               loadOptions={async () => {
                 const res = await contratosApi.listar();
-                return res.data.map((c: { id: number; numero_contrato: string }) => ({ id: c.id, label: c.numero_contrato }));
+                return res.data.map((c: { id: number }) => ({ id: c.id, label: `Contrato #${c.id}` }));
               }}
               placeholder="Buscar contrato..."
             />

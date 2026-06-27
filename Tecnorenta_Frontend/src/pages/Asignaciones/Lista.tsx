@@ -32,7 +32,7 @@ export default function ListaAsignaciones() {
       ]);
       setAsignaciones(res.data);
       const cm: Record<number, string> = {};
-      cRes.data.forEach((c: { id: number; numero_contrato: string }) => { cm[c.id] = c.numero_contrato; });
+      cRes.data.forEach((c: { id: number }) => { cm[c.id] = `Contrato #${c.id}`; });
       setContratosMap(cm);
       const am: Record<number, string> = {};
       aRes.data.forEach((a: { id: number; codigo_inventario: string; modelo: string }) => { am[a.id] = `${a.codigo_inventario} - ${a.modelo}`; });

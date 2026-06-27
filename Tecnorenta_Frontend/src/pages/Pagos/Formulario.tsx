@@ -10,15 +10,14 @@ import { useToast } from "../../context/ToastContext";
 import { Save, ArrowLeft } from "lucide-react";
 
 interface PagoForm {
-  contrato_id: number;
+  id_contrato: number;
+  concepto: string;
   monto: number;
-  fecha_pago: string;
-  metodo_pago: string;
+  fecha: string;
   estado: string;
 }
 
-const metodosPago = ["Efectivo", "Transferencia", "Tarjeta Crédito", "Tarjeta Débito", "Cheque"];
-const estados = ["Pendiente", "Pagado", "Atrasado", "Rechazado", "Anulado"];
+const estados = ["pendiente", "pagado", "atrasado", "rechazado", "anulado"];
 
 export default function FormularioPago() {
   const { id } = useParams<{ id: string }>();
@@ -27,11 +26,11 @@ export default function FormularioPago() {
   const isEdit = Boolean(id);
 
   const [form, setForm] = useState<PagoForm>({
-    contrato_id: 0,
+    id_contrato: 0,
+    concepto: "",
     monto: 0,
-    fecha_pago: "",
-    metodo_pago: "Efectivo",
-    estado: "Pendiente",
+    fecha: "",
+    estado: "pendiente",
   });
 
   useEffect(() => {
@@ -39,10 +38,10 @@ export default function FormularioPago() {
     pagosApi.obtener(Number(id)).then((res) => {
       const p = res.data;
       setForm({
-        contrato_id: p.contrato_id,
+        id_contrato: p.id_contrato,
+        concepto: p.concepto,
         monto: p.monto,
-        fecha_pago: p.fecha_pago.slice(0, 10),
-        metodo_pago: p.metodo_pago,
+        fecha: p.fecha.slice(0, 10),
         estado: p.estado,
       });
     }).catch(() => toast("Error al cargar pago", "error"));
@@ -52,7 +51,7 @@ export default function FormularioPago() {
     e.preventDefault();
     try {
       if (isEdit) {
-        await pagosApi.actualizar(Number(id), { monto: form.monto, metodo_pago: form.metodo_pago, estado: form.estado });
+        await pagosApi.actualizar(Number(id), { monto: form.monto, estado: form.estado, concepto: form.concepto, fecha: form.fecha });
         toast("Pago actualizado", "success");
       } else {
         await pagosApi.crear(form);
@@ -71,25 +70,23 @@ export default function FormularioPago() {
         <FormSection title="Información del Pago">
           <FormField label="Contrato" required>
             <SearchableSelect
-              value={form.contrato_id || null}
-              onChange={(v) => setForm({ ...form, contrato_id: v })}
+              value={form.id_contrato || null}
+              onChange={(v) => setForm({ ...form, id_contrato: v })}
               loadOptions={async () => {
                 const res = await contratosApi.listar();
-                return res.data.map((c) => ({ id: c.id, label: c.numero_contrato }));
+                return res.data.map((c: { id: number }) => ({ id: c.id, label: `Contrato #${c.id}` }));
               }}
               placeholder="Buscar contrato..."
             />
+          </FormField>
+          <FormField label="Concepto" required>
+            <input style={inputStyle} value={form.concepto} onChange={(e) => setForm({ ...form, concepto: e.target.value })} required />
           </FormField>
           <FormField label="Monto" required>
             <input type="number" step="0.01" style={inputStyle} value={form.monto} onChange={(e) => setForm({ ...form, monto: Number(e.target.value) })} required />
           </FormField>
           <FormField label="Fecha Pago" required>
-            <input type="date" style={inputStyle} value={form.fecha_pago} onChange={(e) => setForm({ ...form, fecha_pago: e.target.value })} required />
-          </FormField>
-          <FormField label="Método Pago" required>
-            <select style={inputStyle} value={form.metodo_pago} onChange={(e) => setForm({ ...form, metodo_pago: e.target.value })} required>
-              {metodosPago.map((m) => (<option key={m} value={m}>{m}</option>))}
-            </select>
+            <input type="date" style={inputStyle} value={form.fecha} onChange={(e) => setForm({ ...form, fecha: e.target.value })} required />
           </FormField>
           <FormField label="Estado" required>
             <select style={inputStyle} value={form.estado} onChange={(e) => setForm({ ...form, estado: e.target.value })} required>

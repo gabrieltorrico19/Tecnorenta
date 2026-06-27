@@ -9,7 +9,7 @@ import SearchableSelect from "../../components/common/SearchableSelect";
 import { useToast } from "../../context/ToastContext";
 import { Save, ArrowLeft } from "lucide-react";
 
-const estados = ["Activo", "Pendiente", "Vencido", "Cancelado"];
+const estados = ["activo", "vencido", "cancelado", "renovado"];
 
 export default function FormularioContrato() {
   const { id } = useParams<{ id: string }>();
@@ -18,12 +18,12 @@ export default function FormularioContrato() {
   const isEdit = Boolean(id);
 
   const [form, setForm] = useState<ContratoCreate>({
-    cliente_id: 0,
-    numero_contrato: "",
+    id_cliente: 0,
     fecha_inicio: "",
     fecha_fin: "",
-    monto_total: 0,
-    estado: "Pendiente",
+    monto_mensual: 0,
+    estado: "activo",
+    condiciones_uso: "",
   });
 
   useEffect(() => {
@@ -31,12 +31,12 @@ export default function FormularioContrato() {
     contratosApi.obtener(Number(id)).then((res) => {
       const c = res.data;
       setForm({
-        cliente_id: c.cliente_id,
-        numero_contrato: c.numero_contrato,
+        id_cliente: c.id_cliente,
         fecha_inicio: c.fecha_inicio.slice(0, 10),
         fecha_fin: c.fecha_fin.slice(0, 10),
-        monto_total: c.monto_total,
+        monto_mensual: c.monto_mensual,
         estado: c.estado,
+        condiciones_uso: c.condiciones_uso || "",
       });
     }).catch(() => toast("Error al cargar contrato", "error"));
   }, [id, toast]);
@@ -64,17 +64,14 @@ export default function FormularioContrato() {
         <FormSection title="Información del Contrato">
           <FormField label="Cliente" required>
             <SearchableSelect
-              value={form.cliente_id || null}
-              onChange={(v) => setForm({ ...form, cliente_id: v })}
+              value={form.id_cliente || null}
+              onChange={(v) => setForm({ ...form, id_cliente: v })}
               loadOptions={async () => {
                 const res = await clientesApi.listar();
-                return res.data.map((c) => ({ id: c.id, label: c.nombre }));
+                return res.data.map((c: { id: number; nombre: string }) => ({ id: c.id, label: c.nombre }));
               }}
               placeholder="Buscar cliente..."
             />
-          </FormField>
-          <FormField label="Número de Contrato" required>
-            <input style={inputStyle} value={form.numero_contrato} onChange={(e) => setForm({ ...form, numero_contrato: e.target.value })} required />
           </FormField>
           <FormField label="Fecha Inicio" required>
             <input type="date" style={inputStyle} value={form.fecha_inicio} onChange={(e) => setForm({ ...form, fecha_inicio: e.target.value })} required />
@@ -82,8 +79,11 @@ export default function FormularioContrato() {
           <FormField label="Fecha Fin" required>
             <input type="date" style={inputStyle} value={form.fecha_fin} onChange={(e) => setForm({ ...form, fecha_fin: e.target.value })} required />
           </FormField>
-          <FormField label="Monto Total" required>
-            <input type="number" step="0.01" style={inputStyle} value={form.monto_total} onChange={(e) => setForm({ ...form, monto_total: Number(e.target.value) })} required />
+          <FormField label="Monto Mensual" required>
+            <input type="number" step="0.01" style={inputStyle} value={form.monto_mensual} onChange={(e) => setForm({ ...form, monto_mensual: Number(e.target.value) })} required />
+          </FormField>
+          <FormField label="Condiciones de Uso">
+            <textarea style={inputStyle} value={form.condiciones_uso} onChange={(e) => setForm({ ...form, condiciones_uso: e.target.value })} rows={3} />
           </FormField>
           <FormField label="Estado" required>
             <select style={inputStyle} value={form.estado} onChange={(e) => setForm({ ...form, estado: e.target.value })} required>

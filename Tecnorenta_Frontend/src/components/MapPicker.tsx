@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L, { type LatLng } from "leaflet";
 
@@ -20,6 +20,10 @@ interface MapPickerProps {
 
 function DraggableMarker({ position, onChange }: { position: LatLng; onChange: (lat: number, lng: number) => void }) {
   const [marker, setMarker] = useState(position);
+
+  useEffect(() => {
+    setMarker(position);
+  }, [position]);
 
   useMapEvents({
     click(e) {
@@ -45,13 +49,14 @@ function DraggableMarker({ position, onChange }: { position: LatLng; onChange: (
 }
 
 export default function MapPicker({ latitud, longitud, onChange }: MapPickerProps) {
-  const center = latitud && longitud
+  const hasLocation = latitud !== null && latitud !== undefined && longitud !== null && longitud !== undefined;
+  const center = hasLocation
     ? L.latLng(latitud, longitud)
     : L.latLng(DEFAULT_CENTER[0], DEFAULT_CENTER[1]);
 
   return (
     <div style={{ borderRadius: "var(--radius-sm)", overflow: "hidden", border: "1px solid var(--border)" }}>
-      <MapContainer center={center} zoom={DEFAULT_ZOOM} style={{ height: 300, width: "100%" }}>
+      <MapContainer key={center.toString()} center={center} zoom={DEFAULT_ZOOM} style={{ height: 300, width: "100%" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

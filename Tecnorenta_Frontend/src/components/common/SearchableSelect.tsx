@@ -35,7 +35,7 @@ export default function SearchableSelect({
 
   useEffect(() => {
     const q = search.toLowerCase();
-    setFiltered(options.filter((o) => o.label.toLowerCase().includes(q)));
+    setFiltered(options.filter((o) => o.label?.toLowerCase().includes(q)));
     setFocusedIdx(0);
   }, [search, options]);
 

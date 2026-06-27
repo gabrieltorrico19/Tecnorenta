@@ -3,32 +3,32 @@ import { ENDPOINTS } from "./endpoints";
 
 export interface Contrato {
   id: number;
-  cliente_id: number;
-  cliente_nombre?: string;
-  numero_contrato: string;
+  id_cliente: number;
   fecha_inicio: string;
   fecha_fin: string;
-  monto_total: number;
+  condiciones_uso: string | null;
   estado: string;
-  activo: boolean;
-  created_at: string;
-  updated_at: string;
+  monto_mensual: number;
+  url_documento: string | null;
 }
 
 export interface ContratoCreate {
-  cliente_id: number;
-  numero_contrato: string;
+  id_cliente: number;
   fecha_inicio: string;
   fecha_fin: string;
-  monto_total: number;
+  condiciones_uso?: string;
   estado: string;
+  monto_mensual: number;
 }
 
 export interface ContratoUpdate {
+  fecha_inicio?: string;
   fecha_fin?: string;
-  monto_total?: number;
+  condiciones_uso?: string;
   estado?: string;
-  activo?: boolean;
+  monto_mensual?: number;
+  id_cliente?: number;
+  url_documento?: string;
 }
 
 export const contratosApi = {

@@ -67,7 +67,7 @@ export default function FormularioActivo() {
       if (isEdit) {
         const payload: ActivoUpdate = {};
         for (const [k, v] of Object.entries(form)) {
-          if (v !== undefined && v !== "" && v !== null) (payload as Record<string, unknown>)[k] = v;
+          if (v !== undefined && v !== "") (payload as Record<string, unknown>)[k] = v;
         }
         delete (payload as Record<string, unknown>).codigo_inventario;
         await activosApi.actualizar(Number(id), payload);
@@ -78,7 +78,8 @@ export default function FormularioActivo() {
         toast("Activo creado correctamente. Ahora puedes agregar fotos.", "success");
         navigate(`/activos/editar/${res.data.id}`);
       }
-    } catch {
+    } catch (err) {
+      console.error(`Error al ${isEdit ? "actualizar" : "crear"} activo:`, err);
       toast(`Error al ${isEdit ? "actualizar" : "crear"} el activo`, "error");
     } finally {
       setLoading(false);
@@ -92,7 +93,8 @@ export default function FormularioActivo() {
       await activosApi.subirFoto(Number(id), file);
       toast("Foto subida correctamente", "success");
       cargarFotos(Number(id));
-    } catch {
+    } catch (err) {
+      console.error("Error subiendo foto:", err);
       toast("Error al subir la foto", "error");
     } finally {
       setUploadingFoto(false);
@@ -154,7 +156,7 @@ export default function FormularioActivo() {
         <FormSection title="Ubicación">
           <div style={{ gridColumn: "1 / -1" }}>
             <div style={{ marginBottom: "var(--space-sm)", fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
-              {form.latitud && form.longitud ? `${form.latitud.toFixed(4)}, ${form.longitud.toFixed(4)}` : "Haz clic en el mapa o arrastra el marcador"}
+              {form.latitud !== null && form.latitud !== undefined && form.longitud !== null && form.longitud !== undefined ? `${form.latitud.toFixed(4)}, ${form.longitud.toFixed(4)}` : "Haz clic en el mapa o arrastra el marcador"}
             </div>
             <MapPicker latitud={form.latitud ?? null} longitud={form.longitud ?? null} onChange={(lat, lng) => setForm((prev) => ({ ...prev, latitud: lat, longitud: lng }))} />
           </div>

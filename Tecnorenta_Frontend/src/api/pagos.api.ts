@@ -3,27 +3,25 @@ import { ENDPOINTS } from "./endpoints";
 
 export interface Pago {
   id: number;
-  contrato_id: number;
-  contrato_numero?: string;
+  id_contrato: number;
+  concepto: string;
   monto: number;
-  fecha_pago: string;
-  metodo_pago: string;
+  fecha: string;
   estado: string;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface PagoCreate {
-  contrato_id: number;
+  id_contrato: number;
+  concepto: string;
   monto: number;
-  fecha_pago: string;
-  metodo_pago: string;
+  fecha: string;
   estado: string;
 }
 
 export interface PagoUpdate {
+  concepto?: string;
   monto?: number;
-  metodo_pago?: string;
+  fecha?: string;
   estado?: string;
 }
 
