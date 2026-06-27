@@ -29,6 +29,10 @@ class ActivoService:
         existente = self.repo.get_by_codigo(data.codigo_inventario)
         if existente:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="El código de inventario ya existe")
+        if data.numero_serie:
+            existente_serie = self.repo.get_by_serie(data.numero_serie)
+            if existente_serie:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="El número de serie ya existe")
         return self.repo.create(Activo(**data.model_dump()))
 
     def actualizar(self, activo_id: int, data: ActivoUpdate) -> Activo:

@@ -1,15 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { asignacionesApi, type Asignacion } from "../../api/asignaciones.api";
+import { contratosApi } from "../../api/contratos.api";
+import { activosApi } from "../../api/activos.api";
 import DataTable from "../../components/common/DataTable";
-import Badge from "../../components/common/Badge";
-
-const estadoVariant: Record<string, "success" | "warning" | "danger" | "info" | "default"> = {
-  Activa: "success",
-  Pendiente: "warning",
-  Devuelto: "info",
-  Cancelada: "danger",
-};
+import Button from "../../components/common/Button";
+import { Plus } from "lucide-react";
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return "—";
@@ -22,13 +18,25 @@ export default function ListaAsignaciones() {
   const [asignaciones, setAsignaciones] = useState<Asignacion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [contratosMap, setContratosMap] = useState<Record<number, string>>({});
+  const [activosMap, setActivosMap] = useState<Record<number, string>>({});
 
   const listar = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await asignacionesApi.listar();
+      const [res, cRes, aRes] = await Promise.all([
+        asignacionesApi.listar(),
+        contratosApi.listar(),
+        activosApi.listar(),
+      ]);
       setAsignaciones(res.data);
+      const cm: Record<number, string> = {};
+      cRes.data.forEach((c: { id: number; numero_contrato: string }) => { cm[c.id] = c.numero_contrato; });
+      setContratosMap(cm);
+      const am: Record<number, string> = {};
+      aRes.data.forEach((a: { id: number; codigo_inventario: string; modelo: string }) => { am[a.id] = `${a.codigo_inventario} - ${a.modelo}`; });
+      setActivosMap(am);
     } catch {
       setError("Error al cargar asignaciones");
     } finally {
@@ -52,15 +60,17 @@ export default function ListaAsignaciones() {
 
   const columns = [
     { key: "id", label: "ID" },
+    { key: "id_activo", label: "ID Activo" },
     {
       key: "activo_nombre",
       label: "Activo",
-      render: (row: Asignacion) => <>{row.activo_nombre || "—"}</>,
+      render: (row: Asignacion) => <>{activosMap[row.id_activo] || `ID ${row.id_activo}`}</>,
     },
+    { key: "id_contrato", label: "ID Contrato" },
     {
-      key: "usuario_nombre",
-      label: "Usuario",
-      render: (row: Asignacion) => <>{row.usuario_nombre || "—"}</>,
+      key: "contrato_nombre",
+      label: "Contrato",
+      render: (row: Asignacion) => <>{contratosMap[row.id_contrato] || `ID ${row.id_contrato}`}</>,
     },
     {
       key: "fecha_asignacion",
@@ -72,22 +82,13 @@ export default function ListaAsignaciones() {
       label: "Fecha Devolución",
       render: (row: Asignacion) => <>{formatDate(row.fecha_devolucion)}</>,
     },
-    {
-      key: "estado",
-      label: "Estado",
-      render: (row: Asignacion) => (
-        <Badge variant={estadoVariant[row.estado] || "default"}>{row.estado}</Badge>
-      ),
-    },
   ];
 
   return (
     <div>
       <div style={headerStyle}>
         <h2>Asignaciones</h2>
-        <button onClick={() => navigate("/asignaciones/nuevo")} style={btnPrimary}>
-          + Nueva Asignación
-        </button>
+        <Button onClick={() => navigate("/asignaciones/nuevo")} icon={<Plus size={16} />}>Nueva Asignación</Button>
       </div>
       <DataTable
         columns={columns}
@@ -105,16 +106,5 @@ const headerStyle: React.CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  marginBottom: "1rem",
-};
-
-const btnPrimary: React.CSSProperties = {
-  background: "var(--accent)",
-  color: "#fff",
-  border: "none",
-  padding: "0.5rem 1rem",
-  borderRadius: "var(--radius-sm)",
-  cursor: "pointer",
-  fontWeight: 600,
-  fontSize: "0.85rem",
+  marginBottom: "var(--space-md)",
 };

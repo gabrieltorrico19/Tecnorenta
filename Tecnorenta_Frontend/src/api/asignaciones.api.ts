@@ -3,35 +3,25 @@ import { ENDPOINTS } from "./endpoints";
 
 export interface Asignacion {
   id: number;
-  activo_id: number;
-  activo_nombre?: string;
-  usuario_id: number;
-  usuario_nombre?: string;
   fecha_asignacion: string;
   fecha_devolucion: string | null;
-  motivo: string | null;
-  estado: string;
   latitud: number | null;
   longitud: number | null;
-  created_at: string;
-  updated_at: string;
+  id_contrato: number;
+  id_activo: number;
 }
 
 export interface AsignacionCreate {
-  activo_id: number;
-  usuario_id: number;
   fecha_asignacion: string;
   fecha_devolucion?: string;
-  motivo?: string;
-  estado: string;
+  id_contrato: number;
+  id_activo: number;
   latitud?: number | null;
   longitud?: number | null;
 }
 
 export interface AsignacionUpdate {
   fecha_devolucion?: string;
-  motivo?: string;
-  estado?: string;
   latitud?: number | null;
   longitud?: number | null;
 }

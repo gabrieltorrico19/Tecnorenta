@@ -13,7 +13,7 @@ export const ENDPOINTS = {
   ACTIVOS: `${API_URL}/activos`,
   CONTRATOS: `${API_URL}/contratos`,
   PAGOS: `${API_URL}/pagos`,
-  ASIGNACIONES: `${API_URL}/asignaciones-activo`,
+  ASIGNACIONES: `${API_URL}/asignaciones/`,
   REPORTES: `${API_URL}/reportes-incidencia`,
   MANTENIMIENTOS: `${API_URL}/mantenimientos`,
   HISTORIAL_UBICACION: `${API_URL}/historial-ubicacion`,

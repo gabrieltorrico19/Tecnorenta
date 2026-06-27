@@ -68,7 +68,7 @@ export default function FormularioHistorialUbicacion() {
               onChange={(v) => setIdAsignacion(v)}
               loadOptions={async () => {
                 const res = await asignacionesApi.listar();
-                return res.data.map((a) => ({ id: a.id, label: `#${a.id} - Activo ${a.activo_id}` }));
+                return res.data.map((a) => ({ id: a.id, label: `#${a.id} - Activo ${a.id_activo}` }));
               }}
               placeholder="Buscar asignación..."
               disabled={isEdit}

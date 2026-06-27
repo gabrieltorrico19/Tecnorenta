@@ -16,6 +16,9 @@ class ActivoRepository:
     def get_by_codigo(self, codigo: str) -> Activo | None:
         return self.db.query(Activo).filter(Activo.codigo_inventario == codigo).first()
 
+    def get_by_serie(self, serie: str) -> Activo | None:
+        return self.db.query(Activo).filter(Activo.numero_serie == serie).first()
+
     def create(self, activo: Activo) -> Activo:
         self.db.add(activo)
         self.db.commit()

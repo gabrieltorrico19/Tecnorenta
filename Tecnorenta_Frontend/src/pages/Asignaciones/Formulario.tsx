@@ -2,7 +2,7 @@ import { useState, useEffect, type FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { asignacionesApi, type AsignacionCreate, type AsignacionUpdate } from "../../api/asignaciones.api";
 import { activosApi } from "../../api/activos.api";
-import { usuarioApi } from "../../api/usuario.api";
+import { contratosApi } from "../../api/contratos.api";
 import FormField from "../../components/common/FormField";
 import FormSection from "../../components/common/FormSection";
 import Button from "../../components/common/Button";
@@ -11,8 +11,6 @@ import MapPicker from "../../components/MapPicker";
 import { useToast } from "../../context/ToastContext";
 import { Save, ArrowLeft } from "lucide-react";
 
-const ESTADOS = ["Activa", "Pendiente", "Devuelta", "Cancelada"];
-
 export default function FormularioAsignacion() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -20,12 +18,10 @@ export default function FormularioAsignacion() {
   const isEdit = Boolean(id);
 
   const [form, setForm] = useState<AsignacionCreate>({
-    activo_id: 0,
-    usuario_id: 0,
+    id_activo: 0,
+    id_contrato: 0,
     fecha_asignacion: "",
     fecha_devolucion: "",
-    motivo: "",
-    estado: "Activa",
     latitud: null,
     longitud: null,
   });
@@ -35,12 +31,10 @@ export default function FormularioAsignacion() {
     asignacionesApi.obtener(Number(id)).then((res) => {
       const a = res.data;
       setForm({
-        activo_id: a.activo_id,
-        usuario_id: a.usuario_id,
+        id_activo: a.id_activo,
+        id_contrato: a.id_contrato,
         fecha_asignacion: a.fecha_asignacion,
         fecha_devolucion: a.fecha_devolucion || "",
-        motivo: a.motivo || "",
-        estado: a.estado,
         latitud: a.latitud,
         longitud: a.longitud,
       });
@@ -78,8 +72,8 @@ export default function FormularioAsignacion() {
         <FormSection title="Asignación">
           <FormField label="Activo" required>
             <SearchableSelect
-              value={form.activo_id || null}
-              onChange={(v) => handleChange("activo_id", v)}
+              value={form.id_activo || null}
+              onChange={(v) => handleChange("id_activo", v)}
               loadOptions={async () => {
                 const res = await activosApi.listar();
                 return res.data.map((a) => ({ id: a.id, label: `${a.codigo_inventario} - ${a.modelo}` }));
@@ -87,15 +81,15 @@ export default function FormularioAsignacion() {
               placeholder="Buscar activo..."
             />
           </FormField>
-          <FormField label="Usuario" required>
+          <FormField label="Contrato" required>
             <SearchableSelect
-              value={form.usuario_id || null}
-              onChange={(v) => handleChange("usuario_id", v)}
+              value={form.id_contrato || null}
+              onChange={(v) => handleChange("id_contrato", v)}
               loadOptions={async () => {
-                const res = await usuarioApi.listar();
-                return res.data.map((u: { id: number; nombre: string }) => ({ id: u.id, label: u.nombre }));
+                const res = await contratosApi.listar();
+                return res.data.map((c: { id: number; numero_contrato: string }) => ({ id: c.id, label: c.numero_contrato }));
               }}
-              placeholder="Buscar usuario..."
+              placeholder="Buscar contrato..."
             />
           </FormField>
           <FormField label="Fecha Asignación" required>
@@ -103,16 +97,6 @@ export default function FormularioAsignacion() {
           </FormField>
           <FormField label="Fecha Devolución">
             <input type="date" style={inputStyle} value={form.fecha_devolucion} onChange={(e) => handleChange("fecha_devolucion", e.target.value)} />
-          </FormField>
-          <FormField label="Estado" required>
-            <select style={inputStyle} value={form.estado} onChange={(e) => handleChange("estado", e.target.value)} required>
-              {ESTADOS.map((e) => (<option key={e} value={e}>{e}</option>))}
-            </select>
-          </FormField>
-        </FormSection>
-        <FormSection title="Detalles">
-          <FormField label="Motivo">
-            <textarea style={inputStyle} value={form.motivo} onChange={(e) => handleChange("motivo", e.target.value)} rows={3} />
           </FormField>
         </FormSection>
         <FormSection title="Ubicación">

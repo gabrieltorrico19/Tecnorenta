@@ -34,7 +34,7 @@ def actualizar(contrato_id: int, data: ContratoUpdate, db: Session = Depends(get
 
 
 @router.post("/{contrato_id}/documento", response_model=ContratoOut)
-def subir_documento(contrato_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
+async def subir_documento(contrato_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
     service = ContratoService(ContratoRepository(db))
     contrato = service.obtener(contrato_id)
     ext = Path(file.filename or "doc.pdf").suffix or ".pdf"
@@ -42,7 +42,7 @@ def subir_documento(contrato_id: int, file: UploadFile = File(...), db: Session 
     subdir = Path(settings.UPLOAD_DIR) / "contratos"
     subdir.mkdir(parents=True, exist_ok=True)
     filepath = subdir / filename
-    filepath.write_bytes(file.read())
+    filepath.write_bytes(await file.read())
     contrato.url_documento = f"contratos/{filename}"
     return service.repo.update(contrato)
 

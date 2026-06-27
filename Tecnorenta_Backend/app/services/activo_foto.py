@@ -25,7 +25,7 @@ class ActivoFotoService:
         self._get_activo(activo_id)
         return self.repo.get_by_activo(activo_id)
 
-    def subir(self, activo_id: int, file: UploadFile) -> ActivoFoto:
+    async def subir(self, activo_id: int, file: UploadFile) -> ActivoFoto:
         self._get_activo(activo_id)
 
         ext = Path(file.filename or "foto.jpg").suffix or ".jpg"
@@ -34,7 +34,7 @@ class ActivoFotoService:
         subdir.mkdir(parents=True, exist_ok=True)
         filepath = subdir / filename
 
-        content = file.read()
+        content = await file.read()
         filepath.write_bytes(content)
 
         rel_path = f"activos/{filename}"

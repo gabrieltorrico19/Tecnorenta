@@ -16,8 +16,8 @@ def listar_fotos(activo_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{activo_id}/fotos", response_model=ActivoFotoOut, status_code=201)
-def subir_foto(activo_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
-    return ActivoFotoService(ActivoFotoRepository(db), ActivoRepository(db)).subir(activo_id, file)
+async def subir_foto(activo_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
+    return await ActivoFotoService(ActivoFotoRepository(db), ActivoRepository(db)).subir(activo_id, file)
 
 
 @router.delete("/{activo_id}/fotos/{foto_id}", status_code=204)
