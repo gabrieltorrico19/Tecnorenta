@@ -22,6 +22,7 @@ class Contrato(Base):
     condiciones_uso = Column(String(500), nullable=True)
     estado = Column(Enum(EstadoContrato), default=EstadoContrato.ACTIVO, nullable=False)
     monto_mensual = Column(Float, nullable=False)
+    url_documento = Column(String(500), nullable=True)
     id_cliente = Column(Integer, ForeignKey("clientes.id"), nullable=False)
     creado_por = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
