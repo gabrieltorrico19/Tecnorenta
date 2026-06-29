@@ -1,0 +1,625 @@
+{
+  "info": {
+    "name": "SIGTAR - API TecnoRenta",
+    "description": "Colección Postman para el Sistema de Gestión y Trazabilidad de Activos Rentados (SIGTAR). Base URL: http://localhost:8000/api/v1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000/api/v1", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/health"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\"status\": \"ok\", \"version\": \"1.0.0\"}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "GET Listar usuarios",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/usuarios/?skip=0&limit=100"
+          }
+        },
+        {
+          "name": "GET Obtener usuario por ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/usuarios/1"
+          }
+        },
+        {
+          "name": "POST Crear usuario",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/usuarios/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana García\",\n  \"email\": \"ana.garcia@tecnorenta.com\",\n  \"password\": \"Seguro123!\",\n  \"telefono\": \"3001234567\",\n  \"id_rol\": 1\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"nombre\": \"Ana García\",\n  \"email\": \"ana.garcia@tecnorenta.com\",\n  \"telefono\": \"3001234567\",\n  \"activo\": true,\n  \"id_rol\": 1,\n  \"created_at\": \"2026-06-28T10:00:00\",\n  \"updated_at\": \"2026-06-28T10:00:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "PATCH Actualizar usuario",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/usuarios/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"3109876543\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar usuario",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/usuarios/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Roles",
+      "item": [
+        {
+          "name": "GET Listar roles",
+          "request": { "method": "GET", "url": "{{base_url}}/roles/" }
+        },
+        {
+          "name": "GET Obtener rol por ID",
+          "request": { "method": "GET", "url": "{{base_url}}/roles/1" }
+        },
+        {
+          "name": "POST Crear rol",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/roles/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Administrador\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar rol",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/roles/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Admin\"\n}" }
+          }
+        },
+        {
+          "name": "DELETE Eliminar rol",
+          "request": { "method": "DELETE", "url": "{{base_url}}/roles/1" }
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "GET Listar clientes",
+          "request": { "method": "GET", "url": "{{base_url}}/clientes/?skip=0&limit=100" }
+        },
+        {
+          "name": "GET Obtener cliente por ID",
+          "request": { "method": "GET", "url": "{{base_url}}/clientes/1" }
+        },
+        {
+          "name": "POST Crear cliente",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/clientes/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"razon_social\": \"Empresa Ejemplo SAS\",\n  \"nit\": \"900123456-7\",\n  \"direccion\": \"Calle 123 #45-67, Bogotá\",\n  \"latitud\": 4.711,\n  \"longitud\": -74.0721,\n  \"sector\": \"Tecnología\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"razon_social\": \"Empresa Ejemplo SAS\",\n  \"nit\": \"900123456-7\",\n  \"direccion\": \"Calle 123 #45-67, Bogotá\",\n  \"latitud\": 4.711,\n  \"longitud\": -74.0721,\n  \"sector\": \"Tecnología\"\n}"
+            },
+            {
+              "name": "400 NIT duplicado",
+              "code": 400,
+              "body": "{\"detail\": \"El NIT ya está registrado\"}"
+            }
+          ]
+        },
+        {
+          "name": "PUT Actualizar cliente",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/clientes/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"direccion\": \"Carrera 7 #32-10, Bogotá\"\n}" }
+          }
+        },
+        {
+          "name": "DELETE Eliminar cliente",
+          "request": { "method": "DELETE", "url": "{{base_url}}/clientes/1" }
+        }
+      ]
+    },
+    {
+      "name": "Categorías de Activo",
+      "item": [
+        {
+          "name": "GET Listar categorías",
+          "request": { "method": "GET", "url": "{{base_url}}/categorias-activo/" }
+        },
+        {
+          "name": "GET Obtener categoría por ID",
+          "request": { "method": "GET", "url": "{{base_url}}/categorias-activo/1" }
+        },
+        {
+          "name": "POST Crear categoría",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/categorias-activo/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Laptops\",\n  \"nivel\": \"subcategoria\",\n  \"descripcion\": \"Equipos portátiles de cómputo\",\n  \"id_categoria_padre\": null\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar categoría",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/categorias-activo/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"descripcion\": \"Laptops y ultrabooks\"\n}" }
+          }
+        },
+        {
+          "name": "DELETE Eliminar categoría",
+          "request": { "method": "DELETE", "url": "{{base_url}}/categorias-activo/1" }
+        }
+      ]
+    },
+    {
+      "name": "Activos",
+      "item": [
+        {
+          "name": "GET Listar activos",
+          "request": { "method": "GET", "url": "{{base_url}}/activos/?skip=0&limit=100" }
+        },
+        {
+          "name": "GET Obtener activo por ID",
+          "request": { "method": "GET", "url": "{{base_url}}/activos/1" }
+        },
+        {
+          "name": "POST Crear activo",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/activos/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo_inventario\": \"LAP-001\",\n  \"modelo\": \"Dell Latitude 5420\",\n  \"numero_serie\": \"SN-DELL-001\",\n  \"estado\": \"disponible\",\n  \"fecha_compra\": \"2024-01-15\",\n  \"valor_depreciado\": 2500000.0,\n  \"id_categoria\": 1,\n  \"creado_por\": 1\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"codigo_inventario\": \"LAP-001\",\n  \"modelo\": \"Dell Latitude 5420\",\n  \"numero_serie\": \"SN-DELL-001\",\n  \"estado\": \"disponible\",\n  \"fecha_compra\": \"2024-01-15\",\n  \"valor_depreciado\": 2500000.0,\n  \"id_categoria\": 1,\n  \"creado_por\": 1,\n  \"modificado_por\": null,\n  \"fecha_creacion\": \"2026-06-28T10:00:00\",\n  \"fecha_modificacion\": \"2026-06-28T10:00:00\"\n}"
+            },
+            {
+              "name": "400 Código duplicado",
+              "code": 400,
+              "body": "{\"detail\": \"El código de inventario ya existe\"}"
+            }
+          ]
+        },
+        {
+          "name": "PUT Actualizar activo",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/activos/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"estado\": \"mantenimiento\",\n  \"modificado_por\": 1\n}" }
+          }
+        },
+        {
+          "name": "DELETE Dar de baja activo (borrado lógico)",
+          "request": { "method": "DELETE", "url": "{{base_url}}/activos/1" },
+          "response": [
+            {
+              "name": "200 Dado de baja",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"estado\": \"baja\",\n  ...\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Contratos",
+      "item": [
+        {
+          "name": "GET Listar contratos",
+          "request": { "method": "GET", "url": "{{base_url}}/contratos/?skip=0&limit=100" }
+        },
+        {
+          "name": "GET Obtener contrato por ID",
+          "request": { "method": "GET", "url": "{{base_url}}/contratos/1" }
+        },
+        {
+          "name": "GET Contratos por cliente",
+          "request": { "method": "GET", "url": "{{base_url}}/contratos/cliente/1" }
+        },
+        {
+          "name": "POST Crear contrato",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/contratos/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha_inicio\": \"2026-07-01\",\n  \"fecha_fin\": \"2027-06-30\",\n  \"condiciones_uso\": \"Uso exclusivamente en las instalaciones del cliente.\",\n  \"estado\": \"activo\",\n  \"monto_mensual\": 850000.0,\n  \"id_cliente\": 1,\n  \"creado_por\": 1\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"fecha_inicio\": \"2026-07-01\",\n  \"fecha_fin\": \"2027-06-30\",\n  \"estado\": \"activo\",\n  \"monto_mensual\": 850000.0,\n  \"id_cliente\": 1\n}"
+            },
+            {
+              "name": "400 Fecha inválida",
+              "code": 400,
+              "body": "{\"detail\": [{\"loc\": [\"body\", \"fecha_fin\"], \"msg\": \"fecha_fin debe ser posterior a fecha_inicio\"}]}"
+            }
+          ]
+        },
+        {
+          "name": "PUT Actualizar contrato",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/contratos/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"estado\": \"vencido\"\n}" }
+          }
+        },
+        {
+          "name": "DELETE Cancelar contrato (borrado lógico)",
+          "request": { "method": "DELETE", "url": "{{base_url}}/contratos/1" }
+        }
+      ]
+    },
+    {
+      "name": "Pagos",
+      "item": [
+        {
+          "name": "GET Listar pagos",
+          "request": { "method": "GET", "url": "{{base_url}}/pagos/?skip=0&limit=100" }
+        },
+        {
+          "name": "GET Obtener pago por ID",
+          "request": { "method": "GET", "url": "{{base_url}}/pagos/1" }
+        },
+        {
+          "name": "GET Pagos por contrato",
+          "request": { "method": "GET", "url": "{{base_url}}/pagos/contrato/1" }
+        },
+        {
+          "name": "POST Registrar pago",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/pagos/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_contrato\": 1,\n  \"concepto\": \"Cuota julio 2026\",\n  \"monto\": 850000.0,\n  \"fecha\": \"2026-07-01\",\n  \"estado\": \"pendiente\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar pago",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/pagos/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"estado\": \"pagado\"\n}" }
+          }
+        },
+        {
+          "name": "DELETE Eliminar pago",
+          "request": { "method": "DELETE", "url": "{{base_url}}/pagos/1" }
+        }
+      ]
+    },
+    {
+      "name": "Asignaciones de Activo",
+      "item": [
+        {
+          "name": "GET Listar asignaciones",
+          "request": { "method": "GET", "url": "{{base_url}}/asignaciones/?skip=0&limit=100" }
+        },
+        {
+          "name": "GET Obtener asignación por ID",
+          "request": { "method": "GET", "url": "{{base_url}}/asignaciones/1" }
+        },
+        {
+          "name": "POST Crear asignación",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/asignaciones/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha_asignacion\": \"2026-07-01\",\n  \"fecha_devolucion\": null,\n  \"latitud\": 4.711,\n  \"longitud\": -74.0721,\n  \"id_contrato\": 1,\n  \"id_activo\": 1,\n  \"creado_por\": 1\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created - activo pasa a 'rentado'",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"fecha_asignacion\": \"2026-07-01\",\n  \"id_contrato\": 1,\n  \"id_activo\": 1\n}"
+            },
+            {
+              "name": "400 Activo no disponible",
+              "code": 400,
+              "body": "{\"detail\": \"El activo no está disponible (estado actual: rentado)\"}"
+            }
+          ]
+        },
+        {
+          "name": "PUT Registrar devolución",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/asignaciones/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"fecha_devolucion\": \"2026-12-31\"\n}" }
+          }
+        },
+        {
+          "name": "DELETE Eliminar asignación",
+          "request": { "method": "DELETE", "url": "{{base_url}}/asignaciones/1" }
+        }
+      ]
+    },
+    {
+      "name": "Checklists de Estado",
+      "item": [
+        {
+          "name": "GET Listar checklists",
+          "request": { "method": "GET", "url": "{{base_url}}/checklists/?skip=0&limit=100" }
+        },
+        {
+          "name": "GET Obtener checklist por ID",
+          "request": { "method": "GET", "url": "{{base_url}}/checklists/1" }
+        },
+        {
+          "name": "GET Checklists por asignación",
+          "request": { "method": "GET", "url": "{{base_url}}/checklists/asignacion/1" }
+        },
+        {
+          "name": "POST Crear checklist",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/checklists/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_asignacion\": 1,\n  \"momento\": \"entrega\",\n  \"pantalla\": \"bien\",\n  \"teclado\": \"bien\",\n  \"carcasa\": \"bien\",\n  \"cargador\": true,\n  \"observaciones\": \"Equipo en perfecto estado\",\n  \"url_fotos\": null,\n  \"id_usuario\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar checklist",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/checklists/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"observaciones\": \"Se detectó rayón en la carcasa\",\n  \"carcasa\": \"rayado\"\n}" }
+          }
+        },
+        {
+          "name": "DELETE Eliminar checklist",
+          "request": { "method": "DELETE", "url": "{{base_url}}/checklists/1" }
+        }
+      ]
+    },
+    {
+      "name": "Reportes de Incidencia",
+      "item": [
+        {
+          "name": "GET Listar incidencias (abiertas/en atención)",
+          "request": { "method": "GET", "url": "{{base_url}}/incidencias/?skip=0&limit=100" }
+        },
+        {
+          "name": "GET Obtener incidencia por ID",
+          "request": { "method": "GET", "url": "{{base_url}}/incidencias/1" }
+        },
+        {
+          "name": "GET Incidencias por activo",
+          "request": { "method": "GET", "url": "{{base_url}}/incidencias/activo/1" }
+        },
+        {
+          "name": "POST Reportar incidencia",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/incidencias/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha\": \"2026-06-28\",\n  \"descripcion\": \"Pantalla presenta línea horizontal de píxeles muertos\",\n  \"gravedad\": \"moderado\",\n  \"url_foto\": null,\n  \"estado\": \"abierto\",\n  \"id_activo\": 1,\n  \"creado_por\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar incidencia",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/incidencias/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"estado\": \"en_atencion\"\n}" }
+          }
+        },
+        {
+          "name": "DELETE Cerrar incidencia (borrado lógico)",
+          "request": { "method": "DELETE", "url": "{{base_url}}/incidencias/1" },
+          "response": [
+            {
+              "name": "200 Cerrada",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"estado\": \"cerrado\",\n  ...\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mantenimientos",
+      "item": [
+        {
+          "name": "GET Listar mantenimientos",
+          "request": { "method": "GET", "url": "{{base_url}}/mantenimientos/?skip=0&limit=100" }
+        },
+        {
+          "name": "GET Obtener mantenimiento por ID",
+          "request": { "method": "GET", "url": "{{base_url}}/mantenimientos/1" }
+        },
+        {
+          "name": "GET Mantenimientos por activo",
+          "request": { "method": "GET", "url": "{{base_url}}/mantenimientos/activo/1" }
+        },
+        {
+          "name": "POST Crear mantenimiento preventivo",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/mantenimientos/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"preventivo\",\n  \"fecha\": \"2026-06-28\",\n  \"costo\": 150000.0,\n  \"descripcion\": \"Limpieza interna y actualización de drivers\",\n  \"id_activo\": 1,\n  \"frecuencia_dias\": 90,\n  \"proxima_fecha\": \"2026-09-28\"\n}"
+            }
+          }
+        },
+        {
+          "name": "POST Crear mantenimiento correctivo",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/mantenimientos/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"correctivo\",\n  \"fecha\": \"2026-06-28\",\n  \"costo\": 380000.0,\n  \"descripcion\": \"Reemplazo de pantalla\",\n  \"id_activo\": 1,\n  \"id_reporte_origen\": 1,\n  \"tiempo_reparacion\": 3\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar mantenimiento",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/mantenimientos/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"costo\": 200000.0,\n  \"descripcion\": \"Limpieza + cambio de pasta térmica\"\n}" }
+          }
+        },
+        {
+          "name": "DELETE Eliminar mantenimiento",
+          "request": { "method": "DELETE", "url": "{{base_url}}/mantenimientos/1" }
+        }
+      ]
+    },
+    {
+      "name": "Reportes Gerenciales",
+      "item": [
+        {
+          "name": "GET Top 10 activos más rentados",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reportes/activos/top-rentados?fecha_inicio=2026-01-01&fecha_fin=2026-06-30&limit=10"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"codigo_inventario\": \"LAP-001\",\n    \"modelo\": \"Dell Latitude 5420\",\n    \"total_asignaciones\": 5,\n    \"ingreso_total\": 4250000.0\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "GET Activos con baja disponibilidad",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reportes/activos/bajo-disponibilidad?umbral=5"
+          }
+        },
+        {
+          "name": "GET Resumen pagos por estado",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reportes/pagos/resumen-por-estado?fecha_inicio=2026-01-01&fecha_fin=2026-06-30"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "code": 200,
+              "body": "[\n  {\"estado\": \"pagado\", \"cantidad\": 45, \"total_monto\": 38250000.0},\n  {\"estado\": \"pendiente\", \"cantidad\": 8, \"total_monto\": 6800000.0},\n  {\"estado\": \"vencido\", \"cantidad\": 2, \"total_monto\": 1700000.0}\n]"
+            }
+          ]
+        },
+        {
+          "name": "GET Contratos próximos a vencer (30 días)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reportes/contratos/proximos-a-vencer?dias=30"
+          }
+        },
+        {
+          "name": "GET Incidencias por gravedad",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reportes/incidencias/por-gravedad"
+          }
+        },
+        {
+          "name": "GET Costo de mantenimientos por mes",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reportes/mantenimientos/costo-por-mes"
+          }
+        }
+      ]
+    }
+  ]
+}
