@@ -21,6 +21,7 @@ export default function FormularioActivo() {
   const [loading, setLoading] = useState(false);
   const [fotos, setFotos] = useState<ActivoFoto[]>([]);
   const [uploadingFoto, setUploadingFoto] = useState(false);
+  const [pendingFoto, setPendingFoto] = useState<File | null>(null);
 
   const [form, setForm] = useState<ActivoCreate>({
     codigo_inventario: "",
@@ -65,6 +66,11 @@ export default function FormularioActivo() {
     setLoading(true);
     try {
       if (isEdit) {
+        if (pendingFoto) {
+          await activosApi.subirFoto(Number(id), pendingFoto);
+          setPendingFoto(null);
+          await cargarFotos(Number(id));
+        }
         const payload: ActivoUpdate = {};
         for (const [k, v] of Object.entries(form)) {
           if (v !== undefined && v !== "") (payload as Record<string, unknown>)[k] = v;
@@ -176,7 +182,7 @@ export default function FormularioActivo() {
                 ))}
               </div>
               <div style={{ marginTop: "0.5rem" }}>
-                <CameraCapture onUpload={handleSubirFoto} uploading={uploadingFoto} />
+                <CameraCapture onUpload={handleSubirFoto} uploading={uploadingFoto} onFileSelected={(f) => setPendingFoto(f)} />
               </div>
             </div>
           </FormSection>

@@ -23,15 +23,18 @@ Plataforma web diseñada para **TecnoRenta Latam**, PYME dedicada al alquiler de
 
 ## Módulos del sistema
 
-1. **Usuarios y roles** — autenticación JWT, roles (Administrador/Operador/Cliente), auditoría
-2. **Activos** — catálogo con códigos de inventario, estados fijos (disponible/rentado/mantenimiento/baja), categorías jerárquicas, fotos múltiples
-3. **Clientes** — registro con NIT único
-4. **Contratos** — contratos digitales con cliente y activos asociados, alertas de vencimiento, documento adjunto
-5. **Pagos** — control de pagos por contrato, detección de vencidos y próximos
-6. **Asignaciones** — entrega/devolución con ubicación GPS, checklist fotográfico
-7. **Incidencias** — reportes con gravedad (leve/moderado/grave), ciclo de vida
-8. **Mantenimiento** — preventivo programado, correctivo vinculado a incidencias
-9. **Dashboard** — panel con KPIs, gráficos, alertas de contratos próximos a vencer
+1. **Usuarios y roles** — autenticación JWT + bcrypt, roles (Administrador/Gerente/Almacén/Técnico/Operador/Cliente), 33 permisos asignables, auditoría
+2. **Clientes** — registro con NIT único, dirección, geolocalización con mapa Leaflet
+3. **Activos** — catálogo con códigos de inventario únicos, estados fijos (disponible/rentado/mantenimiento/baja), categorías jerárquicas, fotos múltiples (cámara/archivo), exportación CSV, geoposicionamiento GPS
+4. **Categorías** — jerarquía auto-referenciada (padre → hijo), niveles
+5. **Contratos** — contratos digitales con cliente, montos mensuales, alertas de vencimiento, documento adjunto (PDF/doc)
+6. **Pagos** — control de pagos por contrato, detección de vencidos y próximos, conceptos
+7. **Asignaciones** — entrega/devolución con ubicación GPS, vincula activo ↔ contrato
+8. **Checklist Estado** — evaluación de componentes en entrega y devolución (pantalla, teclado, carcasa, cargador), con fotos
+9. **Historial Ubicación** — registro de coordenadas GPS por asignación con timestamp
+10. **Reportes de Incidencia** — reportes con gravedad (leve/moderado/grave), ciclo de vida (abierto/en_atencion/cerrado), foto adjunta
+11. **Mantenimiento** — preventivo programado (frecuencia en días), correctivo vinculado a incidencias, con costo y tiempo de reparación
+12. **Dashboard** — panel con 7 KPIs (usuarios, clientes, activos, contratos, ingresos mensuales, próximos a vencer, incidencias), 2 gráficos Recharts (barras + pastel), 6 consultas SQL complejas
 
 ## Estructura del backend
 
@@ -78,6 +81,16 @@ cd ../Tecnorenta_Frontend
 npm install
 npm run dev
 ```
+
+## Documentación del proyecto
+
+| Recurso | Ubicación |
+|---------|-----------|
+| Informe Sprint 2 (APA 7) | `informe/Sprint2/SIGTAR_Sprint2_Informe_APA7.docx` |
+| Presentación Sprint 1+2 | `informe/Sprint2/SIGTAR_Sprint1_Sprint2_Presentacion.pptx` |
+| Especificación OpenAPI | `informe/Sprint2/tecnorenta_openapi.json` (importable a Postman) |
+| Capturas del sistema | `informe/Sprint2/capturas/` (16 capturas) |
+| Dump de base de datos | `informe/Sprint2/tecnorenta.sql` |
 
 ## Configuración
 

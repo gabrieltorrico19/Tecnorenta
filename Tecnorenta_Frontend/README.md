@@ -19,15 +19,17 @@ src/
 
 ## Rutas principales
 
-- `/login` — autenticación
-- `/dashboard` — panel con KPIs, alertas de contratos próximos a vencer
-- `/activos` — listado, creación, edición con fotos
+- `/login` — autenticación JWT
+- `/dashboard` — panel con 7 KPIs, gráficos Recharts (barras + pastel), alertas de contratos próximos a vencer
+- `/activos` — listado, creación, edición con fotos (cámara/archivo), mapa GPS, exportación CSV
 - `/contratos` — gestión de contratos con documento adjunto
-- `/pagos` — control de pagos (vencidos, próximos)
-- `/asignaciones` — asignación con checklist y mapa GPS
-- `/mantenimientos` — preventivo y correctivo
-- `/reportes-incidencia` — reportes con gravedad
-- `/usuarios`, `/roles`, `/clientes`, `/categorias`, `/checklist`, `/historial-ubicacion`
+- `/pagos` — control de pagos (vencidos, próximos), por contrato
+- `/asignaciones` — vinculación activo ↔ contrato con mapa GPS
+- `/mantenimientos` — preventivo programado y correctivo
+- `/reportes-incidencia` — reportes con gravedad (leve/moderado/grave)
+- `/checklist` — evaluación de componentes en entrega/devolución
+- `/historial-ubicacion` — trazabilidad GPS por asignación
+- `/usuarios`, `/roles`, `/clientes`, `/categorias`
 
 ## Cómo ejecutar
 
@@ -45,3 +47,7 @@ Copiar `.env.example` a `.env`:
 ```
 VITE_API_URL=http://localhost:8000/api/v1
 ```
+
+## Documentación
+
+Ver `informe/Sprint2/` para informes, presentación y capturas del sistema.

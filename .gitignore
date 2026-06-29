@@ -35,3 +35,14 @@ dist-ssr
 capturas/
 SIGTAR_Sprint0*.docx
 generar_*.py
+
+# Stray files
+nul
+
+# Allow Sprint2 informe files
+!informe/Sprint2/*.docx
+!informe/Sprint2/capturas/
+!informe/Sprint2/capturas/*
+!informe/Sprint2/generar_*.py
+!informe/Sprint2/*.json
+!informe/Sprint2/*.sql

@@ -5,9 +5,10 @@ import Button from "./common/Button";
 interface CameraCaptureProps {
   onUpload: (file: File) => Promise<void>;
   uploading?: boolean;
+  onFileSelected?: (file: File | null) => void;
 }
 
-export default function CameraCapture({ onUpload, uploading }: CameraCaptureProps) {
+export default function CameraCapture({ onUpload, uploading, onFileSelected }: CameraCaptureProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -48,6 +49,7 @@ export default function CameraCapture({ onUpload, uploading }: CameraCaptureProp
       const file = new File([blob], `foto_${Date.now()}.jpg`, { type: "image/jpeg" });
       setCapturedFile(file);
       setPreview(URL.createObjectURL(blob));
+      onFileSelected?.(file);
       stopCamera();
     }, "image/jpeg", 0.85);
   };
@@ -57,6 +59,7 @@ export default function CameraCapture({ onUpload, uploading }: CameraCaptureProp
     if (!file) return;
     setCapturedFile(file);
     setPreview(URL.createObjectURL(file));
+    onFileSelected?.(file);
   };
 
   const handleUpload = async () => {
@@ -64,6 +67,7 @@ export default function CameraCapture({ onUpload, uploading }: CameraCaptureProp
     await onUpload(capturedFile);
     setCapturedFile(null);
     setPreview(null);
+    onFileSelected?.(null);
   };
 
   const cancel = () => {
@@ -71,6 +75,7 @@ export default function CameraCapture({ onUpload, uploading }: CameraCaptureProp
     setCapturedFile(null);
     setPreview(null);
     setError(null);
+    onFileSelected?.(null);
   };
 
   return (
