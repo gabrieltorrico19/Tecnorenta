@@ -47,7 +47,3 @@ Copiar `.env.example` a `.env`:
 ```
 VITE_API_URL=http://localhost:8000/api/v1
 ```
-
-## Documentación
-
-Ver `informe/Sprint2/` para informes, presentación y capturas del sistema.

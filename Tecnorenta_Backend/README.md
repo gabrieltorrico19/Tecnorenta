@@ -82,16 +82,6 @@ npm install
 npm run dev
 ```
 
-## Documentación del proyecto
-
-| Recurso | Ubicación |
-|---------|-----------|
-| Informe Sprint 2 (APA 7) | `informe/Sprint2/SIGTAR_Sprint2_Informe_APA7.docx` |
-| Presentación Sprint 1+2 | `informe/Sprint2/SIGTAR_Sprint1_Sprint2_Presentacion.pptx` |
-| Especificación OpenAPI | `informe/Sprint2/tecnorenta_openapi.json` (importable a Postman) |
-| Capturas del sistema | `informe/Sprint2/capturas/` (16 capturas) |
-| Dump de base de datos | `informe/Sprint2/tecnorenta.sql` |
-
 ## Configuración
 
 Copiar `.env.example` a `.env` y ajustar:
