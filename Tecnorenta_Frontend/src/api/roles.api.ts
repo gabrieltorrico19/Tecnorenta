@@ -1,5 +1,6 @@
 import api from "./axios";
 import { ENDPOINTS } from "./endpoints";
+import { fetchAllPages, type Page, type PageParams } from "./pagination";
 
 export interface Rol {
   id: number;
@@ -22,7 +23,8 @@ export interface RolUpdate {
 }
 
 export const rolesApi = {
-  listar: () => api.get<Rol[]>(ENDPOINTS.ROLES),
+  listar: (params?: PageParams) => api.get<Page<Rol>>(ENDPOINTS.ROLES, { params }),
+  listarTodos: () => fetchAllPages<Rol>((p) => api.get<Page<Rol>>(ENDPOINTS.ROLES, { params: p })),
   obtener: (id: number) => api.get<Rol>(`${ENDPOINTS.ROLES}/${id}`),
   crear: (data: RolCreate) => api.post<Rol>(ENDPOINTS.ROLES, data),
   actualizar: (id: number, data: RolUpdate) =>

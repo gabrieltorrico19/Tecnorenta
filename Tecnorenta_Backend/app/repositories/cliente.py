@@ -10,6 +10,12 @@ class ClienteRepository:
     def get_all(self) -> list[Cliente]:
         return self.db.query(Cliente).all()
 
+    def get_paginated(self, skip: int, limit: int) -> tuple[list[Cliente], int]:
+        query = self.db.query(Cliente)
+        total = query.count()
+        items = query.order_by(Cliente.id.desc()).offset(skip).limit(limit).all()
+        return items, total
+
     def get_by_id(self, cliente_id: int) -> Cliente | None:
         return self.db.query(Cliente).filter(Cliente.id == cliente_id).first()
 

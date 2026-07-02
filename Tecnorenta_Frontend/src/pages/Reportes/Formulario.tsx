@@ -77,8 +77,8 @@ export default function FormularioReporte() {
               value={form.activo_id || null}
               onChange={(v) => handleChange("activo_id", v)}
               loadOptions={async () => {
-                const res = await activosApi.listar();
-                return res.data.map((a) => ({ id: a.id, label: `${a.codigo_inventario} - ${a.modelo}` }));
+                const items = await activosApi.listarTodos();
+                return items.map((a) => ({ id: a.id, label: `${a.codigo_inventario} - ${a.modelo}` }));
               }}
               placeholder="Buscar activo..."
             />
@@ -88,8 +88,8 @@ export default function FormularioReporte() {
               value={form.usuario_id || null}
               onChange={(v) => handleChange("usuario_id", v)}
               loadOptions={async () => {
-                const res = await usuarioApi.listar();
-                return res.data.map((u: { id: number; nombre: string }) => ({ id: u.id, label: u.nombre }));
+                const items = await usuarioApi.listarTodos();
+                return items.map((u: { id: number; nombre: string }) => ({ id: u.id, label: u.nombre }));
               }}
               placeholder="Buscar usuario..."
             />

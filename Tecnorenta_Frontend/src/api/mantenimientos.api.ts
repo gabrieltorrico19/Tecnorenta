@@ -1,5 +1,6 @@
 import api from "./axios";
 import { ENDPOINTS } from "./endpoints";
+import { fetchAllPages, type Page, type PageParams } from "./pagination";
 
 export interface Mantenimiento {
   id: number;
@@ -38,7 +39,8 @@ export interface MantenimientoUpdate {
 }
 
 export const mantenimientosApi = {
-  listar: () => api.get<Mantenimiento[]>(ENDPOINTS.MANTENIMIENTOS),
+  listar: (params?: PageParams) => api.get<Page<Mantenimiento>>(ENDPOINTS.MANTENIMIENTOS, { params }),
+  listarTodos: () => fetchAllPages<Mantenimiento>((p) => api.get<Page<Mantenimiento>>(ENDPOINTS.MANTENIMIENTOS, { params: p })),
   obtener: (id: number) => api.get<Mantenimiento>(`${ENDPOINTS.MANTENIMIENTOS}/${id}`),
   crear: (data: MantenimientoCreate) => api.post<Mantenimiento>(ENDPOINTS.MANTENIMIENTOS, data),
   actualizar: (id: number, data: MantenimientoUpdate) =>

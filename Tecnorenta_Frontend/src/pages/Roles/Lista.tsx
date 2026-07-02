@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import DataTable from "../../components/common/DataTable";
+import Pagination from "../../components/common/Pagination";
 import Badge from "../../components/common/Badge";
 import Button from "../../components/common/Button";
 import ConfirmDialog from "../../components/common/ConfirmDialog";
@@ -9,27 +10,34 @@ import { rolesApi, type Rol } from "../../api/roles.api";
 import { formatDate } from "../../utils/helpers";
 import { Plus } from "lucide-react";
 
+const PAGE_SIZE = 20;
+
 function useRoles() {
   const [roles, setRoles] = useState<Rol[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const listar = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await rolesApi.listar();
-      setRoles(res.data);
+      const res = await rolesApi.listar({ page, page_size: PAGE_SIZE });
+      setRoles(res.data.items);
+      setPages(res.data.pages);
+      setTotal(res.data.total);
     } catch {
       setError("Error al cargar roles");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page]);
 
   useEffect(() => { listar(); }, [listar]);
 
-  return { roles, loading, error, listar };
+  return { roles, loading, error, listar, page, setPage, pages, total };
 }
 
 const columns = [
@@ -43,7 +51,7 @@ const columns = [
 export default function ListaRoles() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { roles, loading, error, listar } = useRoles();
+  const { roles, loading, error, listar, page, setPage, pages, total } = useRoles();
   const [deleteTarget, setDeleteTarget] = useState<Rol | null>(null);
 
   const eliminar = async () => {
@@ -51,7 +59,8 @@ export default function ListaRoles() {
     try {
       await rolesApi.eliminar(deleteTarget.id);
       toast("Rol eliminado correctamente", "success");
-      listar();
+      if (roles.length === 1 && page > 1) setPage(page - 1);
+      else listar();
     } catch {
       toast("Error al eliminar el rol", "error");
     }
@@ -68,6 +77,7 @@ export default function ListaRoles() {
         onEdit={(row) => navigate(`/roles/editar/${row.id}`)}
         onDelete={(row) => setDeleteTarget(row)}
       />
+      <Pagination page={page} pages={pages} total={total} pageSize={PAGE_SIZE} onPageChange={setPage} />
       <ConfirmDialog
         open={!!deleteTarget}
         title="Eliminar rol"

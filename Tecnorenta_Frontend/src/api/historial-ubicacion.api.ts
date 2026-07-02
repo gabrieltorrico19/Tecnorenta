@@ -1,5 +1,6 @@
 import api from "./axios";
 import { ENDPOINTS } from "./endpoints";
+import { fetchAllPages, type Page, type PageParams } from "./pagination";
 
 export interface HistorialUbicacion {
   id: number;
@@ -21,7 +22,9 @@ export interface HistorialUbicacionUpdate {
 }
 
 export const historialUbicacionApi = {
-  listar: () => api.get<HistorialUbicacion[]>(ENDPOINTS.HISTORIAL_UBICACION),
+  listar: (params?: PageParams) => api.get<Page<HistorialUbicacion>>(ENDPOINTS.HISTORIAL_UBICACION, { params }),
+  listarTodos: () =>
+    fetchAllPages<HistorialUbicacion>((p) => api.get<Page<HistorialUbicacion>>(ENDPOINTS.HISTORIAL_UBICACION, { params: p })),
   listarPorAsignacion: (asignacionId: number) =>
     api.get<HistorialUbicacion[]>(`${ENDPOINTS.HISTORIAL_UBICACION}/asignacion/${asignacionId}`),
   obtener: (id: number) => api.get<HistorialUbicacion>(`${ENDPOINTS.HISTORIAL_UBICACION}/${id}`),

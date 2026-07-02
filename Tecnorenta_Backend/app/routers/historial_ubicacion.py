@@ -2,16 +2,19 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.dependencies.pagination import PaginationParams
 from app.repositories.historial_ubicacion import HistorialUbicacionRepository
 from app.services.historial_ubicacion import HistorialUbicacionService
+from app.schemas.common import Page, paginate
 from app.schemas.historial_ubicacion import HistorialUbicacionCreate, HistorialUbicacionUpdate, HistorialUbicacionOut
 
 router = APIRouter(prefix="/historial-ubicacion", tags=["Historial de Ubicación"])
 
 
-@router.get("/", response_model=list[HistorialUbicacionOut])
-def listar(db: Session = Depends(get_db)):
-    return HistorialUbicacionService(HistorialUbicacionRepository(db)).listar()
+@router.get("/", response_model=Page[HistorialUbicacionOut])
+def listar(pagination: PaginationParams = Depends(), db: Session = Depends(get_db)):
+    items, total = HistorialUbicacionService(HistorialUbicacionRepository(db)).listar(pagination.skip, pagination.limit)
+    return paginate(items, total, pagination.page, pagination.page_size)
 
 
 @router.get("/asignacion/{asignacion_id}", response_model=list[HistorialUbicacionOut])

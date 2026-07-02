@@ -1,0 +1,867 @@
+{
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\alembic\\env.py": {
+    "mtime": 1782866961.1243086,
+    "ast_hash": "d5fc17f69f687c2bfb7a085d835613bf",
+    "semantic_hash": "d5fc17f69f687c2bfb7a085d835613bf"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\alembic\\versions\\5f96ab620aaa_init_schema.py": {
+    "mtime": 1782866961.126296,
+    "ast_hash": "726f4ece9de02e1b3ce4f44ab37d51a0",
+    "semantic_hash": "726f4ece9de02e1b3ce4f44ab37d51a0"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\alembic\\versions\\b3a1ecbe72df_add_activos_fotos_table.py": {
+    "mtime": 1782866961.126296,
+    "ast_hash": "8f1ad0afd2582e3bc365c4948086feb7",
+    "semantic_hash": "8f1ad0afd2582e3bc365c4948086feb7"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\alembic\\versions\\cc1398101ac3_add_latitud_longitud_to_activos.py": {
+    "mtime": 1782866961.1272962,
+    "ast_hash": "3607d260b9bad85c8cfe65c7cd649b08",
+    "semantic_hash": "3607d260b9bad85c8cfe65c7cd649b08"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\alembic\\versions\\fea5c70ae009_add_url_documento_to_contratos.py": {
+    "mtime": 1782866961.1282966,
+    "ast_hash": "7adf9a23ecbcc70866b65187e642cb6c",
+    "semantic_hash": "7adf9a23ecbcc70866b65187e642cb6c"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\__init__.py": {
+    "mtime": 1782866961.1282966,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\core\\__init__.py": {
+    "mtime": 1782866961.1292953,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\core\\config.py": {
+    "mtime": 1782866961.1302934,
+    "ast_hash": "b9cfbadf72713b6421a411fdac23acc5",
+    "semantic_hash": "b9cfbadf72713b6421a411fdac23acc5"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\core\\database.py": {
+    "mtime": 1782866961.131293,
+    "ast_hash": "6117847e0e24b5392c87504b23be3c82",
+    "semantic_hash": "6117847e0e24b5392c87504b23be3c82"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\core\\security.py": {
+    "mtime": 1782866961.1333065,
+    "ast_hash": "dfc64a0f600966bb39d8c25a40ba327e",
+    "semantic_hash": "dfc64a0f600966bb39d8c25a40ba327e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\dependencies\\__init__.py": {
+    "mtime": 1782866961.1343057,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\dependencies\\auth.py": {
+    "mtime": 1782866961.1363041,
+    "ast_hash": "5b53ad33a0f44ee1e988a83ce1948982",
+    "semantic_hash": "5b53ad33a0f44ee1e988a83ce1948982"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\dependencies\\database.py": {
+    "mtime": 1782866961.1363041,
+    "ast_hash": "5207bbc29d5fdbba560b97ab34157194",
+    "semantic_hash": "5207bbc29d5fdbba560b97ab34157194"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\main.py": {
+    "mtime": 1782866961.1372938,
+    "ast_hash": "d5671293438e38b4becc62c36381f101",
+    "semantic_hash": "d5671293438e38b4becc62c36381f101"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\__init__.py": {
+    "mtime": 1782866961.1393137,
+    "ast_hash": "3a51dbaad1318108f0db902ba67a9050",
+    "semantic_hash": "3a51dbaad1318108f0db902ba67a9050"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\activo.py": {
+    "mtime": 1782866961.1402948,
+    "ast_hash": "504f3bc8a8894067acc6c858abf3668b",
+    "semantic_hash": "504f3bc8a8894067acc6c858abf3668b"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\activo_foto.py": {
+    "mtime": 1782866961.1412947,
+    "ast_hash": "76a891e781225c4005ef27d2df9b19ab",
+    "semantic_hash": "76a891e781225c4005ef27d2df9b19ab"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\asignacion_activo.py": {
+    "mtime": 1782866961.1422904,
+    "ast_hash": "fae08dd128bcad7b1a6f690d2f1bfede",
+    "semantic_hash": "fae08dd128bcad7b1a6f690d2f1bfede"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\base.py": {
+    "mtime": 1782866961.1442945,
+    "ast_hash": "f0f2f99b1802829d3715d1228ad4240d",
+    "semantic_hash": "f0f2f99b1802829d3715d1228ad4240d"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\categoria_activo.py": {
+    "mtime": 1782866961.1442945,
+    "ast_hash": "2230817aef392c2d81ef14d4e5e04cfc",
+    "semantic_hash": "2230817aef392c2d81ef14d4e5e04cfc"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\checklist_estado.py": {
+    "mtime": 1782866961.145295,
+    "ast_hash": "f25abd1c2225e765c06d638b59418b17",
+    "semantic_hash": "f25abd1c2225e765c06d638b59418b17"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\cliente.py": {
+    "mtime": 1782866961.1463077,
+    "ast_hash": "1c27c32629b68ddeca6bd86ea9825825",
+    "semantic_hash": "1c27c32629b68ddeca6bd86ea9825825"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\contrato.py": {
+    "mtime": 1782866961.1463077,
+    "ast_hash": "7f6c71aea9c1ce11e71e0d6f4c9eaabd",
+    "semantic_hash": "7f6c71aea9c1ce11e71e0d6f4c9eaabd"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\historial_ubicacion.py": {
+    "mtime": 1782866961.147315,
+    "ast_hash": "d0988f8eb931b2996920f1a581f683ff",
+    "semantic_hash": "d0988f8eb931b2996920f1a581f683ff"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\mantenimiento.py": {
+    "mtime": 1782866961.1482956,
+    "ast_hash": "f28884d1dd3bd2ed01861f5350fe9205",
+    "semantic_hash": "f28884d1dd3bd2ed01861f5350fe9205"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\pago.py": {
+    "mtime": 1782866961.149313,
+    "ast_hash": "89a39fa967f45dfcc81506a38ba92aed",
+    "semantic_hash": "89a39fa967f45dfcc81506a38ba92aed"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\reporte_incidencia.py": {
+    "mtime": 1782866961.149313,
+    "ast_hash": "1d656cc0d10a25090d95d0959886f33b",
+    "semantic_hash": "1d656cc0d10a25090d95d0959886f33b"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\rol.py": {
+    "mtime": 1782866961.1502945,
+    "ast_hash": "b681a80372de49d106ae13837a9ad0d8",
+    "semantic_hash": "b681a80372de49d106ae13837a9ad0d8"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\models\\usuario.py": {
+    "mtime": 1782866961.1513054,
+    "ast_hash": "cb6d93767675c6de39b51a5f46594d6e",
+    "semantic_hash": "cb6d93767675c6de39b51a5f46594d6e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\__init__.py": {
+    "mtime": 1782866961.152305,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\activo.py": {
+    "mtime": 1782866961.153314,
+    "ast_hash": "34e71c62f7c41ee40be62a5ea70d806e",
+    "semantic_hash": "34e71c62f7c41ee40be62a5ea70d806e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\activo_foto.py": {
+    "mtime": 1782866961.154302,
+    "ast_hash": "b0308315288ec111f477e0971d6ff0ab",
+    "semantic_hash": "b0308315288ec111f477e0971d6ff0ab"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\asignacion_activo.py": {
+    "mtime": 1782866961.1553042,
+    "ast_hash": "301f3f8d26ebcbf3b4d15f1f802edbb2",
+    "semantic_hash": "301f3f8d26ebcbf3b4d15f1f802edbb2"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\categoria_activo.py": {
+    "mtime": 1782866961.1563046,
+    "ast_hash": "96ac337c49b5dd2f85462eed9af36c04",
+    "semantic_hash": "96ac337c49b5dd2f85462eed9af36c04"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\checklist_estado.py": {
+    "mtime": 1782866961.1563046,
+    "ast_hash": "42a79be6db8595c885b5dda9c3f637e0",
+    "semantic_hash": "42a79be6db8595c885b5dda9c3f637e0"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\cliente.py": {
+    "mtime": 1782866961.1573076,
+    "ast_hash": "8866e78b28ec8bda25f2805b338ac292",
+    "semantic_hash": "8866e78b28ec8bda25f2805b338ac292"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\contrato.py": {
+    "mtime": 1782866961.1582916,
+    "ast_hash": "9f278bea8f4b6ada02886cf51893c685",
+    "semantic_hash": "9f278bea8f4b6ada02886cf51893c685"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\historial_ubicacion.py": {
+    "mtime": 1782866961.1582916,
+    "ast_hash": "703ab6426db22972ed82c263f472f127",
+    "semantic_hash": "703ab6426db22972ed82c263f472f127"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\mantenimiento.py": {
+    "mtime": 1782866961.160298,
+    "ast_hash": "6171027e2c227ae8743598d585de0abb",
+    "semantic_hash": "6171027e2c227ae8743598d585de0abb"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\pago.py": {
+    "mtime": 1782866961.1613054,
+    "ast_hash": "8289666fcce73e19eb9fcf2fa413d48d",
+    "semantic_hash": "8289666fcce73e19eb9fcf2fa413d48d"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\reporte_incidencia.py": {
+    "mtime": 1782866961.162294,
+    "ast_hash": "b126f81f881e1b3cdcc28c2b8c74996c",
+    "semantic_hash": "b126f81f881e1b3cdcc28c2b8c74996c"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\rol.py": {
+    "mtime": 1782866961.1632957,
+    "ast_hash": "c59f67a4c2a895b21b4d8b7b39bd6bbb",
+    "semantic_hash": "c59f67a4c2a895b21b4d8b7b39bd6bbb"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\repositories\\usuario.py": {
+    "mtime": 1782866961.1643045,
+    "ast_hash": "ed560b48128f1e8bb5669b181b915230",
+    "semantic_hash": "ed560b48128f1e8bb5669b181b915230"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\__init__.py": {
+    "mtime": 1782866961.1652954,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\activo.py": {
+    "mtime": 1782866961.1663036,
+    "ast_hash": "53d767ee92f993e074c32dd85427e862",
+    "semantic_hash": "53d767ee92f993e074c32dd85427e862"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\activo_foto.py": {
+    "mtime": 1782866961.1673124,
+    "ast_hash": "f436bb00addd9dd061e8df497a850a4c",
+    "semantic_hash": "f436bb00addd9dd061e8df497a850a4c"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\asignacion_activo.py": {
+    "mtime": 1782866961.168296,
+    "ast_hash": "b815ed8d3f5de1fb072fa7fd6413e38e",
+    "semantic_hash": "b815ed8d3f5de1fb072fa7fd6413e38e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\auth.py": {
+    "mtime": 1782866961.1703045,
+    "ast_hash": "0b556c0314d169abcdb5d442fdbc178c",
+    "semantic_hash": "0b556c0314d169abcdb5d442fdbc178c"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\categoria_activo.py": {
+    "mtime": 1782866961.171294,
+    "ast_hash": "f75b2d8033ee00f4d9f4072def680de4",
+    "semantic_hash": "f75b2d8033ee00f4d9f4072def680de4"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\checklist_estado.py": {
+    "mtime": 1782866961.171294,
+    "ast_hash": "ebaf33a2366c0517f99d73809d6e7922",
+    "semantic_hash": "ebaf33a2366c0517f99d73809d6e7922"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\cliente.py": {
+    "mtime": 1782866961.172305,
+    "ast_hash": "f84df9dcbf36400fe3220740e14570ea",
+    "semantic_hash": "f84df9dcbf36400fe3220740e14570ea"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\contrato.py": {
+    "mtime": 1782866961.1733053,
+    "ast_hash": "299f3fc5c4b81ae49b831349a9f15f94",
+    "semantic_hash": "299f3fc5c4b81ae49b831349a9f15f94"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\dashboard.py": {
+    "mtime": 1782866961.1752956,
+    "ast_hash": "c52aa27f97db22c54816d31a90e8429b",
+    "semantic_hash": "c52aa27f97db22c54816d31a90e8429b"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\historial_ubicacion.py": {
+    "mtime": 1782866961.1762946,
+    "ast_hash": "cc928265b401a951ab9e185eb249ad1d",
+    "semantic_hash": "cc928265b401a951ab9e185eb249ad1d"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\mantenimiento.py": {
+    "mtime": 1782866961.1762946,
+    "ast_hash": "9ba002d8544b0faf0a1d7bec56d5730f",
+    "semantic_hash": "9ba002d8544b0faf0a1d7bec56d5730f"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\pago.py": {
+    "mtime": 1782866961.1772952,
+    "ast_hash": "bde0f0e0b2ad619f8094ef4c12c88674",
+    "semantic_hash": "bde0f0e0b2ad619f8094ef4c12c88674"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\reporte_incidencia.py": {
+    "mtime": 1782866961.1782944,
+    "ast_hash": "8538bcdca0183ab9bc2a913a9ae3d490",
+    "semantic_hash": "8538bcdca0183ab9bc2a913a9ae3d490"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\rol.py": {
+    "mtime": 1782866961.1792946,
+    "ast_hash": "b16670803f4f095417c7440ba91ba153",
+    "semantic_hash": "b16670803f4f095417c7440ba91ba153"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\routers\\usuario.py": {
+    "mtime": 1782866961.1803167,
+    "ast_hash": "150bb49be798c617091e4b7b214fc0a6",
+    "semantic_hash": "150bb49be798c617091e4b7b214fc0a6"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\__init__.py": {
+    "mtime": 1782866961.181295,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\activo.py": {
+    "mtime": 1782866961.1823132,
+    "ast_hash": "c24ac6305cce2a57b9663e122d31312a",
+    "semantic_hash": "c24ac6305cce2a57b9663e122d31312a"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\activo_foto.py": {
+    "mtime": 1782866961.1823132,
+    "ast_hash": "4d536cdbaf86ac26b881585819e7d501",
+    "semantic_hash": "4d536cdbaf86ac26b881585819e7d501"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\asignacion_activo.py": {
+    "mtime": 1782866961.1833231,
+    "ast_hash": "2e154a51d5fd8e5429498507f1d49baa",
+    "semantic_hash": "2e154a51d5fd8e5429498507f1d49baa"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\auth.py": {
+    "mtime": 1782866961.1843078,
+    "ast_hash": "66119d657b1171c4b427f3095f8e123c",
+    "semantic_hash": "66119d657b1171c4b427f3095f8e123c"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\categoria_activo.py": {
+    "mtime": 1782866961.185295,
+    "ast_hash": "bb3ecac75ea3c4346b731df1798c7363",
+    "semantic_hash": "bb3ecac75ea3c4346b731df1798c7363"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\checklist_estado.py": {
+    "mtime": 1782866961.1863055,
+    "ast_hash": "866a3b1370b6de432fff859c12a6b824",
+    "semantic_hash": "866a3b1370b6de432fff859c12a6b824"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\cliente.py": {
+    "mtime": 1782866961.1873055,
+    "ast_hash": "4bd5a038cb222bbdc88f829b9cdc156c",
+    "semantic_hash": "4bd5a038cb222bbdc88f829b9cdc156c"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\contrato.py": {
+    "mtime": 1782866961.1883147,
+    "ast_hash": "1c2f2ab4ddf04c6582239d7f0a0c45f3",
+    "semantic_hash": "1c2f2ab4ddf04c6582239d7f0a0c45f3"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\dashboard.py": {
+    "mtime": 1782866961.189301,
+    "ast_hash": "f6f02643eae52a31844533aa5efa3936",
+    "semantic_hash": "f6f02643eae52a31844533aa5efa3936"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\historial_ubicacion.py": {
+    "mtime": 1782866961.1902962,
+    "ast_hash": "dbb1aa6855a0ce29025a78502676be75",
+    "semantic_hash": "dbb1aa6855a0ce29025a78502676be75"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\mantenimiento.py": {
+    "mtime": 1782866961.1913087,
+    "ast_hash": "227c9edc6af1f97193a3f1e8aac89454",
+    "semantic_hash": "227c9edc6af1f97193a3f1e8aac89454"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\pago.py": {
+    "mtime": 1782866961.1923053,
+    "ast_hash": "e6378f67ce077c922ea6f98e9633a830",
+    "semantic_hash": "e6378f67ce077c922ea6f98e9633a830"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\reporte_incidencia.py": {
+    "mtime": 1782866961.1933217,
+    "ast_hash": "16cb0a6f7a8266cab59cf4c1c1a457af",
+    "semantic_hash": "16cb0a6f7a8266cab59cf4c1c1a457af"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\rol.py": {
+    "mtime": 1782866961.1943278,
+    "ast_hash": "be88c1f06d64e71a7f5cbcd6f18377f5",
+    "semantic_hash": "be88c1f06d64e71a7f5cbcd6f18377f5"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\schemas\\usuario.py": {
+    "mtime": 1782866961.1952953,
+    "ast_hash": "a8446a3f24607f317a23c475e198f942",
+    "semantic_hash": "a8446a3f24607f317a23c475e198f942"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\seed.py": {
+    "mtime": 1782866961.1963055,
+    "ast_hash": "7dbc0ce560cfde6ea77afac2ea091b00",
+    "semantic_hash": "7dbc0ce560cfde6ea77afac2ea091b00"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\seed_data.py": {
+    "mtime": 1782866961.197296,
+    "ast_hash": "de216e0f66dbc0704f843112b0a1aae7",
+    "semantic_hash": "de216e0f66dbc0704f843112b0a1aae7"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\__init__.py": {
+    "mtime": 1782866961.1983051,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\activo.py": {
+    "mtime": 1782866961.1992965,
+    "ast_hash": "aa3c4a98ba5387b6b60d2716dd229b53",
+    "semantic_hash": "aa3c4a98ba5387b6b60d2716dd229b53"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\activo_foto.py": {
+    "mtime": 1782866961.2003052,
+    "ast_hash": "fcade17a062ca95cfa69bd15ab40cd93",
+    "semantic_hash": "fcade17a062ca95cfa69bd15ab40cd93"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\asignacion_activo.py": {
+    "mtime": 1782866961.201296,
+    "ast_hash": "cd4bb6c87ff77f19426eda2cb776f084",
+    "semantic_hash": "cd4bb6c87ff77f19426eda2cb776f084"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\categoria_activo.py": {
+    "mtime": 1782866961.2023053,
+    "ast_hash": "be4e5eb7cd7d14ee1c60870788d24757",
+    "semantic_hash": "be4e5eb7cd7d14ee1c60870788d24757"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\checklist_estado.py": {
+    "mtime": 1782866961.2032957,
+    "ast_hash": "462dea365e6d4f189eba2c68556ad27f",
+    "semantic_hash": "462dea365e6d4f189eba2c68556ad27f"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\cliente.py": {
+    "mtime": 1782866961.204306,
+    "ast_hash": "27f8e21b0f1bed9451e7c67539b9572c",
+    "semantic_hash": "27f8e21b0f1bed9451e7c67539b9572c"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\contrato.py": {
+    "mtime": 1782866961.204306,
+    "ast_hash": "e91137032966db8fb00e63dc571b971a",
+    "semantic_hash": "e91137032966db8fb00e63dc571b971a"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\dashboard.py": {
+    "mtime": 1782866961.205296,
+    "ast_hash": "b0545bb0cfeb6d5637c12f4ad61c1403",
+    "semantic_hash": "b0545bb0cfeb6d5637c12f4ad61c1403"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\historial_ubicacion.py": {
+    "mtime": 1782866961.20629,
+    "ast_hash": "2ffb1cf6684849360a3fb92624475dea",
+    "semantic_hash": "2ffb1cf6684849360a3fb92624475dea"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\mantenimiento.py": {
+    "mtime": 1782866961.2072954,
+    "ast_hash": "fa8212d4a4c73d7af49f7a87e0a7d5a8",
+    "semantic_hash": "fa8212d4a4c73d7af49f7a87e0a7d5a8"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\pago.py": {
+    "mtime": 1782866961.2082944,
+    "ast_hash": "5d2d9de39d7e180fc7d7b4c8e1235ba8",
+    "semantic_hash": "5d2d9de39d7e180fc7d7b4c8e1235ba8"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\reporte_incidencia.py": {
+    "mtime": 1782866961.2093053,
+    "ast_hash": "c01de79ff151e6a185d918e72b451eb5",
+    "semantic_hash": "c01de79ff151e6a185d918e72b451eb5"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\rol.py": {
+    "mtime": 1782866961.2103004,
+    "ast_hash": "c7f9677f7f9ee8bcaeab93ca2f0ab697",
+    "semantic_hash": "c7f9677f7f9ee8bcaeab93ca2f0ab697"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\app\\services\\usuario.py": {
+    "mtime": 1782866961.2113051,
+    "ast_hash": "0d18a4ba819373d69d6210b8f147bdfd",
+    "semantic_hash": "0d18a4ba819373d69d6210b8f147bdfd"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\.oxlintrc.json": {
+    "mtime": 1782866961.2212965,
+    "ast_hash": "1f0703525c59e961c2b7f20e78aa1cd4",
+    "semantic_hash": "1f0703525c59e961c2b7f20e78aa1cd4"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\package.json": {
+    "mtime": 1782866961.227321,
+    "ast_hash": "95725a81a70c1c002c18ab1b17de3bef",
+    "semantic_hash": "95725a81a70c1c002c18ab1b17de3bef"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\App.tsx": {
+    "mtime": 1782866961.23131,
+    "ast_hash": "27bcda9e08d0a1433df43e197ed6c16e",
+    "semantic_hash": "27bcda9e08d0a1433df43e197ed6c16e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\activos.api.ts": {
+    "mtime": 1782866961.2323067,
+    "ast_hash": "eff5f31eb74c70dcb10c6cb514cd3b1d",
+    "semantic_hash": "eff5f31eb74c70dcb10c6cb514cd3b1d"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\asignaciones.api.ts": {
+    "mtime": 1782866961.2343047,
+    "ast_hash": "b1801e2b3947455d18bbd283beeb447d",
+    "semantic_hash": "b1801e2b3947455d18bbd283beeb447d"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\auth.api.ts": {
+    "mtime": 1782866961.2343047,
+    "ast_hash": "6c1eacfc25e4c82c31241154e3ca5f8e",
+    "semantic_hash": "6c1eacfc25e4c82c31241154e3ca5f8e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\axios.ts": {
+    "mtime": 1782866961.2363064,
+    "ast_hash": "fa1dbdb4fde74af1213f14518f806299",
+    "semantic_hash": "fa1dbdb4fde74af1213f14518f806299"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\categorias.api.ts": {
+    "mtime": 1782866961.2363064,
+    "ast_hash": "42dc4892d717a9c726220cfb2afa76fc",
+    "semantic_hash": "42dc4892d717a9c726220cfb2afa76fc"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\checklist-estado.api.ts": {
+    "mtime": 1782866961.237322,
+    "ast_hash": "4ce81269df781be935206f717e669e16",
+    "semantic_hash": "4ce81269df781be935206f717e669e16"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\clientes.api.ts": {
+    "mtime": 1782866961.2383199,
+    "ast_hash": "24ae0439477a2752968f80e2c79edd5f",
+    "semantic_hash": "24ae0439477a2752968f80e2c79edd5f"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\contratos.api.ts": {
+    "mtime": 1782866961.2392926,
+    "ast_hash": "1125b8d59f034eeb6ca2d4ea8e13bcc4",
+    "semantic_hash": "1125b8d59f034eeb6ca2d4ea8e13bcc4"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\dashboard.api.ts": {
+    "mtime": 1782866961.2402954,
+    "ast_hash": "353020fa638882982ba882c091738cbd",
+    "semantic_hash": "353020fa638882982ba882c091738cbd"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\endpoints.ts": {
+    "mtime": 1782866961.2413282,
+    "ast_hash": "8b269ae667adc647ca2c31584d77ec49",
+    "semantic_hash": "8b269ae667adc647ca2c31584d77ec49"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\historial-ubicacion.api.ts": {
+    "mtime": 1782866961.2423184,
+    "ast_hash": "af1eabe8dd0d5e9ccaf6f7b404266bcc",
+    "semantic_hash": "af1eabe8dd0d5e9ccaf6f7b404266bcc"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\mantenimientos.api.ts": {
+    "mtime": 1782866961.243293,
+    "ast_hash": "fda4eee2c760bccd002b6894ab0c12f9",
+    "semantic_hash": "fda4eee2c760bccd002b6894ab0c12f9"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\pagos.api.ts": {
+    "mtime": 1782866961.244307,
+    "ast_hash": "1873f408c46c15a7e2bf57322af43b35",
+    "semantic_hash": "1873f408c46c15a7e2bf57322af43b35"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\reportes.api.ts": {
+    "mtime": 1782866961.245307,
+    "ast_hash": "fe05fd8dec0b394a99b39ebb5b001bff",
+    "semantic_hash": "fe05fd8dec0b394a99b39ebb5b001bff"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\roles.api.ts": {
+    "mtime": 1782866961.2463045,
+    "ast_hash": "8f75844c0228529e0c4883763af6bda4",
+    "semantic_hash": "8f75844c0228529e0c4883763af6bda4"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\api\\usuario.api.ts": {
+    "mtime": 1782866961.2463045,
+    "ast_hash": "0a733424e2f0adef5d2bad5a8c832350",
+    "semantic_hash": "0a733424e2f0adef5d2bad5a8c832350"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\CameraCapture.tsx": {
+    "mtime": 1782866961.250292,
+    "ast_hash": "9d239569efc127473acaeda989a0711f",
+    "semantic_hash": "9d239569efc127473acaeda989a0711f"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\MapPicker.tsx": {
+    "mtime": 1782866961.2513187,
+    "ast_hash": "f6f09ee22411d5da4d7d40b8afbe6e08",
+    "semantic_hash": "f6f09ee22411d5da4d7d40b8afbe6e08"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\common\\Badge.tsx": {
+    "mtime": 1782866961.2533064,
+    "ast_hash": "63bbf02181ca7c8af7e02bb9c683b4b4",
+    "semantic_hash": "63bbf02181ca7c8af7e02bb9c683b4b4"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\common\\Button.tsx": {
+    "mtime": 1782866961.2543104,
+    "ast_hash": "bdbc3ba686e79329941a4cb6f39abbdc",
+    "semantic_hash": "bdbc3ba686e79329941a4cb6f39abbdc"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\common\\Card.tsx": {
+    "mtime": 1782866961.255297,
+    "ast_hash": "80910c11ca077a379ecfc8804cedf471",
+    "semantic_hash": "80910c11ca077a379ecfc8804cedf471"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\common\\ConfirmDialog.tsx": {
+    "mtime": 1782866961.255297,
+    "ast_hash": "37f4b6506c882ef37a54f8b847631bdd",
+    "semantic_hash": "37f4b6506c882ef37a54f8b847631bdd"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\common\\DataTable.tsx": {
+    "mtime": 1782866961.2563064,
+    "ast_hash": "e6a1b759ddc6a0c2036607794130a83f",
+    "semantic_hash": "e6a1b759ddc6a0c2036607794130a83f"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\common\\FormField.tsx": {
+    "mtime": 1782866961.2572954,
+    "ast_hash": "3c2d74c284d88bb8da2a3f5bd3c5c550",
+    "semantic_hash": "3c2d74c284d88bb8da2a3f5bd3c5c550"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\common\\FormSection.tsx": {
+    "mtime": 1782866961.258308,
+    "ast_hash": "579edc2d75c88e05af2df643ea1cdd34",
+    "semantic_hash": "579edc2d75c88e05af2df643ea1cdd34"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\common\\Modal.tsx": {
+    "mtime": 1782866961.258308,
+    "ast_hash": "de047e9cda5c12801497b48e11a73fba",
+    "semantic_hash": "de047e9cda5c12801497b48e11a73fba"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\common\\SearchableSelect.tsx": {
+    "mtime": 1782866961.259307,
+    "ast_hash": "7e060e0a1483a20d099591e843072068",
+    "semantic_hash": "7e060e0a1483a20d099591e843072068"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\layout\\Header.tsx": {
+    "mtime": 1782866961.261303,
+    "ast_hash": "1ea714c4995f84630be266558f43c160",
+    "semantic_hash": "1ea714c4995f84630be266558f43c160"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\layout\\Layout.tsx": {
+    "mtime": 1782866961.261303,
+    "ast_hash": "2ca41bccba83f4d7bbac671dd475ac32",
+    "semantic_hash": "2ca41bccba83f4d7bbac671dd475ac32"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\components\\layout\\Sidebar.tsx": {
+    "mtime": 1782866961.2623072,
+    "ast_hash": "bf159d0c783f56b3f5ff353501a2072c",
+    "semantic_hash": "bf159d0c783f56b3f5ff353501a2072c"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\context\\AuthContext.tsx": {
+    "mtime": 1782866961.2633078,
+    "ast_hash": "4a505dd49027da2a064982635037dd23",
+    "semantic_hash": "4a505dd49027da2a064982635037dd23"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\context\\ToastContext.tsx": {
+    "mtime": 1782866961.2643158,
+    "ast_hash": "d1fd911d39125bb7fbb3445f08dab5df",
+    "semantic_hash": "d1fd911d39125bb7fbb3445f08dab5df"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\hooks\\useUsuarios.ts": {
+    "mtime": 1782866961.2662973,
+    "ast_hash": "5327118b1a99dba747c73f4b0beaf587",
+    "semantic_hash": "5327118b1a99dba747c73f4b0beaf587"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\main.tsx": {
+    "mtime": 1782866961.2673004,
+    "ast_hash": "3498ef2ed10faa093e46f1c8c576831a",
+    "semantic_hash": "3498ef2ed10faa093e46f1c8c576831a"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Activos\\Formulario.tsx": {
+    "mtime": 1782866961.269298,
+    "ast_hash": "70fd29158b4a81fe0116d4f7651f88c2",
+    "semantic_hash": "70fd29158b4a81fe0116d4f7651f88c2"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Activos\\Lista.tsx": {
+    "mtime": 1782866961.2712986,
+    "ast_hash": "afaf3e44ac4fc689f70e3caac02a254a",
+    "semantic_hash": "afaf3e44ac4fc689f70e3caac02a254a"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Asignaciones\\Formulario.tsx": {
+    "mtime": 1782866961.273303,
+    "ast_hash": "935acbf18e933bfa609c36a314560549",
+    "semantic_hash": "935acbf18e933bfa609c36a314560549"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Asignaciones\\Lista.tsx": {
+    "mtime": 1782866961.2743073,
+    "ast_hash": "36573781e0bc4a46ff9bc91f91e0c78f",
+    "semantic_hash": "36573781e0bc4a46ff9bc91f91e0c78f"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Categorias\\Formulario.tsx": {
+    "mtime": 1782866961.2755592,
+    "ast_hash": "bfdae753866ec2c298839597291eb1dc",
+    "semantic_hash": "bfdae753866ec2c298839597291eb1dc"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Categorias\\Lista.tsx": {
+    "mtime": 1782866961.276293,
+    "ast_hash": "870db626c00f24a8ea2c49b0193ed550",
+    "semantic_hash": "870db626c00f24a8ea2c49b0193ed550"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\ChecklistEstado\\Formulario.tsx": {
+    "mtime": 1782866961.2782986,
+    "ast_hash": "0450e93aa4ef0828b355eedea8d76fcc",
+    "semantic_hash": "0450e93aa4ef0828b355eedea8d76fcc"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\ChecklistEstado\\Lista.tsx": {
+    "mtime": 1782866961.2792952,
+    "ast_hash": "c38baad3f7238bc26e369df61e5d6f49",
+    "semantic_hash": "c38baad3f7238bc26e369df61e5d6f49"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Clientes\\Formulario.tsx": {
+    "mtime": 1782866961.2812977,
+    "ast_hash": "19aa4e0fc29bbae0b7e2b109fb6f8348",
+    "semantic_hash": "19aa4e0fc29bbae0b7e2b109fb6f8348"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Clientes\\Lista.tsx": {
+    "mtime": 1782866961.2812977,
+    "ast_hash": "4b694404ad7fc422575883c40f675cb7",
+    "semantic_hash": "4b694404ad7fc422575883c40f675cb7"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Contratos\\Formulario.tsx": {
+    "mtime": 1782866961.283309,
+    "ast_hash": "6b6403e582900ec1b813cc8152b9e8d6",
+    "semantic_hash": "6b6403e582900ec1b813cc8152b9e8d6"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Contratos\\Lista.tsx": {
+    "mtime": 1782866961.2843108,
+    "ast_hash": "2f68478ddfefa04116d0811e70ae714b",
+    "semantic_hash": "2f68478ddfefa04116d0811e70ae714b"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Dashboard.tsx": {
+    "mtime": 1782866961.2843108,
+    "ast_hash": "e4bdf8df446319005dedb006254dc91e",
+    "semantic_hash": "e4bdf8df446319005dedb006254dc91e"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\HistorialUbicacion\\Formulario.tsx": {
+    "mtime": 1782866961.2863169,
+    "ast_hash": "b3ccb73a7c9c205678cafc53bdb5fc32",
+    "semantic_hash": "b3ccb73a7c9c205678cafc53bdb5fc32"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\HistorialUbicacion\\Lista.tsx": {
+    "mtime": 1782866961.2873168,
+    "ast_hash": "3334c1fd9ea4c4464a5965ccb40056b6",
+    "semantic_hash": "3334c1fd9ea4c4464a5965ccb40056b6"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Login.tsx": {
+    "mtime": 1782866961.2873168,
+    "ast_hash": "d0a84fba0d9b9170ddcbf0701ec814b9",
+    "semantic_hash": "d0a84fba0d9b9170ddcbf0701ec814b9"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Mantenimientos\\Formulario.tsx": {
+    "mtime": 1782866961.289326,
+    "ast_hash": "375307f0c00963a5f658634e40d848ac",
+    "semantic_hash": "375307f0c00963a5f658634e40d848ac"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Mantenimientos\\Lista.tsx": {
+    "mtime": 1782866961.289326,
+    "ast_hash": "aec86b515e00ea038fd208fe9e14b429",
+    "semantic_hash": "aec86b515e00ea038fd208fe9e14b429"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Pagos\\Formulario.tsx": {
+    "mtime": 1782866961.2913074,
+    "ast_hash": "c9d2e86d3069850b92460c83368aca17",
+    "semantic_hash": "c9d2e86d3069850b92460c83368aca17"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Pagos\\Lista.tsx": {
+    "mtime": 1782866961.2923229,
+    "ast_hash": "9388bcda7c847e70a9cf04a64399acb7",
+    "semantic_hash": "9388bcda7c847e70a9cf04a64399acb7"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Reportes\\Formulario.tsx": {
+    "mtime": 1782866961.2933297,
+    "ast_hash": "9dac833124a51d1209982285e6ada414",
+    "semantic_hash": "9dac833124a51d1209982285e6ada414"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Reportes\\Lista.tsx": {
+    "mtime": 1782866961.2942975,
+    "ast_hash": "81f22c436c7b54b310d70c6497124cbf",
+    "semantic_hash": "81f22c436c7b54b310d70c6497124cbf"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Roles\\Formulario.tsx": {
+    "mtime": 1782866961.295308,
+    "ast_hash": "609df2f99e30c20051d6e9131ed421cd",
+    "semantic_hash": "609df2f99e30c20051d6e9131ed421cd"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Roles\\Lista.tsx": {
+    "mtime": 1782866961.2963166,
+    "ast_hash": "e3c84e1c4cf0105c27e0bb1239f7a07b",
+    "semantic_hash": "e3c84e1c4cf0105c27e0bb1239f7a07b"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Usuarios\\Formulario.tsx": {
+    "mtime": 1782866961.2982984,
+    "ast_hash": "12ebd92fe371e00903919fab332baa9f",
+    "semantic_hash": "12ebd92fe371e00903919fab332baa9f"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\pages\\Usuarios\\Lista.tsx": {
+    "mtime": 1782866961.3003228,
+    "ast_hash": "87fd28f717a82a5709de37734f02bd75",
+    "semantic_hash": "87fd28f717a82a5709de37734f02bd75"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\utils\\helpers.ts": {
+    "mtime": 1782866961.3032942,
+    "ast_hash": "f6af2d44af783a2357ced112640ba7fa",
+    "semantic_hash": "f6af2d44af783a2357ced112640ba7fa"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\tsconfig.app.json": {
+    "mtime": 1782866961.3042982,
+    "ast_hash": "4cd9dda3b62ff2a571c2419a75074a39",
+    "semantic_hash": "4cd9dda3b62ff2a571c2419a75074a39"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\tsconfig.json": {
+    "mtime": 1782866961.305319,
+    "ast_hash": "852c3a5df14a4b43ac28e9554ebedf4a",
+    "semantic_hash": "852c3a5df14a4b43ac28e9554ebedf4a"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\tsconfig.node.json": {
+    "mtime": 1782866961.3062992,
+    "ast_hash": "74cde0261ad0a13045ca0a05ab1542ae",
+    "semantic_hash": "74cde0261ad0a13045ca0a05ab1542ae"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\vite.config.ts": {
+    "mtime": 1782866961.3062992,
+    "ast_hash": "199e1221ae03d6974fdc8b5e23787b98",
+    "semantic_hash": "199e1221ae03d6974fdc8b5e23787b98"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\SKILLS.md": {
+    "mtime": 1782866961.1183014,
+    "ast_hash": "33881edef2c10547a717b073274ac5c0",
+    "semantic_hash": "33881edef2c10547a717b073274ac5c0"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\AGENTS.md": {
+    "mtime": 1782866961.1203024,
+    "ast_hash": "27e145de2c55b1da029bc351681cad98",
+    "semantic_hash": "27e145de2c55b1da029bc351681cad98"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\README.md": {
+    "mtime": 1782866961.1223154,
+    "ast_hash": "57ae09c432870e977b9de69940ff5384",
+    "semantic_hash": "57ae09c432870e977b9de69940ff5384"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\requirements.txt": {
+    "mtime": 1782866961.2113051,
+    "ast_hash": "88954c90dc01e6c7f1ac87204b212679",
+    "semantic_hash": "88954c90dc01e6c7f1ac87204b212679"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\README.md": {
+    "mtime": 1782866961.2232919,
+    "ast_hash": "58918a67018d5dbe4d6107d702701242",
+    "semantic_hash": "58918a67018d5dbe4d6107d702701242"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\index.html": {
+    "mtime": 1782866961.2232919,
+    "ast_hash": "6044457eb0081cf2dbdb1558cee55487",
+    "semantic_hash": "6044457eb0081cf2dbdb1558cee55487"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\static\\img\\activos\\15eee281f7624fd38954840d2a029820.png": {
+    "mtime": 1782866961.215297,
+    "ast_hash": "5c8248718f11c618b9de01d124ee1085",
+    "semantic_hash": "5c8248718f11c618b9de01d124ee1085"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\static\\img\\activos\\31159befdc134834b08a3cc07c1f5d52.jpg": {
+    "mtime": 1782866961.216305,
+    "ast_hash": "e91a2607b710ab74ec49ce3d4fa31682",
+    "semantic_hash": "e91a2607b710ab74ec49ce3d4fa31682"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\static\\img\\activos\\73b2b67f1a234f19bd757e14f396491c.jpg": {
+    "mtime": 1782866961.2173135,
+    "ast_hash": "e91a2607b710ab74ec49ce3d4fa31682",
+    "semantic_hash": "e91a2607b710ab74ec49ce3d4fa31682"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Backend\\static\\img\\activos\\b54050829cc442e2a83686b970a95152.jpg": {
+    "mtime": 1782866961.218316,
+    "ast_hash": "e91a2607b710ab74ec49ce3d4fa31682",
+    "semantic_hash": "e91a2607b710ab74ec49ce3d4fa31682"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\public\\favicon.svg": {
+    "mtime": 1782866961.228292,
+    "ast_hash": "7e840862161341271697daa99a40d76b",
+    "semantic_hash": "7e840862161341271697daa99a40d76b"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\public\\icons.svg": {
+    "mtime": 1782866961.2293165,
+    "ast_hash": "21c7473c592c67dc87223d49892c8f0a",
+    "semantic_hash": "21c7473c592c67dc87223d49892c8f0a"
+  },
+  "C:\\www2\\sparada\\Tecnorenta\\Tecnorenta_Frontend\\src\\assets\\vite.svg": {
+    "mtime": 1782866961.2482998,
+    "ast_hash": "6d5180a782d64c8cf51ba01c2a2184d8",
+    "semantic_hash": "6d5180a782d64c8cf51ba01c2a2184d8"
+  }
+}

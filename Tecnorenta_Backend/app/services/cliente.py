@@ -9,8 +9,8 @@ class ClienteService:
     def __init__(self, repo: ClienteRepository):
         self.repo = repo
 
-    def listar(self) -> list[Cliente]:
-        return self.repo.get_all()
+    def listar(self, skip: int, limit: int) -> tuple[list[Cliente], int]:
+        return self.repo.get_paginated(skip, limit)
 
     def obtener(self, cliente_id: int) -> Cliente:
         cliente = self.repo.get_by_id(cliente_id)

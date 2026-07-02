@@ -140,8 +140,8 @@ export default function FormularioActivo() {
               value={form.id_categoria ?? null}
               onChange={(v) => set("id_categoria")(v ?? null)}
               loadOptions={async () => {
-                const res = await categoriasApi.listar();
-                return res.data.map((c: { id: number; nombre: string }) => ({ id: c.id, label: c.nombre }));
+                const items = await categoriasApi.listarTodos();
+                return items.map((c: { id: number; nombre: string }) => ({ id: c.id, label: c.nombre }));
               }}
               placeholder="Seleccionar categoría..."
             />

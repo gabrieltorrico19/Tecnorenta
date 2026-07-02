@@ -12,7 +12,13 @@ class ActivoService:
         self.repo = repo
         self.db = db
 
-    def listar(self) -> list[Activo]:
+    def listar(self, skip: int, limit: int) -> tuple[list[Activo], int]:
+        activos, total = self.repo.get_paginated(skip, limit)
+        for a in activos:
+            a.categoria_nombre = a.categoria.nombre if a.categoria else None
+        return activos, total
+
+    def listar_todos(self) -> list[Activo]:
         activos = self.repo.get_all()
         for a in activos:
             a.categoria_nombre = a.categoria.nombre if a.categoria else None

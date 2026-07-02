@@ -10,6 +10,12 @@ class AsignacionActivoRepository:
     def get_all(self) -> list[AsignacionActivo]:
         return self.db.query(AsignacionActivo).all()
 
+    def get_paginated(self, skip: int, limit: int) -> tuple[list[AsignacionActivo], int]:
+        query = self.db.query(AsignacionActivo)
+        total = query.count()
+        items = query.order_by(AsignacionActivo.id.desc()).offset(skip).limit(limit).all()
+        return items, total
+
     def get_by_id(self, asignacion_id: int) -> AsignacionActivo | None:
         return self.db.query(AsignacionActivo).filter(AsignacionActivo.id == asignacion_id).first()
 

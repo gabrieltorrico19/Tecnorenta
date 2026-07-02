@@ -12,8 +12,8 @@ class UsuarioService:
     def __init__(self, repo: UsuarioRepository):
         self.repo = repo
 
-    def listar(self) -> list[Usuario]:
-        return self.repo.get_all()
+    def listar(self, skip: int, limit: int) -> tuple[list[Usuario], int]:
+        return self.repo.get_paginated(skip, limit)
 
     def obtener(self, usuario_id: int) -> Usuario:
         usuario = self.repo.get_by_id(usuario_id)

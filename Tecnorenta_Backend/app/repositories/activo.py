@@ -10,6 +10,12 @@ class ActivoRepository:
     def get_all(self) -> list[Activo]:
         return self.db.query(Activo).all()
 
+    def get_paginated(self, skip: int, limit: int) -> tuple[list[Activo], int]:
+        query = self.db.query(Activo)
+        total = query.count()
+        items = query.order_by(Activo.id.desc()).offset(skip).limit(limit).all()
+        return items, total
+
     def get_by_id(self, activo_id: int) -> Activo | None:
         return self.db.query(Activo).filter(Activo.id == activo_id).first()
 

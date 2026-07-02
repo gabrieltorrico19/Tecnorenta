@@ -12,8 +12,8 @@ class AsignacionActivoService:
         self.repo = repo
         self.db = db
 
-    def listar(self) -> list[AsignacionActivo]:
-        return self.repo.get_all()
+    def listar(self, skip: int, limit: int) -> tuple[list[AsignacionActivo], int]:
+        return self.repo.get_paginated(skip, limit)
 
     def obtener(self, asignacion_id: int) -> AsignacionActivo:
         asignacion = self.repo.get_by_id(asignacion_id)

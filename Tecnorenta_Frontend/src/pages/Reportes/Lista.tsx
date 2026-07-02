@@ -2,8 +2,11 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { reportesApi, type Reporte } from "../../api/reportes.api";
 import DataTable from "../../components/common/DataTable";
+import Pagination from "../../components/common/Pagination";
 import Badge from "../../components/common/Badge";
 import { formatDate } from "../../utils/helpers";
+
+const PAGE_SIZE = 20;
 
 const estadoVariant: Record<string, "success" | "warning" | "danger" | "info" | "default"> = {
   Reportada: "danger",
@@ -17,19 +20,24 @@ export default function ListaReportes() {
   const [reportes, setReportes] = useState<Reporte[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const listar = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await reportesApi.listar();
-      setReportes(res.data);
+      const res = await reportesApi.listar({ page, page_size: PAGE_SIZE });
+      setReportes(res.data.items);
+      setPages(res.data.pages);
+      setTotal(res.data.total);
     } catch {
       setError("Error al cargar reportes");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     listar();
@@ -39,7 +47,8 @@ export default function ListaReportes() {
     if (!window.confirm(`¿Eliminar reporte #${reporte.id}?`)) return;
     try {
       await reportesApi.eliminar(reporte.id);
-      listar();
+      if (reportes.length === 1 && page > 1) setPage(page - 1);
+      else listar();
     } catch {
       alert("Error al eliminar reporte");
     }
@@ -81,6 +90,7 @@ export default function ListaReportes() {
         onEdit={(row) => navigate(`/reportes/editar/${row.id}`)}
         onDelete={eliminar}
       />
+      <Pagination page={page} pages={pages} total={total} pageSize={PAGE_SIZE} onPageChange={setPage} />
     </div>
   );
 }

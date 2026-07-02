@@ -11,13 +11,16 @@ from app.models.usuario import Usuario
 from app.repositories.activo import ActivoRepository
 from app.services.activo import ActivoService
 from app.schemas.activo import ActivoCreate, ActivoUpdate, ActivoOut
+from app.schemas.common import Page, paginate
+from app.dependencies.pagination import PaginationParams
 
 router = APIRouter(prefix="/activos", tags=["Activos"])
 
 
-@router.get("/", response_model=list[ActivoOut])
-def listar(db: Session = Depends(get_db)):
-    return ActivoService(ActivoRepository(db)).listar()
+@router.get("/", response_model=Page[ActivoOut])
+def listar(pagination: PaginationParams = Depends(), db: Session = Depends(get_db)):
+    items, total = ActivoService(ActivoRepository(db)).listar(pagination.skip, pagination.limit)
+    return paginate(items, total, pagination.page, pagination.page_size)
 
 
 @router.get("/{activo_id}", response_model=ActivoOut)
@@ -37,7 +40,7 @@ def actualizar(activo_id: int, data: ActivoUpdate, db: Session = Depends(get_db)
 
 @router.get("/exportar/formato-csv")
 def exportar_csv(db: Session = Depends(get_db)):
-    activos = ActivoService(ActivoRepository(db)).listar()
+    activos = ActivoService(ActivoRepository(db)).listar_todos()
     output = io.StringIO()
     writer = csv.writer(output)
     writer.writerow(["ID", "Codigo Inventario", "Modelo", "Numero Serie", "Estado", "Categoria", "Valor Depreciado", "Fecha Compra"])

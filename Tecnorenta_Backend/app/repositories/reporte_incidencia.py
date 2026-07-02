@@ -10,6 +10,12 @@ class ReporteIncidenciaRepository:
     def get_all(self) -> list[ReporteIncidencia]:
         return self.db.query(ReporteIncidencia).all()
 
+    def get_paginated(self, skip: int, limit: int) -> tuple[list[ReporteIncidencia], int]:
+        query = self.db.query(ReporteIncidencia)
+        total = query.count()
+        items = query.order_by(ReporteIncidencia.id.desc()).offset(skip).limit(limit).all()
+        return items, total
+
     def get_by_id(self, reporte_id: int) -> ReporteIncidencia | None:
         return self.db.query(ReporteIncidencia).filter(ReporteIncidencia.id == reporte_id).first()
 

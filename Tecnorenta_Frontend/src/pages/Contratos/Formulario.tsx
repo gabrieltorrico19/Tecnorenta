@@ -67,8 +67,8 @@ export default function FormularioContrato() {
               value={form.id_cliente || null}
               onChange={(v) => setForm({ ...form, id_cliente: v })}
               loadOptions={async () => {
-                const res = await clientesApi.listar();
-                return res.data.map((c: { id: number; nombre: string }) => ({ id: c.id, label: c.nombre }));
+                const items = await clientesApi.listarTodos();
+                return items.map((c: { id: number; nombre: string }) => ({ id: c.id, label: c.nombre }));
               }}
               placeholder="Buscar cliente..."
             />

@@ -75,8 +75,8 @@ export default function FormularioAsignacion() {
               value={form.id_activo || null}
               onChange={(v) => handleChange("id_activo", v)}
               loadOptions={async () => {
-                const res = await activosApi.listar();
-                return res.data.map((a) => ({ id: a.id, label: `${a.codigo_inventario} - ${a.modelo}` }));
+                const items = await activosApi.listarTodos();
+                return items.map((a) => ({ id: a.id, label: `${a.codigo_inventario} - ${a.modelo}` }));
               }}
               placeholder="Buscar activo..."
             />
@@ -86,8 +86,8 @@ export default function FormularioAsignacion() {
               value={form.id_contrato || null}
               onChange={(v) => handleChange("id_contrato", v)}
               loadOptions={async () => {
-                const res = await contratosApi.listar();
-                return res.data.map((c: { id: number }) => ({ id: c.id, label: `Contrato #${c.id}` }));
+                const items = await contratosApi.listarTodos();
+                return items.map((c: { id: number }) => ({ id: c.id, label: `Contrato #${c.id}` }));
               }}
               placeholder="Buscar contrato..."
             />

@@ -5,6 +5,8 @@ from app.core.database import get_db
 from app.repositories.usuario import UsuarioRepository
 from app.services.usuario import UsuarioService
 from app.schemas.usuario import UsuarioCreate, UsuarioUpdate, UsuarioOut
+from app.schemas.common import Page, paginate
+from app.dependencies.pagination import PaginationParams
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
@@ -13,10 +15,10 @@ def get_service(db: Session = Depends(get_db)) -> UsuarioService:
     return UsuarioService(UsuarioRepository(db))
 
 
-@router.get("/", response_model=list[UsuarioOut])
-def listar(db: Session = Depends(get_db)):
-    service = get_service(db)
-    return service.listar()
+@router.get("/", response_model=Page[UsuarioOut])
+def listar(pagination: PaginationParams = Depends(), db: Session = Depends(get_db)):
+    items, total = get_service(db).listar(pagination.skip, pagination.limit)
+    return paginate(items, total, pagination.page, pagination.page_size)
 
 
 @router.get("/{usuario_id}", response_model=UsuarioOut)

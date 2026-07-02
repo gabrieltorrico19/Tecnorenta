@@ -72,8 +72,8 @@ export default function FormularioMantenimiento() {
               value={form.activo_id || null}
               onChange={(v) => setForm({ ...form, activo_id: v })}
               loadOptions={async () => {
-                const res = await activosApi.listar();
-                return res.data.map((a) => ({ id: a.id, label: `${a.codigo_inventario} - ${a.modelo}` }));
+                const items = await activosApi.listarTodos();
+                return items.map((a) => ({ id: a.id, label: `${a.codigo_inventario} - ${a.modelo}` }));
               }}
               placeholder="Buscar activo..."
             />

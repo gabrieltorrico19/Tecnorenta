@@ -2,16 +2,19 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.dependencies.pagination import PaginationParams
 from app.repositories.mantenimiento import MantenimientoRepository
 from app.services.mantenimiento import MantenimientoService
+from app.schemas.common import Page, paginate
 from app.schemas.mantenimiento import MantenimientoCreate, MantenimientoUpdate, MantenimientoOut
 
 router = APIRouter(prefix="/mantenimientos", tags=["Mantenimientos"])
 
 
-@router.get("/", response_model=list[MantenimientoOut])
-def listar(db: Session = Depends(get_db)):
-    return MantenimientoService(MantenimientoRepository(db)).listar()
+@router.get("/", response_model=Page[MantenimientoOut])
+def listar(pagination: PaginationParams = Depends(), db: Session = Depends(get_db)):
+    items, total = MantenimientoService(MantenimientoRepository(db)).listar(pagination.skip, pagination.limit)
+    return paginate(items, total, pagination.page, pagination.page_size)
 
 
 @router.get("/activo/{activo_id}", response_model=list[MantenimientoOut])

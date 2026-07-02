@@ -73,8 +73,8 @@ export default function FormularioPago() {
               value={form.id_contrato || null}
               onChange={(v) => setForm({ ...form, id_contrato: v })}
               loadOptions={async () => {
-                const res = await contratosApi.listar();
-                return res.data.map((c: { id: number }) => ({ id: c.id, label: `Contrato #${c.id}` }));
+                const items = await contratosApi.listarTodos();
+                return items.map((c: { id: number }) => ({ id: c.id, label: `Contrato #${c.id}` }));
               }}
               placeholder="Buscar contrato..."
             />

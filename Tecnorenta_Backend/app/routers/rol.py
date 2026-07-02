@@ -6,13 +6,16 @@ from app.dependencies.auth import require_role
 from app.repositories.rol import RolRepository, PermisoRepository
 from app.services.rol import RolService, PermisoService
 from app.schemas.rol import RolCreate, RolUpdate, RolOut, PermisoOut, RolAsignarPermiso
+from app.schemas.common import Page, paginate
+from app.dependencies.pagination import PaginationParams
 
 router = APIRouter(prefix="/roles", tags=["Roles y Permisos"])
 
 
-@router.get("/", response_model=list[RolOut])
-def listar(db: Session = Depends(get_db)):
-    return RolService(RolRepository(db)).listar()
+@router.get("/", response_model=Page[RolOut])
+def listar(pagination: PaginationParams = Depends(), db: Session = Depends(get_db)):
+    items, total = RolService(RolRepository(db)).listar(pagination.skip, pagination.limit)
+    return paginate(items, total, pagination.page, pagination.page_size)
 
 
 @router.get("/{rol_id}", response_model=RolOut)

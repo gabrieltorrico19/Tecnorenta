@@ -2,16 +2,19 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.dependencies.pagination import PaginationParams
 from app.repositories.asignacion_activo import AsignacionActivoRepository
 from app.services.asignacion_activo import AsignacionActivoService
+from app.schemas.common import Page, paginate
 from app.schemas.asignacion_activo import AsignacionActivoCreate, AsignacionActivoUpdate, AsignacionActivoOut
 
 router = APIRouter(prefix="/asignaciones", tags=["Asignaciones de Activo"])
 
 
-@router.get("/", response_model=list[AsignacionActivoOut])
-def listar(db: Session = Depends(get_db)):
-    return AsignacionActivoService(AsignacionActivoRepository(db)).listar()
+@router.get("/", response_model=Page[AsignacionActivoOut])
+def listar(pagination: PaginationParams = Depends(), db: Session = Depends(get_db)):
+    items, total = AsignacionActivoService(AsignacionActivoRepository(db)).listar(pagination.skip, pagination.limit)
+    return paginate(items, total, pagination.page, pagination.page_size)
 
 
 @router.get("/{asignacion_id}", response_model=AsignacionActivoOut)

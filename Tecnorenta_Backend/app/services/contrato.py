@@ -10,8 +10,8 @@ class ContratoService:
     def __init__(self, repo: ContratoRepository):
         self.repo = repo
 
-    def listar(self) -> list[Contrato]:
-        return self.repo.get_all()
+    def listar(self, skip: int, limit: int) -> tuple[list[Contrato], int]:
+        return self.repo.get_paginated(skip, limit)
 
     def obtener(self, contrato_id: int) -> Contrato:
         contrato = self.repo.get_by_id(contrato_id)

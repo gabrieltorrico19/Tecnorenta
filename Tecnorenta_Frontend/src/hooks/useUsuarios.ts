@@ -11,8 +11,8 @@ export function useUsuarios() {
     setLoading(true);
     setError(null);
     try {
-      const res = await usuarioApi.listar();
-      setUsuarios(res.data);
+      const data = await usuarioApi.listarTodos();
+      setUsuarios(data);
     } catch {
       setError("Error al cargar usuarios");
     } finally {

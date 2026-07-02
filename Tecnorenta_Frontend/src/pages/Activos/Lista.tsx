@@ -2,11 +2,14 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { activosApi, type Activo } from "../../api/activos.api";
 import DataTable from "../../components/common/DataTable";
+import Pagination from "../../components/common/Pagination";
 import Badge from "../../components/common/Badge";
 import Button from "../../components/common/Button";
 import ConfirmDialog from "../../components/common/ConfirmDialog";
 import { useToast } from "../../context/ToastContext";
 import { Plus, Download } from "lucide-react";
+
+const PAGE_SIZE = 20;
 
 const estadoVariant: Record<string, "success" | "warning" | "danger" | "info" | "default"> = {
   disponible: "success",
@@ -23,6 +26,9 @@ export default function ListaActivos() {
   const [error, setError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Activo | null>(null);
   const [fotosMap, setFotosMap] = useState<Record<number, string>>({});
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const cargarPrimeraFoto = useCallback(async (activo: Activo) => {
     try {
@@ -37,14 +43,16 @@ export default function ListaActivos() {
     setLoading(true);
     setError(null);
     try {
-      const res = await activosApi.listar();
-      setActivos(res.data);
+      const res = await activosApi.listar({ page, page_size: PAGE_SIZE });
+      setActivos(res.data.items);
+      setPages(res.data.pages);
+      setTotal(res.data.total);
     } catch {
       setError("Error al cargar activos");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page]);
 
   useEffect(() => { listar(); }, [listar]);
 
@@ -56,7 +64,8 @@ export default function ListaActivos() {
     try {
       await activosApi.eliminar(activo.id);
       toast("Activo eliminado correctamente", "success");
-      listar();
+      if (activos.length === 1 && page > 1) setPage(page - 1);
+      else listar();
     } catch {
       toast("Error al eliminar el activo", "error");
     }
@@ -99,6 +108,7 @@ export default function ListaActivos() {
         onEdit={(row) => navigate(`/activos/editar/${row.id}`)}
         onDelete={(row) => setDeleteTarget(row)}
       />
+      <Pagination page={page} pages={pages} total={total} pageSize={PAGE_SIZE} onPageChange={setPage} />
       <ConfirmDialog
         open={!!deleteTarget}
         title="Eliminar activo"

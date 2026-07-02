@@ -9,8 +9,8 @@ class RolService:
     def __init__(self, repo: RolRepository):
         self.repo = repo
 
-    def listar(self) -> list[Rol]:
-        return self.repo.get_all()
+    def listar(self, skip: int, limit: int) -> tuple[list[Rol], int]:
+        return self.repo.get_paginated(skip, limit)
 
     def obtener(self, rol_id: int) -> Rol:
         rol = self.repo.get_by_id(rol_id)

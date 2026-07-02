@@ -1,5 +1,6 @@
 import api from "./axios";
 import { ENDPOINTS } from "./endpoints";
+import { fetchAllPages, type Page, type PageParams } from "./pagination";
 
 export interface Categoria {
   id: number;
@@ -24,7 +25,8 @@ export interface CategoriaUpdate {
 }
 
 export const categoriasApi = {
-  listar: () => api.get<Categoria[]>(ENDPOINTS.CATEGORIAS),
+  listar: (params?: PageParams) => api.get<Page<Categoria>>(ENDPOINTS.CATEGORIAS, { params }),
+  listarTodos: () => fetchAllPages<Categoria>((p) => api.get<Page<Categoria>>(ENDPOINTS.CATEGORIAS, { params: p })),
   obtener: (id: number) => api.get<Categoria>(`${ENDPOINTS.CATEGORIAS}/${id}`),
   crear: (data: CategoriaCreate) => api.post<Categoria>(ENDPOINTS.CATEGORIAS, data),
   actualizar: (id: number, data: CategoriaUpdate) =>

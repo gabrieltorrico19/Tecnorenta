@@ -1,5 +1,6 @@
 import api from "./axios";
 import { ENDPOINTS } from "./endpoints";
+import { fetchAllPages, type Page, type PageParams } from "./pagination";
 
 export interface Usuario {
   id: number;
@@ -27,7 +28,8 @@ export interface UsuarioUpdate {
 }
 
 export const usuarioApi = {
-  listar: () => api.get<Usuario[]>(ENDPOINTS.USUARIOS),
+  listar: (params?: PageParams) => api.get<Page<Usuario>>(ENDPOINTS.USUARIOS, { params }),
+  listarTodos: () => fetchAllPages<Usuario>((p) => api.get<Page<Usuario>>(ENDPOINTS.USUARIOS, { params: p })),
   obtener: (id: number) => api.get<Usuario>(`${ENDPOINTS.USUARIOS}/${id}`),
   crear: (data: UsuarioCreate) => api.post<Usuario>(ENDPOINTS.USUARIOS, data),
   actualizar: (id: number, data: UsuarioUpdate) =>

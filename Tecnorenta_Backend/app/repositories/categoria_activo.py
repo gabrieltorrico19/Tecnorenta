@@ -10,6 +10,12 @@ class CategoriaActivoRepository:
     def get_all(self) -> list[CategoriaActivo]:
         return self.db.query(CategoriaActivo).all()
 
+    def get_paginated(self, skip: int, limit: int) -> tuple[list[CategoriaActivo], int]:
+        query = self.db.query(CategoriaActivo)
+        total = query.count()
+        items = query.order_by(CategoriaActivo.id.desc()).offset(skip).limit(limit).all()
+        return items, total
+
     def get_by_id(self, categoria_id: int) -> CategoriaActivo | None:
         return self.db.query(CategoriaActivo).filter(CategoriaActivo.id == categoria_id).first()
 

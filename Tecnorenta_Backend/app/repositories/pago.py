@@ -10,6 +10,12 @@ class PagoRepository:
     def get_all(self) -> list[Pago]:
         return self.db.query(Pago).all()
 
+    def get_paginated(self, skip: int, limit: int) -> tuple[list[Pago], int]:
+        query = self.db.query(Pago)
+        total = query.count()
+        items = query.order_by(Pago.id.desc()).offset(skip).limit(limit).all()
+        return items, total
+
     def get_by_id(self, pago_id: int) -> Pago | None:
         return self.db.query(Pago).filter(Pago.id == pago_id).first()
 

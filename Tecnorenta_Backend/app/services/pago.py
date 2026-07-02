@@ -9,8 +9,8 @@ class PagoService:
     def __init__(self, repo: PagoRepository):
         self.repo = repo
 
-    def listar(self) -> list[Pago]:
-        return self.repo.get_all()
+    def listar(self, skip: int, limit: int) -> tuple[list[Pago], int]:
+        return self.repo.get_paginated(skip, limit)
 
     def listar_por_contrato(self, contrato_id: int) -> list[Pago]:
         return self.repo.get_by_contrato(contrato_id)

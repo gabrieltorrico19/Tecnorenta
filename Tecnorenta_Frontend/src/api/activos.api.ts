@@ -1,5 +1,6 @@
 import api from "./axios";
 import { ENDPOINTS } from "./endpoints";
+import { fetchAllPages, type Page, type PageParams } from "./pagination";
 
 export interface Activo {
   id: number;
@@ -51,7 +52,8 @@ export interface ActivoFoto {
 }
 
 export const activosApi = {
-  listar: () => api.get<Activo[]>(ENDPOINTS.ACTIVOS),
+  listar: (params?: PageParams) => api.get<Page<Activo>>(ENDPOINTS.ACTIVOS, { params }),
+  listarTodos: () => fetchAllPages<Activo>((p) => api.get<Page<Activo>>(ENDPOINTS.ACTIVOS, { params: p })),
   obtener: (id: number) => api.get<Activo>(`${ENDPOINTS.ACTIVOS}/${id}`),
   crear: (data: ActivoCreate) => api.post<Activo>(ENDPOINTS.ACTIVOS, data),
   actualizar: (id: number, data: ActivoUpdate) =>

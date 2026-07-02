@@ -4,17 +4,20 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.dependencies.pagination import PaginationParams
 from app.models.pago import Pago
 from app.repositories.pago import PagoRepository
 from app.services.pago import PagoService
+from app.schemas.common import Page, paginate
 from app.schemas.pago import PagoCreate, PagoUpdate, PagoOut
 
 router = APIRouter(prefix="/pagos", tags=["Pagos"])
 
 
-@router.get("/", response_model=list[PagoOut])
-def listar(db: Session = Depends(get_db)):
-    return PagoService(PagoRepository(db)).listar()
+@router.get("/", response_model=Page[PagoOut])
+def listar(pagination: PaginationParams = Depends(), db: Session = Depends(get_db)):
+    items, total = PagoService(PagoRepository(db)).listar(pagination.skip, pagination.limit)
+    return paginate(items, total, pagination.page, pagination.page_size)
 
 
 @router.get("/vencidos", response_model=list[PagoOut])

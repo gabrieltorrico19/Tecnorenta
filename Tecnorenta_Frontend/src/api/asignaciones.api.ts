@@ -1,5 +1,6 @@
 import api from "./axios";
 import { ENDPOINTS } from "./endpoints";
+import { fetchAllPages, type Page, type PageParams } from "./pagination";
 
 export interface Asignacion {
   id: number;
@@ -27,7 +28,8 @@ export interface AsignacionUpdate {
 }
 
 export const asignacionesApi = {
-  listar: () => api.get<Asignacion[]>(ENDPOINTS.ASIGNACIONES),
+  listar: (params?: PageParams) => api.get<Page<Asignacion>>(ENDPOINTS.ASIGNACIONES, { params }),
+  listarTodos: () => fetchAllPages<Asignacion>((p) => api.get<Page<Asignacion>>(ENDPOINTS.ASIGNACIONES, { params: p })),
   obtener: (id: number) => api.get<Asignacion>(`${ENDPOINTS.ASIGNACIONES}/${id}`),
   crear: (data: AsignacionCreate) => api.post<Asignacion>(ENDPOINTS.ASIGNACIONES, data),
   actualizar: (id: number, data: AsignacionUpdate) =>

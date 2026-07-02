@@ -9,8 +9,8 @@ class MantenimientoService:
     def __init__(self, repo: MantenimientoRepository):
         self.repo = repo
 
-    def listar(self) -> list[Mantenimiento]:
-        return self.repo.get_all()
+    def listar(self, skip: int, limit: int) -> tuple[list[Mantenimiento], int]:
+        return self.repo.get_paginated(skip, limit)
 
     def listar_por_activo(self, activo_id: int) -> list[Mantenimiento]:
         return self.repo.get_by_activo(activo_id)

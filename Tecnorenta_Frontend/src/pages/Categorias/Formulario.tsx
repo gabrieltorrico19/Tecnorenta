@@ -17,8 +17,8 @@ export default function FormularioCategoria() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    categoriasApi.listar().then((res) => {
-      setCategorias(res.data.filter((c) => c.id !== Number(id)));
+    categoriasApi.listarTodos().then((items) => {
+      setCategorias(items.filter((c) => c.id !== Number(id)));
     }).catch(() => {});
   }, [id]);
 

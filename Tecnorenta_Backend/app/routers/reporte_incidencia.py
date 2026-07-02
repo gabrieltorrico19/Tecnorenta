@@ -2,16 +2,19 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.dependencies.pagination import PaginationParams
 from app.repositories.reporte_incidencia import ReporteIncidenciaRepository
 from app.services.reporte_incidencia import ReporteIncidenciaService
+from app.schemas.common import Page, paginate
 from app.schemas.reporte_incidencia import ReporteIncidenciaCreate, ReporteIncidenciaUpdate, ReporteIncidenciaOut
 
 router = APIRouter(prefix="/reportes", tags=["Reportes de Incidencia"])
 
 
-@router.get("/", response_model=list[ReporteIncidenciaOut])
-def listar(db: Session = Depends(get_db)):
-    return ReporteIncidenciaService(ReporteIncidenciaRepository(db)).listar()
+@router.get("/", response_model=Page[ReporteIncidenciaOut])
+def listar(pagination: PaginationParams = Depends(), db: Session = Depends(get_db)):
+    items, total = ReporteIncidenciaService(ReporteIncidenciaRepository(db)).listar(pagination.skip, pagination.limit)
+    return paginate(items, total, pagination.page, pagination.page_size)
 
 
 @router.get("/{reporte_id}", response_model=ReporteIncidenciaOut)

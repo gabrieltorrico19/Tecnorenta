@@ -12,8 +12,8 @@ class CategoriaActivoService:
         self.repo = repo
         self.db = db
 
-    def listar(self) -> list[CategoriaActivo]:
-        return self.repo.get_all()
+    def listar(self, skip: int, limit: int) -> tuple[list[CategoriaActivo], int]:
+        return self.repo.get_paginated(skip, limit)
 
     def obtener(self, categoria_id: int) -> CategoriaActivo:
         cat = self.repo.get_by_id(categoria_id)

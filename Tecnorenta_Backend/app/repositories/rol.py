@@ -10,6 +10,12 @@ class RolRepository:
     def get_all(self) -> list[Rol]:
         return self.db.query(Rol).all()
 
+    def get_paginated(self, skip: int, limit: int) -> tuple[list[Rol], int]:
+        query = self.db.query(Rol)
+        total = query.count()
+        items = query.order_by(Rol.id.desc()).offset(skip).limit(limit).all()
+        return items, total
+
     def get_by_id(self, rol_id: int) -> Rol | None:
         return self.db.query(Rol).filter(Rol.id == rol_id).first()
 

@@ -10,6 +10,12 @@ class HistorialUbicacionRepository:
     def get_all(self) -> list[HistorialUbicacion]:
         return self.db.query(HistorialUbicacion).all()
 
+    def get_paginated(self, skip: int, limit: int) -> tuple[list[HistorialUbicacion], int]:
+        query = self.db.query(HistorialUbicacion)
+        total = query.count()
+        items = query.order_by(HistorialUbicacion.id.desc()).offset(skip).limit(limit).all()
+        return items, total
+
     def get_by_id(self, registro_id: int) -> HistorialUbicacion | None:
         return self.db.query(HistorialUbicacion).filter(HistorialUbicacion.id == registro_id).first()
 

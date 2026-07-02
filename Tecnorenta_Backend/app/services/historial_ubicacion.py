@@ -9,8 +9,8 @@ class HistorialUbicacionService:
     def __init__(self, repo: HistorialUbicacionRepository):
         self.repo = repo
 
-    def listar(self) -> list[HistorialUbicacion]:
-        return self.repo.get_all()
+    def listar(self, skip: int, limit: int) -> tuple[list[HistorialUbicacion], int]:
+        return self.repo.get_paginated(skip, limit)
 
     def listar_por_asignacion(self, asignacion_id: int) -> list[HistorialUbicacion]:
         return self.repo.get_by_asignacion(asignacion_id)
