@@ -147,15 +147,46 @@ def seed_admin(db: Session, roles_ids: dict[str, int]) -> None:
         db.add(admin)
 
 
+def seed_usuarios_demo(db: Session, roles_ids: dict[str, int]) -> None:
+    """Crea un usuario por rol operativo para poblar el KPI de usuarios y
+    permitir probar el DSS con distintos perfiles (contraseña: demo1234)."""
+    usuarios = [
+        ("Gabriela Vargas", "gerente@tecnorenta.com", "70011122", "Gerente"),
+        ("Andrés Rojas", "almacen@tecnorenta.com", "70022233", "Almacén"),
+        ("Técnico SIGTAR", "tecnico@tecnorenta.com", "70033344", "Técnico"),
+        ("Operador SIGTAR", "operador@tecnorenta.com", "70044455", "Operador"),
+        ("Cliente Demo", "cliente@tecnorenta.com", "70055566", "Cliente"),
+    ]
+    for nombre, email, tel, rol in usuarios:
+        existing = db.query(Usuario).filter(Usuario.email == email).first()
+        if not existing and roles_ids.get(rol):
+            db.add(Usuario(
+                nombre=nombre,
+                email=email,
+                password_hash=hash_password("demo1234"),
+                telefono=tel,
+                activo=True,
+                id_rol=roles_ids[rol],
+            ))
+    db.flush()
+
+
+def run(db: Session) -> dict[str, int]:
+    """Pipeline de roles/permisos/usuarios reutilizable (CLI y migraciones)."""
+    roles_ids = seed_roles(db)
+    seed_permisos(db)
+    seed_permisos_asignacion(db, roles_ids)
+    seed_admin(db, roles_ids)
+    seed_usuarios_demo(db, roles_ids)
+    return roles_ids
+
+
 def main() -> None:
     db = SessionLocal()
     try:
-        roles_ids = seed_roles(db)
-        seed_permisos(db)
-        seed_permisos_asignacion(db, roles_ids)
-        seed_admin(db, roles_ids)
+        roles_ids = run(db)
         db.commit()
-        print(f"Seed data: {len(roles_ids)} roles, permisos asignados")
+        print(f"Seed data: {len(roles_ids)} roles, permisos y usuarios asignados")
     except Exception as e:
         db.rollback()
         print(f"Error: {e}")

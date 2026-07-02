@@ -20,6 +20,10 @@ export const ENDPOINTS = {
   CHECKLIST_ESTADO: `${API_URL}/checklist`,
   DASHBOARD: {
     STATS: `${API_URL}/dashboard/stats`,
+    KPIS: `${API_URL}/dashboard/kpis`,
+    RECOMENDACIONES: `${API_URL}/dashboard/recomendaciones`,
+    TENDENCIAS: `${API_URL}/dashboard/tendencias`,
+    ACTIVOS_REPORTE: `${API_URL}/dashboard/activos-reporte`,
     CONTRATOS_PROXIMOS: `${API_URL}/dashboard/contratos-proximos-vencer`,
   },
   HEALTH: `${API_URL}/health`,
