@@ -38,3 +38,11 @@ generar_*.py
 
 # Stray files
 nul
+
+# Salida de herramientas / caché de análisis (no pertenece al repo)
+graphify-out/
+SKILLS.md
+
+# Entregables generados (informe, presentación, capturas, diagramas)
+entregables/
+*.pptx
