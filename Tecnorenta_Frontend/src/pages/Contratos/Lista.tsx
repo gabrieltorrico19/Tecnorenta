@@ -6,6 +6,7 @@ import DataTable from "../../components/common/DataTable";
 import Pagination from "../../components/common/Pagination";
 import Badge from "../../components/common/Badge";
 import Button from "../../components/common/Button";
+import { formatCurrency } from "../../utils/helpers";
 import { Plus } from "lucide-react";
 
 const PAGE_SIZE = 20;
@@ -92,7 +93,7 @@ export default function ListaContratos() {
     {
       key: "monto_mensual",
       label: "Monto Mensual",
-      render: (row: Contrato) => <>{`$ ${row.monto_mensual}`}</>,
+      render: (row: Contrato) => <>{formatCurrency(row.monto_mensual)}</>,
     },
     {
       key: "estado",

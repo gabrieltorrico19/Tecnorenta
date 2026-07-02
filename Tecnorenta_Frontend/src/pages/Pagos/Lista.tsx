@@ -5,6 +5,7 @@ import DataTable from "../../components/common/DataTable";
 import Pagination from "../../components/common/Pagination";
 import Badge from "../../components/common/Badge";
 import Button from "../../components/common/Button";
+import { formatCurrency } from "../../utils/helpers";
 import { Plus } from "lucide-react";
 
 const PAGE_SIZE = 20;
@@ -76,7 +77,7 @@ export default function ListaPagos() {
     {
       key: "monto",
       label: "Monto",
-      render: (row: Pago) => <>{`$ ${row.monto}`}</>,
+      render: (row: Pago) => <>{formatCurrency(row.monto)}</>,
     },
     {
       key: "fecha",
