@@ -106,7 +106,7 @@ export default function ListaActivos() {
       render: (row: Activo) => {
         const url = fotosMap[row.id];
         return url ? (
-          <img src={`http://localhost:8000/static/${url}`} alt="" style={thumbCol} />
+          <img src={url.startsWith('http') ? url : `http://localhost:8000/static/${url}`} alt="" style={thumbCol} />
         ) : (
           <span style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>—</span>
         );

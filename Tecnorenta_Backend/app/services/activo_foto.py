@@ -1,6 +1,9 @@
+import io
 import uuid
 from pathlib import Path
 
+import cloudinary
+from cloudinary import uploader
 from fastapi import HTTPException, UploadFile, status
 
 from app.core.config import settings
@@ -11,6 +14,12 @@ from app.repositories.activo import ActivoRepository
 
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
 MAX_FILE_SIZE = 10 * 1024 * 1024
+
+cloudinary.config(
+    cloud_name=settings.CLOUDINARY_CLOUD_NAME,
+    api_key=settings.CLOUDINARY_API_KEY,
+    api_secret=settings.CLOUDINARY_API_SECRET,
+)
 
 
 class ActivoFotoService:
@@ -39,17 +48,21 @@ class ActivoFotoService:
         if len(content) > MAX_FILE_SIZE:
             raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="Archivo demasiado grande (máx 10MB)")
 
-        filename = f"{uuid.uuid4().hex}{ext}"
-        subdir = Path(settings.UPLOAD_DIR) / "activos"
-        subdir.mkdir(parents=True, exist_ok=True)
-        filepath = subdir / filename
-        filepath.write_bytes(content)
+        public_id = f"activos/{activo_id}/{uuid.uuid4().hex}"
+        result = uploader.upload(
+            io.BytesIO(content),
+            public_id=public_id,
+            overwrite=True,
+        )
 
-        rel_path = f"activos/{filename}"
+        url = result.get("secure_url")
+        if not url:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error al subir imagen a Cloudinary")
+
         fotos = self.repo.get_by_activo(activo_id)
         orden = max((f.orden for f in fotos), default=-1) + 1
 
-        foto = ActivoFoto(id_activo=activo_id, url=rel_path, orden=orden)
+        foto = ActivoFoto(id_activo=activo_id, url=url, orden=orden)
         return self.repo.create(foto)
 
     def eliminar(self, activo_id: int, foto_id: int) -> None:
@@ -58,8 +71,18 @@ class ActivoFotoService:
         if not foto or foto.id_activo != activo_id:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Foto no encontrada")
 
-        filepath = Path(settings.UPLOAD_DIR) / "activos" / Path(foto.url).name
-        if filepath.exists():
-            filepath.unlink()
+        if "/upload/" in foto.url:
+            # Extract public_id from Cloudinary URL
+            parts = foto.url.split("/upload/")
+            if len(parts) > 1:
+                path = parts[1].split("/", 1)[1] if "/" in parts[1] else parts[1]
+                public_id = path.rsplit(".", 1)[0]  # remove extension
+                # Remove version prefix (v1234567890/)
+                if public_id.startswith("v") and "/" in public_id:
+                    public_id = public_id.split("/", 1)[1]
+                try:
+                    uploader.destroy(public_id)
+                except Exception:
+                    pass
 
         self.repo.delete(foto)
