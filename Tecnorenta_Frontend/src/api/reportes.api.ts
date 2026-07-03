@@ -4,35 +4,38 @@ import { fetchAllPages, type Page, type PageParams } from "./pagination";
 
 export interface Reporte {
   id: number;
-  activo_id: number;
-  activo_nombre?: string;
-  usuario_id: number;
-  usuario_nombre?: string;
-  tipo_incidencia: string;
+  fecha: string;
   descripcion: string;
-  fecha_reporte: string;
-  estado: string;
-  created_at: string;
-  updated_at: string;
+  gravedad: string;                  // "leve" | "moderado" | "grave"
+  url_foto: string | null;
+  estado: string;                    // "abierto" | "en_atencion" | "cerrado"
+  id_activo: number;
 }
 
 export interface ReporteCreate {
-  activo_id: number;
-  usuario_id: number;
-  tipo_incidencia: string;
+  fecha: string;
   descripcion: string;
-  fecha_reporte: string;
-  estado: string;
+  gravedad: string;
+  url_foto?: string;
+  estado?: string;
+  id_activo: number;
 }
 
 export interface ReporteUpdate {
-  tipo_incidencia?: string;
   descripcion?: string;
+  gravedad?: string;
+  url_foto?: string;
   estado?: string;
 }
 
+export interface ReporteFiltros extends PageParams {
+  gravedad?: string;
+  estado?: string;
+  id_activo?: number;
+}
+
 export const reportesApi = {
-  listar: (params?: PageParams) => api.get<Page<Reporte>>(ENDPOINTS.REPORTES, { params }),
+  listar: (params?: ReporteFiltros) => api.get<Page<Reporte>>(ENDPOINTS.REPORTES, { params }),
   listarTodos: () => fetchAllPages<Reporte>((p) => api.get<Page<Reporte>>(ENDPOINTS.REPORTES, { params: p })),
   obtener: (id: number) => api.get<Reporte>(`${ENDPOINTS.REPORTES}/${id}`),
   crear: (data: ReporteCreate) => api.post<Reporte>(ENDPOINTS.REPORTES, data),

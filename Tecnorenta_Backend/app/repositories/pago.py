@@ -1,6 +1,8 @@
+from datetime import date
+
 from sqlalchemy.orm import Session
 
-from app.models.pago import Pago
+from app.models.pago import Pago, EstadoPago
 
 
 class PagoRepository:
@@ -10,8 +12,24 @@ class PagoRepository:
     def get_all(self) -> list[Pago]:
         return self.db.query(Pago).all()
 
-    def get_paginated(self, skip: int, limit: int) -> tuple[list[Pago], int]:
+    def get_paginated(
+        self,
+        skip: int,
+        limit: int,
+        estado: EstadoPago | None = None,
+        id_contrato: int | None = None,
+        fecha_desde: date | None = None,
+        fecha_hasta: date | None = None,
+    ) -> tuple[list[Pago], int]:
         query = self.db.query(Pago)
+        if estado is not None:
+            query = query.filter(Pago.estado == estado)
+        if id_contrato is not None:
+            query = query.filter(Pago.id_contrato == id_contrato)
+        if fecha_desde is not None:
+            query = query.filter(Pago.fecha >= fecha_desde)
+        if fecha_hasta is not None:
+            query = query.filter(Pago.fecha <= fecha_hasta)
         total = query.count()
         items = query.order_by(Pago.id.desc()).offset(skip).limit(limit).all()
         return items, total

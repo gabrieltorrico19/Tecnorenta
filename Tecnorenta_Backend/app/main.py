@@ -21,6 +21,7 @@ from app.routers import (
     mantenimiento,
     activo_foto,
     dashboard,
+    informe,
 )
 
 app = FastAPI(title=settings.APP_NAME, version=settings.VERSION)
@@ -48,6 +49,7 @@ app.include_router(reporte_incidencia.router, prefix="/api/v1")
 app.include_router(mantenimiento.router, prefix="/api/v1")
 app.include_router(activo_foto.router, prefix="/api/v1")
 app.include_router(dashboard.router, prefix="/api/v1")
+app.include_router(informe.router, prefix="/api/v1")
 
 static_dir = Path(settings.UPLOAD_DIR).resolve()
 static_dir.mkdir(parents=True, exist_ok=True)

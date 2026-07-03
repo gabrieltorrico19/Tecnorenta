@@ -4,38 +4,39 @@ import { fetchAllPages, type Page, type PageParams } from "./pagination";
 
 export interface Cliente {
   id: number;
-  tipo_persona: string;
-  tipo_documento: string;
-  numero_documento: string;
-  nombre: string;
-  email: string;
-  telefono: string | null;
+  razon_social: string;
+  nit: string;
   direccion: string | null;
-  activo: boolean;
-  created_at: string;
-  updated_at: string;
+  latitud: number | null;
+  longitud: number | null;
+  sector: string | null;
 }
 
 export interface ClienteCreate {
-  tipo_persona: string;
-  tipo_documento: string;
-  numero_documento: string;
-  nombre: string;
-  email: string;
-  telefono?: string;
+  razon_social: string;
+  nit: string;
   direccion?: string;
+  latitud?: number | null;
+  longitud?: number | null;
+  sector?: string;
 }
 
 export interface ClienteUpdate {
-  nombre?: string;
-  email?: string;
-  telefono?: string;
+  razon_social?: string;
+  nit?: string;
   direccion?: string;
-  activo?: boolean;
+  latitud?: number | null;
+  longitud?: number | null;
+  sector?: string;
+}
+
+export interface ClienteFiltros extends PageParams {
+  q?: string;
+  sector?: string;
 }
 
 export const clientesApi = {
-  listar: (params?: PageParams) => api.get<Page<Cliente>>(ENDPOINTS.CLIENTES, { params }),
+  listar: (params?: ClienteFiltros) => api.get<Page<Cliente>>(ENDPOINTS.CLIENTES, { params }),
   listarTodos: () => fetchAllPages<Cliente>((p) => api.get<Page<Cliente>>(ENDPOINTS.CLIENTES, { params: p })),
   obtener: (id: number) => api.get<Cliente>(`${ENDPOINTS.CLIENTES}/${id}`),
   crear: (data: ClienteCreate) => api.post<Cliente>(ENDPOINTS.CLIENTES, data),

@@ -1,11 +1,12 @@
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi import APIRouter, Depends, UploadFile, File, Query
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.database import get_db
+from app.models.contrato import EstadoContrato
 from app.repositories.contrato import ContratoRepository
 from app.services.contrato import ContratoService
 from app.schemas.contrato import ContratoCreate, ContratoUpdate, ContratoOut
@@ -16,8 +17,15 @@ router = APIRouter(prefix="/contratos", tags=["Contratos"])
 
 
 @router.get("/", response_model=Page[ContratoOut])
-def listar(pagination: PaginationParams = Depends(), db: Session = Depends(get_db)):
-    items, total = ContratoService(ContratoRepository(db)).listar(pagination.skip, pagination.limit)
+def listar(
+    pagination: PaginationParams = Depends(),
+    estado: EstadoContrato | None = Query(None, description="Filtrar por estado"),
+    id_cliente: int | None = Query(None, description="Filtrar por cliente"),
+    db: Session = Depends(get_db),
+):
+    items, total = ContratoService(ContratoRepository(db)).listar(
+        pagination.skip, pagination.limit, estado=estado, id_cliente=id_cliente
+    )
     return paginate(items, total, pagination.page, pagination.page_size)
 
 

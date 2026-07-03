@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { clientesApi, type Cliente } from "../../api/clientes.api";
 import DataTable from "../../components/common/DataTable";
 import Pagination from "../../components/common/Pagination";
-import Badge from "../../components/common/Badge";
+import FilterBar from "../../components/common/FilterBar";
 
 const PAGE_SIZE = 20;
 
@@ -15,12 +15,28 @@ export default function ListaClientes() {
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
   const [total, setTotal] = useState(0);
+  // filtros (server-side)
+  const [q, setQ] = useState("");
+  const [qAplicado, setQAplicado] = useState("");
+
+  // debounce de la búsqueda: aplica 400 ms después de dejar de escribir
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setQAplicado(q);
+      setPage(1);
+    }, 400);
+    return () => clearTimeout(t);
+  }, [q]);
 
   const listar = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await clientesApi.listar({ page, page_size: PAGE_SIZE });
+      const res = await clientesApi.listar({
+        page,
+        page_size: PAGE_SIZE,
+        q: qAplicado || undefined,
+      });
       setClientes(res.data.items);
       setPages(res.data.pages);
       setTotal(res.data.total);
@@ -29,7 +45,7 @@ export default function ListaClientes() {
     } finally {
       setLoading(false);
     }
-  }, [page]);
+  }, [page, qAplicado]);
 
   useEffect(() => {
     listar();
@@ -37,7 +53,7 @@ export default function ListaClientes() {
 
   const eliminar = useCallback(
     async (cliente: Cliente) => {
-      if (!window.confirm(`¿Eliminar cliente "${cliente.nombre}"?`)) return;
+      if (!window.confirm(`¿Eliminar cliente "${cliente.razon_social}"?`)) return;
       try {
         await clientesApi.eliminar(cliente.id);
         if (clientes.length === 1 && page > 1) setPage(page - 1);
@@ -51,26 +67,17 @@ export default function ListaClientes() {
 
   const columns = [
     { key: "id", label: "ID" },
+    { key: "razon_social", label: "Razón Social" },
+    { key: "nit", label: "NIT" },
     {
-      key: "documento",
-      label: "Documento",
-      render: (row: Cliente) => `${row.tipo_documento} ${row.numero_documento}`,
-    },
-    { key: "nombre", label: "Nombre" },
-    { key: "email", label: "Email" },
-    {
-      key: "telefono",
-      label: "Teléfono",
-      render: (row: Cliente) => row.telefono ?? "—",
+      key: "sector",
+      label: "Sector",
+      render: (row: Cliente) => <>{row.sector ?? "—"}</>,
     },
     {
-      key: "activo",
-      label: "Activo",
-      render: (row: Cliente) => (
-        <Badge variant={row.activo ? "success" : "danger"}>
-          {row.activo ? "Sí" : "No"}
-        </Badge>
-      ),
+      key: "direccion",
+      label: "Dirección",
+      render: (row: Cliente) => <>{row.direccion ?? "—"}</>,
     },
   ];
 
@@ -82,6 +89,15 @@ export default function ListaClientes() {
           + Nuevo Cliente
         </button>
       </div>
+      <FilterBar hayFiltros={q !== ""} onLimpiar={() => setQ("")}>
+        <input
+          type="search"
+          placeholder="Buscar por razón social o NIT…"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          style={{ minWidth: 260 }}
+        />
+      </FilterBar>
       <DataTable
         columns={columns}
         data={clientes}

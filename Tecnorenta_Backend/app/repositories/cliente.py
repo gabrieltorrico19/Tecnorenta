@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.models.cliente import Cliente
@@ -10,8 +11,22 @@ class ClienteRepository:
     def get_all(self) -> list[Cliente]:
         return self.db.query(Cliente).all()
 
-    def get_paginated(self, skip: int, limit: int) -> tuple[list[Cliente], int]:
+    def get_paginated(
+        self,
+        skip: int,
+        limit: int,
+        q: str | None = None,
+        sector: str | None = None,
+    ) -> tuple[list[Cliente], int]:
         query = self.db.query(Cliente)
+        if q:
+            like = f"%{q}%"
+            query = query.filter(or_(
+                Cliente.razon_social.ilike(like),
+                Cliente.nit.ilike(like),
+            ))
+        if sector:
+            query = query.filter(Cliente.sector == sector)
         total = query.count()
         items = query.order_by(Cliente.id.desc()).offset(skip).limit(limit).all()
         return items, total

@@ -1,6 +1,8 @@
+from datetime import date
+
 from sqlalchemy.orm import Session
 
-from app.models.mantenimiento import Mantenimiento
+from app.models.mantenimiento import Mantenimiento, TipoMantenimiento
 
 
 class MantenimientoRepository:
@@ -10,8 +12,24 @@ class MantenimientoRepository:
     def get_all(self) -> list[Mantenimiento]:
         return self.db.query(Mantenimiento).all()
 
-    def get_paginated(self, skip: int, limit: int) -> tuple[list[Mantenimiento], int]:
+    def get_paginated(
+        self,
+        skip: int,
+        limit: int,
+        tipo: TipoMantenimiento | None = None,
+        id_activo: int | None = None,
+        fecha_desde: date | None = None,
+        fecha_hasta: date | None = None,
+    ) -> tuple[list[Mantenimiento], int]:
         query = self.db.query(Mantenimiento)
+        if tipo is not None:
+            query = query.filter(Mantenimiento.tipo == tipo)
+        if id_activo is not None:
+            query = query.filter(Mantenimiento.id_activo == id_activo)
+        if fecha_desde is not None:
+            query = query.filter(Mantenimiento.fecha >= fecha_desde)
+        if fecha_hasta is not None:
+            query = query.filter(Mantenimiento.fecha <= fecha_hasta)
         total = query.count()
         items = query.order_by(Mantenimiento.id.desc()).offset(skip).limit(limit).all()
         return items, total

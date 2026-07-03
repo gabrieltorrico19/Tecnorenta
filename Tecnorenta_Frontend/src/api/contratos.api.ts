@@ -32,8 +32,13 @@ export interface ContratoUpdate {
   url_documento?: string;
 }
 
+export interface ContratoFiltros extends PageParams {
+  estado?: string;
+  id_cliente?: number;
+}
+
 export const contratosApi = {
-  listar: (params?: PageParams) => api.get<Page<Contrato>>(ENDPOINTS.CONTRATOS, { params }),
+  listar: (params?: ContratoFiltros) => api.get<Page<Contrato>>(ENDPOINTS.CONTRATOS, { params }),
   listarTodos: () => fetchAllPages<Contrato>((p) => api.get<Page<Contrato>>(ENDPOINTS.CONTRATOS, { params: p })),
   obtener: (id: number) => api.get<Contrato>(`${ENDPOINTS.CONTRATOS}/${id}`),
   crear: (data: ContratoCreate) => api.post<Contrato>(ENDPOINTS.CONTRATOS, data),

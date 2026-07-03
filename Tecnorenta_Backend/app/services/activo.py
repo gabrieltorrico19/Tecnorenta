@@ -12,8 +12,8 @@ class ActivoService:
         self.repo = repo
         self.db = db
 
-    def listar(self, skip: int, limit: int) -> tuple[list[Activo], int]:
-        activos, total = self.repo.get_paginated(skip, limit)
+    def listar(self, skip: int, limit: int, **filtros) -> tuple[list[Activo], int]:
+        activos, total = self.repo.get_paginated(skip, limit, **filtros)
         for a in activos:
             a.categoria_nombre = a.categoria.nombre if a.categoria else None
         return activos, total

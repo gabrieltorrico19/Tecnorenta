@@ -14,10 +14,11 @@ export const ENDPOINTS = {
   CONTRATOS: `${API_URL}/contratos`,
   PAGOS: `${API_URL}/pagos`,
   ASIGNACIONES: `${API_URL}/asignaciones`,
-  REPORTES: `${API_URL}/reportes-incidencia`,
+  REPORTES: `${API_URL}/reportes`,
   MANTENIMIENTOS: `${API_URL}/mantenimientos`,
   HISTORIAL_UBICACION: `${API_URL}/historial-ubicacion`,
   CHECKLIST_ESTADO: `${API_URL}/checklist`,
+  INFORMES: `${API_URL}/informes`,
   DASHBOARD: {
     STATS: `${API_URL}/dashboard/stats`,
     KPIS: `${API_URL}/dashboard/kpis`,

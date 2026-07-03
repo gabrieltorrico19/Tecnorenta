@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -12,8 +12,15 @@ router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
 
 @router.get("/", response_model=Page[ClienteOut])
-def listar(pagination: PaginationParams = Depends(), db: Session = Depends(get_db)):
-    items, total = ClienteService(ClienteRepository(db)).listar(pagination.skip, pagination.limit)
+def listar(
+    pagination: PaginationParams = Depends(),
+    q: str | None = Query(None, max_length=100, description="Buscar por razón social o NIT"),
+    sector: str | None = Query(None, max_length=100, description="Filtrar por sector"),
+    db: Session = Depends(get_db),
+):
+    items, total = ClienteService(ClienteRepository(db)).listar(
+        pagination.skip, pagination.limit, q=q, sector=sector
+    )
     return paginate(items, total, pagination.page, pagination.page_size)
 
 

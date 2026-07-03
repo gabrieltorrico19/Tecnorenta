@@ -5,6 +5,7 @@ import DataTable from "../../components/common/DataTable";
 import Pagination from "../../components/common/Pagination";
 import Badge from "../../components/common/Badge";
 import Button from "../../components/common/Button";
+import FilterBar from "../../components/common/FilterBar";
 import { formatCurrency } from "../../utils/helpers";
 import { Plus } from "lucide-react";
 
@@ -13,9 +14,7 @@ const PAGE_SIZE = 20;
 const estadoVariant: Record<string, "success" | "warning" | "danger" | "default"> = {
   pagado: "success",
   pendiente: "warning",
-  atrasado: "danger",
-  rechazado: "danger",
-  anulado: "danger",
+  vencido: "danger",
 };
 
 function formatDate(dateStr: string | null): string {
@@ -32,12 +31,18 @@ export default function ListaPagos() {
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
   const [total, setTotal] = useState(0);
+  // filtros (server-side)
+  const [estado, setEstado] = useState("");
 
   const listar = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await pagosApi.listar({ page, page_size: PAGE_SIZE });
+      const res = await pagosApi.listar({
+        page,
+        page_size: PAGE_SIZE,
+        estado: estado || undefined,
+      });
       setPagos(res.data.items);
       setPages(res.data.pages);
       setTotal(res.data.total);
@@ -46,7 +51,7 @@ export default function ListaPagos() {
     } finally {
       setLoading(false);
     }
-  }, [page]);
+  }, [page, estado]);
 
   const eliminar = useCallback(
     async (id: number) => {
@@ -99,6 +104,14 @@ export default function ListaPagos() {
         <h2>Pagos</h2>
         <Button onClick={() => navigate("/pagos/nuevo")} icon={<Plus size={16} />}>Nuevo Pago</Button>
       </div>
+      <FilterBar hayFiltros={estado !== ""} onLimpiar={() => { setEstado(""); setPage(1); }}>
+        <select value={estado} onChange={(e) => { setEstado(e.target.value); setPage(1); }}>
+          <option value="">Todos los estados</option>
+          <option value="pagado">Pagado</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="vencido">Vencido</option>
+        </select>
+      </FilterBar>
       <DataTable
         columns={columns}
         data={pagos}

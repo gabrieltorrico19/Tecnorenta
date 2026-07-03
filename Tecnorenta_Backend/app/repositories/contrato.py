@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.models.contrato import Contrato
+from app.models.contrato import Contrato, EstadoContrato
 
 
 class ContratoRepository:
@@ -10,8 +10,18 @@ class ContratoRepository:
     def get_all(self) -> list[Contrato]:
         return self.db.query(Contrato).all()
 
-    def get_paginated(self, skip: int, limit: int) -> tuple[list[Contrato], int]:
+    def get_paginated(
+        self,
+        skip: int,
+        limit: int,
+        estado: EstadoContrato | None = None,
+        id_cliente: int | None = None,
+    ) -> tuple[list[Contrato], int]:
         query = self.db.query(Contrato)
+        if estado is not None:
+            query = query.filter(Contrato.estado == estado)
+        if id_cliente is not None:
+            query = query.filter(Contrato.id_cliente == id_cliente)
         total = query.count()
         items = query.order_by(Contrato.id.desc()).offset(skip).limit(limit).all()
         return items, total

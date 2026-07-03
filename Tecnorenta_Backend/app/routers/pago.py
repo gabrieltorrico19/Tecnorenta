@@ -1,11 +1,11 @@
 from datetime import date
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.dependencies.pagination import PaginationParams
-from app.models.pago import Pago
+from app.models.pago import Pago, EstadoPago
 from app.repositories.pago import PagoRepository
 from app.services.pago import PagoService
 from app.schemas.common import Page, paginate
@@ -15,8 +15,19 @@ router = APIRouter(prefix="/pagos", tags=["Pagos"])
 
 
 @router.get("/", response_model=Page[PagoOut])
-def listar(pagination: PaginationParams = Depends(), db: Session = Depends(get_db)):
-    items, total = PagoService(PagoRepository(db)).listar(pagination.skip, pagination.limit)
+def listar(
+    pagination: PaginationParams = Depends(),
+    estado: EstadoPago | None = Query(None, description="Filtrar por estado"),
+    id_contrato: int | None = Query(None, description="Filtrar por contrato"),
+    fecha_desde: date | None = Query(None, description="Fecha de cuota desde"),
+    fecha_hasta: date | None = Query(None, description="Fecha de cuota hasta"),
+    db: Session = Depends(get_db),
+):
+    items, total = PagoService(PagoRepository(db)).listar(
+        pagination.skip, pagination.limit,
+        estado=estado, id_contrato=id_contrato,
+        fecha_desde=fecha_desde, fecha_hasta=fecha_hasta,
+    )
     return paginate(items, total, pagination.page, pagination.page_size)
 
 

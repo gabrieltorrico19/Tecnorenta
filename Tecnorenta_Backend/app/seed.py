@@ -69,6 +69,7 @@ def seed_permisos(db: Session) -> None:
         {"nombre": "mantenimientos.crear", "descripcion": "Crear mantenimientos"},
         {"nombre": "mantenimientos.editar", "descripcion": "Editar mantenimientos"},
         {"nombre": "dashboard.ver", "descripcion": "Ver dashboard y estadísticas"},
+        {"nombre": "informes.ver", "descripcion": "Generar informes del sistema"},
     ]
     for p in permisos_data:
         existing = db.query(Permiso).filter(Permiso.nombre == p["nombre"]).first()
@@ -90,6 +91,7 @@ def seed_permisos_asignacion(db: Session, roles_ids: dict[str, int]) -> None:
             "activos.listar",
             "pagos.listar", "pagos.crear",
             "dashboard.ver",
+            "informes.ver",
         ],
         "Almacén": [
             "activos.listar", "activos.crear", "activos.editar", "activos.eliminar",
@@ -112,6 +114,7 @@ def seed_permisos_asignacion(db: Session, roles_ids: dict[str, int]) -> None:
             "activos.listar",
             "pagos.listar",
             "dashboard.ver",
+            "informes.ver",
         ],
         "Cliente": [],
     }

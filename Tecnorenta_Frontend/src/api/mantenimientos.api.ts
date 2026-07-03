@@ -4,42 +4,48 @@ import { fetchAllPages, type Page, type PageParams } from "./pagination";
 
 export interface Mantenimiento {
   id: number;
-  activo_id: number;
-  activo_nombre?: string;
-  tipo_mantenimiento: string;
-  descripcion: string;
-  fecha_inicio: string | null;
-  fecha_fin: string | null;
-  costo: number | null;
-  proveedor: string | null;
-  estado: string;
-  created_at: string;
-  updated_at: string;
+  tipo: string;                      // "preventivo" | "correctivo"
+  fecha: string;
+  costo: number;
+  descripcion: string | null;
+  url_foto: string | null;
+  id_activo: number;
+  frecuencia_dias: number | null;
+  proxima_fecha: string | null;
+  id_reporte_origen: number | null;
+  tiempo_reparacion: number | null;
 }
 
 export interface MantenimientoCreate {
-  activo_id: number;
-  tipo_mantenimiento: string;
-  descripcion: string;
-  fecha_inicio?: string;
-  fecha_fin?: string;
+  tipo: string;
+  fecha: string;
   costo?: number;
-  proveedor?: string;
-  estado: string;
+  descripcion?: string;
+  url_foto?: string;
+  id_activo: number;
+  frecuencia_dias?: number | null;
+  proxima_fecha?: string | null;
+  id_reporte_origen?: number | null;
+  tiempo_reparacion?: number | null;
 }
 
 export interface MantenimientoUpdate {
-  tipo_mantenimiento?: string;
-  descripcion?: string;
-  fecha_inicio?: string;
-  fecha_fin?: string;
   costo?: number;
-  proveedor?: string;
-  estado?: string;
+  descripcion?: string;
+  url_foto?: string;
+  proxima_fecha?: string | null;
+  tiempo_reparacion?: number | null;
+}
+
+export interface MantenimientoFiltros extends PageParams {
+  tipo?: string;
+  id_activo?: number;
+  fecha_desde?: string;
+  fecha_hasta?: string;
 }
 
 export const mantenimientosApi = {
-  listar: (params?: PageParams) => api.get<Page<Mantenimiento>>(ENDPOINTS.MANTENIMIENTOS, { params }),
+  listar: (params?: MantenimientoFiltros) => api.get<Page<Mantenimiento>>(ENDPOINTS.MANTENIMIENTOS, { params }),
   listarTodos: () => fetchAllPages<Mantenimiento>((p) => api.get<Page<Mantenimiento>>(ENDPOINTS.MANTENIMIENTOS, { params: p })),
   obtener: (id: number) => api.get<Mantenimiento>(`${ENDPOINTS.MANTENIMIENTOS}/${id}`),
   crear: (data: MantenimientoCreate) => api.post<Mantenimiento>(ENDPOINTS.MANTENIMIENTOS, data),

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.models.reporte_incidencia import ReporteIncidencia
+from app.models.reporte_incidencia import ReporteIncidencia, GravedadIncidencia, EstadoIncidencia
 
 
 class ReporteIncidenciaRepository:
@@ -10,8 +10,21 @@ class ReporteIncidenciaRepository:
     def get_all(self) -> list[ReporteIncidencia]:
         return self.db.query(ReporteIncidencia).all()
 
-    def get_paginated(self, skip: int, limit: int) -> tuple[list[ReporteIncidencia], int]:
+    def get_paginated(
+        self,
+        skip: int,
+        limit: int,
+        gravedad: GravedadIncidencia | None = None,
+        estado: EstadoIncidencia | None = None,
+        id_activo: int | None = None,
+    ) -> tuple[list[ReporteIncidencia], int]:
         query = self.db.query(ReporteIncidencia)
+        if gravedad is not None:
+            query = query.filter(ReporteIncidencia.gravedad == gravedad)
+        if estado is not None:
+            query = query.filter(ReporteIncidencia.estado == estado)
+        if id_activo is not None:
+            query = query.filter(ReporteIncidencia.id_activo == id_activo)
         total = query.count()
         items = query.order_by(ReporteIncidencia.id.desc()).offset(skip).limit(limit).all()
         return items, total

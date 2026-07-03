@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { activosApi, type Activo } from "../../api/activos.api";
+import { categoriasApi, type Categoria } from "../../api/categorias.api";
 import DataTable from "../../components/common/DataTable";
 import Pagination from "../../components/common/Pagination";
 import Badge from "../../components/common/Badge";
 import Button from "../../components/common/Button";
 import ConfirmDialog from "../../components/common/ConfirmDialog";
+import FilterBar from "../../components/common/FilterBar";
 import { useToast } from "../../context/ToastContext";
 import { Plus, Download } from "lucide-react";
 
@@ -29,6 +31,25 @@ export default function ListaActivos() {
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
   const [total, setTotal] = useState(0);
+  // filtros (server-side)
+  const [estado, setEstado] = useState("");
+  const [idCategoria, setIdCategoria] = useState("");
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [q, setQ] = useState("");
+  const [qAplicado, setQAplicado] = useState("");
+
+  // debounce de la búsqueda: aplica 400 ms después de dejar de escribir
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setQAplicado(q);
+      setPage(1);
+    }, 400);
+    return () => clearTimeout(t);
+  }, [q]);
+
+  useEffect(() => {
+    categoriasApi.listarTodos().then(setCategorias).catch(() => { /* catálogo opcional */ });
+  }, []);
 
   const cargarPrimeraFoto = useCallback(async (activo: Activo) => {
     try {
@@ -43,7 +64,13 @@ export default function ListaActivos() {
     setLoading(true);
     setError(null);
     try {
-      const res = await activosApi.listar({ page, page_size: PAGE_SIZE });
+      const res = await activosApi.listar({
+        page,
+        page_size: PAGE_SIZE,
+        estado: estado || undefined,
+        id_categoria: idCategoria ? Number(idCategoria) : undefined,
+        q: qAplicado || undefined,
+      });
       setActivos(res.data.items);
       setPages(res.data.pages);
       setTotal(res.data.total);
@@ -52,7 +79,7 @@ export default function ListaActivos() {
     } finally {
       setLoading(false);
     }
-  }, [page]);
+  }, [page, estado, idCategoria, qAplicado]);
 
   useEffect(() => { listar(); }, [listar]);
 
@@ -104,6 +131,31 @@ export default function ListaActivos() {
           <Button onClick={() => navigate("/activos/nuevo")} icon={<Plus size={16} />}>Nuevo Activo</Button>
         </div>
       </div>
+      <FilterBar
+        hayFiltros={estado !== "" || idCategoria !== "" || q !== ""}
+        onLimpiar={() => { setEstado(""); setIdCategoria(""); setQ(""); setPage(1); }}
+      >
+        <input
+          type="search"
+          placeholder="Buscar código, modelo o serie…"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          style={{ minWidth: 240 }}
+        />
+        <select value={estado} onChange={(e) => { setEstado(e.target.value); setPage(1); }}>
+          <option value="">Todos los estados</option>
+          <option value="disponible">Disponible</option>
+          <option value="rentado">Rentado</option>
+          <option value="mantenimiento">Mantenimiento</option>
+          <option value="baja">Baja</option>
+        </select>
+        <select value={idCategoria} onChange={(e) => { setIdCategoria(e.target.value); setPage(1); }}>
+          <option value="">Todas las categorías</option>
+          {categorias.map((c) => (
+            <option key={c.id} value={c.id}>{c.nombre}</option>
+          ))}
+        </select>
+      </FilterBar>
       <DataTable columns={columns} data={activos} loading={loading} error={error}
         onEdit={(row) => navigate(`/activos/editar/${row.id}`)}
         onDelete={(row) => setDeleteTarget(row)}

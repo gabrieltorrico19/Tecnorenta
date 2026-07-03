@@ -26,8 +26,15 @@ export interface PagoUpdate {
   estado?: string;
 }
 
+export interface PagoFiltros extends PageParams {
+  estado?: string;
+  id_contrato?: number;
+  fecha_desde?: string;
+  fecha_hasta?: string;
+}
+
 export const pagosApi = {
-  listar: (params?: PageParams) => api.get<Page<Pago>>(ENDPOINTS.PAGOS, { params }),
+  listar: (params?: PagoFiltros) => api.get<Page<Pago>>(ENDPOINTS.PAGOS, { params }),
   listarTodos: () => fetchAllPages<Pago>((p) => api.get<Page<Pago>>(ENDPOINTS.PAGOS, { params: p })),
   obtener: (id: number) => api.get<Pago>(`${ENDPOINTS.PAGOS}/${id}`),
   crear: (data: PagoCreate) => api.post<Pago>(ENDPOINTS.PAGOS, data),

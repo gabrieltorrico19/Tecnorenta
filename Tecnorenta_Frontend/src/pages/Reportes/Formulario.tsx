@@ -2,7 +2,6 @@ import { useState, useEffect, type FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { reportesApi, type ReporteCreate, type ReporteUpdate } from "../../api/reportes.api";
 import { activosApi } from "../../api/activos.api";
-import { usuarioApi } from "../../api/usuario.api";
 import FormField from "../../components/common/FormField";
 import FormSection from "../../components/common/FormSection";
 import Button from "../../components/common/Button";
@@ -10,8 +9,16 @@ import SearchableSelect from "../../components/common/SearchableSelect";
 import { useToast } from "../../context/ToastContext";
 import { Save, ArrowLeft } from "lucide-react";
 
-const TIPOS_INCIDENCIA = ["Daño Físico", "Fallo Técnico", "Software", "Pérdida", "Robo", "Otro"];
-const ESTADOS = ["Reportada", "En Revisión", "Resuelta", "Cerrada"];
+const GRAVEDADES = [
+  { value: "leve", label: "Leve" },
+  { value: "moderado", label: "Moderado" },
+  { value: "grave", label: "Grave" },
+];
+const ESTADOS = [
+  { value: "abierto", label: "Abierto" },
+  { value: "en_atencion", label: "En atención" },
+  { value: "cerrado", label: "Cerrado" },
+];
 
 export default function FormularioReporte() {
   const { id } = useParams<{ id: string }>();
@@ -20,12 +27,12 @@ export default function FormularioReporte() {
   const isEdit = Boolean(id);
 
   const [form, setForm] = useState<ReporteCreate>({
-    activo_id: 0,
-    usuario_id: 0,
-    tipo_incidencia: "Daño Físico",
+    fecha: "",
     descripcion: "",
-    fecha_reporte: "",
-    estado: "Reportada",
+    gravedad: "leve",
+    estado: "abierto",
+    id_activo: 0,
+    url_foto: "",
   });
 
   useEffect(() => {
@@ -33,12 +40,12 @@ export default function FormularioReporte() {
     reportesApi.obtener(Number(id)).then((res) => {
       const r = res.data;
       setForm({
-        activo_id: r.activo_id,
-        usuario_id: r.usuario_id,
-        tipo_incidencia: r.tipo_incidencia,
+        fecha: r.fecha ? r.fecha.slice(0, 10) : "",
         descripcion: r.descripcion,
-        fecha_reporte: r.fecha_reporte,
+        gravedad: r.gravedad,
         estado: r.estado,
+        id_activo: r.id_activo,
+        url_foto: r.url_foto ?? "",
       });
     }).catch(() => toast("Error al cargar reporte", "error"));
   }, [id, toast]);
@@ -49,16 +56,22 @@ export default function FormularioReporte() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (!form.id_activo) {
+      toast("Seleccione un activo", "error");
+      return;
+    }
     try {
       if (isEdit) {
-        const payload: ReporteUpdate = {};
-        for (const [k, v] of Object.entries(form)) {
-          if (v !== undefined && v !== "") (payload as Record<string, unknown>)[k] = v;
-        }
+        const payload: ReporteUpdate = {
+          descripcion: form.descripcion,
+          gravedad: form.gravedad,
+          estado: form.estado,
+          url_foto: form.url_foto || undefined,
+        };
         await reportesApi.actualizar(Number(id), payload);
         toast("Reporte actualizado", "success");
       } else {
-        await reportesApi.crear(form);
+        await reportesApi.crear({ ...form, url_foto: form.url_foto || undefined });
         toast("Reporte creado", "success");
       }
       navigate("/reportes");
@@ -74,8 +87,8 @@ export default function FormularioReporte() {
         <FormSection title="Información del Reporte">
           <FormField label="Activo" required>
             <SearchableSelect
-              value={form.activo_id || null}
-              onChange={(v) => handleChange("activo_id", v)}
+              value={form.id_activo || null}
+              onChange={(v) => handleChange("id_activo", v)}
               loadOptions={async () => {
                 const items = await activosApi.listarTodos();
                 return items.map((a) => ({ id: a.id, label: `${a.codigo_inventario} - ${a.modelo}` }));
@@ -83,29 +96,21 @@ export default function FormularioReporte() {
               placeholder="Buscar activo..."
             />
           </FormField>
-          <FormField label="Usuario" required>
-            <SearchableSelect
-              value={form.usuario_id || null}
-              onChange={(v) => handleChange("usuario_id", v)}
-              loadOptions={async () => {
-                const items = await usuarioApi.listarTodos();
-                return items.map((u: { id: number; nombre: string }) => ({ id: u.id, label: u.nombre }));
-              }}
-              placeholder="Buscar usuario..."
-            />
+          <FormField label="Fecha" required>
+            <input type="date" style={inputStyle} value={form.fecha} onChange={(e) => handleChange("fecha", e.target.value)} required />
           </FormField>
-          <FormField label="Tipo de Incidencia" required>
-            <select style={inputStyle} value={form.tipo_incidencia} onChange={(e) => handleChange("tipo_incidencia", e.target.value)} required>
-              {TIPOS_INCIDENCIA.map((t) => (<option key={t} value={t}>{t}</option>))}
+          <FormField label="Gravedad" required>
+            <select style={inputStyle} value={form.gravedad} onChange={(e) => handleChange("gravedad", e.target.value)} required>
+              {GRAVEDADES.map((g) => (<option key={g.value} value={g.value}>{g.label}</option>))}
             </select>
-          </FormField>
-          <FormField label="Fecha del Reporte" required>
-            <input type="date" style={inputStyle} value={form.fecha_reporte} onChange={(e) => handleChange("fecha_reporte", e.target.value)} required />
           </FormField>
           <FormField label="Estado" required>
             <select style={inputStyle} value={form.estado} onChange={(e) => handleChange("estado", e.target.value)} required>
-              {ESTADOS.map((e) => (<option key={e} value={e}>{e}</option>))}
+              {ESTADOS.map((es) => (<option key={es.value} value={es.value}>{es.label}</option>))}
             </select>
+          </FormField>
+          <FormField label="URL de foto">
+            <input type="url" style={inputStyle} value={form.url_foto} onChange={(e) => handleChange("url_foto", e.target.value)} placeholder="https://…" />
           </FormField>
         </FormSection>
         <FormSection title="Descripción">

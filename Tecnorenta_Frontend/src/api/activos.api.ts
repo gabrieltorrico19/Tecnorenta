@@ -51,8 +51,14 @@ export interface ActivoFoto {
   fecha_subida: string | null;
 }
 
+export interface ActivoFiltros extends PageParams {
+  estado?: string;
+  id_categoria?: number;
+  q?: string;
+}
+
 export const activosApi = {
-  listar: (params?: PageParams) => api.get<Page<Activo>>(ENDPOINTS.ACTIVOS, { params }),
+  listar: (params?: ActivoFiltros) => api.get<Page<Activo>>(ENDPOINTS.ACTIVOS, { params }),
   listarTodos: () => fetchAllPages<Activo>((p) => api.get<Page<Activo>>(ENDPOINTS.ACTIVOS, { params: p })),
   obtener: (id: number) => api.get<Activo>(`${ENDPOINTS.ACTIVOS}/${id}`),
   crear: (data: ActivoCreate) => api.post<Activo>(ENDPOINTS.ACTIVOS, data),

@@ -9,8 +9,8 @@ class ReporteIncidenciaService:
     def __init__(self, repo: ReporteIncidenciaRepository):
         self.repo = repo
 
-    def listar(self, skip: int, limit: int) -> tuple[list[ReporteIncidencia], int]:
-        return self.repo.get_paginated(skip, limit)
+    def listar(self, skip: int, limit: int, **filtros) -> tuple[list[ReporteIncidencia], int]:
+        return self.repo.get_paginated(skip, limit, **filtros)
 
     def obtener(self, reporte_id: int) -> ReporteIncidencia:
         reporte = self.repo.get_by_id(reporte_id)

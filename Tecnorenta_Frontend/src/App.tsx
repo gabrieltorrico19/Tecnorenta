@@ -28,6 +28,7 @@ import ListaHistorialUbicacion from "./pages/HistorialUbicacion/Lista";
 import FormularioHistorialUbicacion from "./pages/HistorialUbicacion/Formulario";
 import ListaChecklistEstado from "./pages/ChecklistEstado/Lista";
 import FormularioChecklistEstado from "./pages/ChecklistEstado/Formulario";
+import Informes from "./pages/Informes/Index";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route element={<Layout />}>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/informes" element={<Informes />} />
             <Route path="/usuarios" element={<ListaUsuarios />} />
             <Route path="/usuarios/nuevo" element={<FormularioUsuario />} />
             <Route path="/usuarios/editar/:id" element={<FormularioUsuario />} />

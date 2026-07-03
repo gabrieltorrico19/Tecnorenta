@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.dependencies.auth import get_current_user, require_role
+from app.models.activo import EstadoActivo
 from app.models.usuario import Usuario
 from app.repositories.activo import ActivoRepository
 from app.services.activo import ActivoService
@@ -18,8 +19,16 @@ router = APIRouter(prefix="/activos", tags=["Activos"])
 
 
 @router.get("/", response_model=Page[ActivoOut])
-def listar(pagination: PaginationParams = Depends(), db: Session = Depends(get_db)):
-    items, total = ActivoService(ActivoRepository(db)).listar(pagination.skip, pagination.limit)
+def listar(
+    pagination: PaginationParams = Depends(),
+    estado: EstadoActivo | None = Query(None, description="Filtrar por estado"),
+    id_categoria: int | None = Query(None, description="Filtrar por categoría"),
+    q: str | None = Query(None, max_length=100, description="Buscar por código, modelo o serie"),
+    db: Session = Depends(get_db),
+):
+    items, total = ActivoService(ActivoRepository(db)).listar(
+        pagination.skip, pagination.limit, estado=estado, id_categoria=id_categoria, q=q
+    )
     return paginate(items, total, pagination.page, pagination.page_size)
 
 

@@ -1,6 +1,7 @@
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
-from app.models.activo import Activo
+from app.models.activo import Activo, EstadoActivo
 
 
 class ActivoRepository:
@@ -10,8 +11,26 @@ class ActivoRepository:
     def get_all(self) -> list[Activo]:
         return self.db.query(Activo).all()
 
-    def get_paginated(self, skip: int, limit: int) -> tuple[list[Activo], int]:
+    def get_paginated(
+        self,
+        skip: int,
+        limit: int,
+        estado: EstadoActivo | None = None,
+        id_categoria: int | None = None,
+        q: str | None = None,
+    ) -> tuple[list[Activo], int]:
         query = self.db.query(Activo)
+        if estado is not None:
+            query = query.filter(Activo.estado == estado)
+        if id_categoria is not None:
+            query = query.filter(Activo.id_categoria == id_categoria)
+        if q:
+            like = f"%{q}%"
+            query = query.filter(or_(
+                Activo.codigo_inventario.ilike(like),
+                Activo.modelo.ilike(like),
+                Activo.numero_serie.ilike(like),
+            ))
         total = query.count()
         items = query.order_by(Activo.id.desc()).offset(skip).limit(limit).all()
         return items, total

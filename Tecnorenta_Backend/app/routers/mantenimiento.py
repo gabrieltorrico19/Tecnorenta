@@ -1,8 +1,11 @@
-from fastapi import APIRouter, Depends
+from datetime import date
+
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.dependencies.pagination import PaginationParams
+from app.models.mantenimiento import TipoMantenimiento
 from app.repositories.mantenimiento import MantenimientoRepository
 from app.services.mantenimiento import MantenimientoService
 from app.schemas.common import Page, paginate
@@ -12,8 +15,18 @@ router = APIRouter(prefix="/mantenimientos", tags=["Mantenimientos"])
 
 
 @router.get("/", response_model=Page[MantenimientoOut])
-def listar(pagination: PaginationParams = Depends(), db: Session = Depends(get_db)):
-    items, total = MantenimientoService(MantenimientoRepository(db)).listar(pagination.skip, pagination.limit)
+def listar(
+    pagination: PaginationParams = Depends(),
+    tipo: TipoMantenimiento | None = Query(None, description="Filtrar por tipo"),
+    id_activo: int | None = Query(None, description="Filtrar por activo"),
+    fecha_desde: date | None = Query(None, description="Fecha desde"),
+    fecha_hasta: date | None = Query(None, description="Fecha hasta"),
+    db: Session = Depends(get_db),
+):
+    items, total = MantenimientoService(MantenimientoRepository(db)).listar(
+        pagination.skip, pagination.limit,
+        tipo=tipo, id_activo=id_activo, fecha_desde=fecha_desde, fecha_hasta=fecha_hasta,
+    )
     return paginate(items, total, pagination.page, pagination.page_size)
 
 

@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Users, Shield, Building2, Monitor, FileText, DollarSign, ClipboardList, AlertTriangle, Wrench, FolderTree, MapPin, ClipboardCheck } from "lucide-react";
+import { LayoutDashboard, Users, Shield, Building2, Monitor, FileText, DollarSign, ClipboardList, AlertTriangle, Wrench, FolderTree, MapPin, ClipboardCheck, FileBarChart } from "lucide-react";
 import type { ReactNode } from "react";
 
 interface LinkItem {
@@ -10,6 +10,7 @@ interface LinkItem {
 
 const links: LinkItem[] = [
   { to: "/", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
+  { to: "/informes", label: "Informes", icon: <FileBarChart size={18} /> },
   { to: "/usuarios", label: "Usuarios", icon: <Users size={18} /> },
   { to: "/roles", label: "Roles", icon: <Shield size={18} /> },
   { to: "/clientes", label: "Clientes", icon: <Building2 size={18} /> },
