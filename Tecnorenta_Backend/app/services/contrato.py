@@ -17,6 +17,8 @@ class ContratoService:
         contrato = self.repo.get_by_id(contrato_id)
         if not contrato:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contrato no encontrado")
+        if contrato.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contrato no encontrado")
         return contrato
 
     def crear(self, data: ContratoCreate) -> Contrato:
@@ -29,6 +31,13 @@ class ContratoService:
         contrato = self.obtener(contrato_id)
         for field, value in data.model_dump(exclude_unset=True).items():
             setattr(contrato, field, value)
+        return self.repo.update(contrato)
+
+    def restaurar(self, contrato_id: int) -> Contrato:
+        contrato = self.repo.get_by_id(contrato_id)
+        if not contrato or not contrato.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contrato no encontrado o no está eliminado")
+        contrato.fecha_baja = None
         return self.repo.update(contrato)
 
     def eliminar(self, contrato_id: int) -> None:

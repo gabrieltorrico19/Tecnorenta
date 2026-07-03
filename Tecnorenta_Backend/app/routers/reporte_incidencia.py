@@ -45,3 +45,9 @@ def actualizar(reporte_id: int, data: ReporteIncidenciaUpdate, db: Session = Dep
 @router.delete("/{reporte_id}", status_code=204)
 def eliminar(reporte_id: int, db: Session = Depends(get_db)):
     ReporteIncidenciaService(ReporteIncidenciaRepository(db)).eliminar(reporte_id)
+
+
+@router.post("/{reporte_id}/restaurar")
+def restaurar(reporte_id: int, db: Session = Depends(get_db)):
+    ReporteIncidenciaService(ReporteIncidenciaRepository(db)).restaurar(reporte_id)
+    return {"message": "Reporte restaurado exitosamente"}

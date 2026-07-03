@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlalchemy.orm import Session
@@ -10,10 +11,10 @@ class UsuarioRepository:
         self.db = db
 
     def get_all(self) -> list[Usuario]:
-        return self.db.query(Usuario).all()
+        return self.db.query(Usuario).filter(Usuario.fecha_baja.is_(None)).all()
 
     def get_paginated(self, skip: int, limit: int) -> tuple[list[Usuario], int]:
-        query = self.db.query(Usuario)
+        query = self.db.query(Usuario).filter(Usuario.fecha_baja.is_(None))
         total = query.count()
         items = query.order_by(Usuario.id.desc()).offset(skip).limit(limit).all()
         return items, total
@@ -36,5 +37,5 @@ class UsuarioRepository:
         return usuario
 
     def delete(self, usuario: Usuario) -> None:
-        self.db.delete(usuario)
+        usuario.fecha_baja = datetime.now(timezone.utc)
         self.db.commit()

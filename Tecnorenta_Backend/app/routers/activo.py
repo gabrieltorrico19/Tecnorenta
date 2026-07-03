@@ -66,3 +66,9 @@ def exportar_csv(db: Session = Depends(get_db)):
 @router.delete("/{activo_id}", status_code=204, dependencies=[Depends(require_role("Administrador"))])
 def eliminar(activo_id: int, db: Session = Depends(get_db)):
     ActivoService(ActivoRepository(db), db=db).eliminar(activo_id)
+
+
+@router.post("/{activo_id}/restaurar")
+def restaurar(activo_id: int, db: Session = Depends(get_db)):
+    ActivoService(ActivoRepository(db)).restaurar(activo_id)
+    return {"message": "Activo restaurado exitosamente"}

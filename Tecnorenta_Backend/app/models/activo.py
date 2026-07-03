@@ -30,6 +30,7 @@ class Activo(Base):
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
     modificado_por = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
     fecha_modificacion = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    fecha_baja = Column(DateTime(timezone=True), nullable=True)
 
     categoria = relationship("CategoriaActivo", back_populates="activos")
     asignaciones = relationship("AsignacionActivo", back_populates="activo")

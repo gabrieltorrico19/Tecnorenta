@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 
 from app.models.checklist_estado import ChecklistEstado
@@ -8,7 +10,7 @@ class ChecklistEstadoRepository:
         self.db = db
 
     def get_by_asignacion(self, asignacion_id: int) -> list[ChecklistEstado]:
-        return self.db.query(ChecklistEstado).filter(ChecklistEstado.id_asignacion == asignacion_id).all()
+        return self.db.query(ChecklistEstado).filter(ChecklistEstado.fecha_baja.is_(None), ChecklistEstado.id_asignacion == asignacion_id).all()
 
     def get_by_id(self, checklist_id: int) -> ChecklistEstado | None:
         return self.db.query(ChecklistEstado).filter(ChecklistEstado.id == checklist_id).first()
@@ -25,5 +27,5 @@ class ChecklistEstadoRepository:
         return checklist
 
     def delete(self, checklist: ChecklistEstado) -> None:
-        self.db.delete(checklist)
+        checklist.fecha_baja = datetime.now(timezone.utc)
         self.db.commit()

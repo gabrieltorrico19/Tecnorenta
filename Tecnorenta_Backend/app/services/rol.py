@@ -16,6 +16,8 @@ class RolService:
         rol = self.repo.get_by_id(rol_id)
         if not rol:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rol no encontrado")
+        if rol.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rol no encontrado")
         return rol
 
     def crear(self, data: RolCreate) -> Rol:
@@ -28,6 +30,13 @@ class RolService:
         rol = self.obtener(rol_id)
         for field, value in data.model_dump(exclude_unset=True).items():
             setattr(rol, field, value)
+        return self.repo.update(rol)
+
+    def restaurar(self, rol_id: int) -> Rol:
+        rol = self.repo.get_by_id(rol_id)
+        if not rol or not rol.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rol no encontrado o no está eliminado")
+        rol.fecha_baja = None
         return self.repo.update(rol)
 
     def eliminar(self, rol_id: int) -> None:

@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 
 from app.models.asignacion_activo import AsignacionActivo
@@ -8,10 +10,10 @@ class AsignacionActivoRepository:
         self.db = db
 
     def get_all(self) -> list[AsignacionActivo]:
-        return self.db.query(AsignacionActivo).all()
+        return self.db.query(AsignacionActivo).filter(AsignacionActivo.fecha_baja.is_(None)).all()
 
     def get_paginated(self, skip: int, limit: int) -> tuple[list[AsignacionActivo], int]:
-        query = self.db.query(AsignacionActivo)
+        query = self.db.query(AsignacionActivo).filter(AsignacionActivo.fecha_baja.is_(None))
         total = query.count()
         items = query.order_by(AsignacionActivo.id.desc()).offset(skip).limit(limit).all()
         return items, total
@@ -31,5 +33,5 @@ class AsignacionActivoRepository:
         return asignacion
 
     def delete(self, asignacion: AsignacionActivo) -> None:
-        self.db.delete(asignacion)
+        asignacion.fecha_baja = datetime.now(timezone.utc)
         self.db.commit()

@@ -38,6 +38,12 @@ def eliminar(rol_id: int, db: Session = Depends(get_db)):
     RolService(RolRepository(db)).eliminar(rol_id)
 
 
+@router.post("/{rol_id}/restaurar")
+def restaurar(rol_id: int, db: Session = Depends(get_db)):
+    RolService(RolRepository(db)).restaurar(rol_id)
+    return {"message": "Rol restaurado exitosamente"}
+
+
 @router.get("/permisos/all", response_model=list[PermisoOut])
 def listar_permisos(db: Session = Depends(get_db)):
     return PermisoService(PermisoRepository(db), RolRepository(db)).listar_permisos()

@@ -12,5 +12,6 @@ class ActivoFoto(Base):
     url = Column(String(500), nullable=False)
     orden = Column(Integer, default=0)
     fecha_subida = Column(DateTime(timezone=True), server_default=func.now())
+    fecha_baja = Column(DateTime(timezone=True), nullable=True)
 
     activo = relationship("Activo", back_populates="fotos")

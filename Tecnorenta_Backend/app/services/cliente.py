@@ -16,6 +16,8 @@ class ClienteService:
         cliente = self.repo.get_by_id(cliente_id)
         if not cliente:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cliente no encontrado")
+        if cliente.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cliente no encontrado")
         return cliente
 
     def crear(self, data: ClienteCreate) -> Cliente:
@@ -28,6 +30,13 @@ class ClienteService:
         cliente = self.obtener(cliente_id)
         for field, value in data.model_dump(exclude_unset=True).items():
             setattr(cliente, field, value)
+        return self.repo.update(cliente)
+
+    def restaurar(self, cliente_id: int) -> Cliente:
+        cliente = self.repo.get_by_id(cliente_id)
+        if not cliente or not cliente.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cliente no encontrado o no está eliminado")
+        cliente.fecha_baja = None
         return self.repo.update(cliente)
 
     def eliminar(self, cliente_id: int) -> None:

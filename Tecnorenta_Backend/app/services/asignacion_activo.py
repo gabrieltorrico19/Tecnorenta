@@ -19,6 +19,8 @@ class AsignacionActivoService:
         asignacion = self.repo.get_by_id(asignacion_id)
         if not asignacion:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Asignación no encontrada")
+        if asignacion.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Asignación no encontrada")
         return asignacion
 
     def crear(self, data: AsignacionActivoCreate) -> AsignacionActivo:
@@ -33,6 +35,13 @@ class AsignacionActivoService:
         asignacion = self.obtener(asignacion_id)
         for field, value in data.model_dump(exclude_unset=True).items():
             setattr(asignacion, field, value)
+        return self.repo.update(asignacion)
+
+    def restaurar(self, asignacion_id: int) -> AsignacionActivo:
+        asignacion = self.repo.get_by_id(asignacion_id)
+        if not asignacion or not asignacion.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Asignación no encontrada o no está eliminada")
+        asignacion.fecha_baja = None
         return self.repo.update(asignacion)
 
     def eliminar(self, asignacion_id: int) -> None:

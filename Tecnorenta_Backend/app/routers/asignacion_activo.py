@@ -35,3 +35,9 @@ def actualizar(asignacion_id: int, data: AsignacionActivoUpdate, db: Session = D
 @router.delete("/{asignacion_id}", status_code=204)
 def eliminar(asignacion_id: int, db: Session = Depends(get_db)):
     AsignacionActivoService(AsignacionActivoRepository(db)).eliminar(asignacion_id)
+
+
+@router.post("/{asignacion_id}/restaurar")
+def restaurar(asignacion_id: int, db: Session = Depends(get_db)):
+    AsignacionActivoService(AsignacionActivoRepository(db)).restaurar(asignacion_id)
+    return {"message": "Asignación restaurada exitosamente"}

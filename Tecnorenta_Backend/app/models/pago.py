@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Column, Integer, String, Float, Date, Enum, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Date, Enum, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
 from app.models.base import Base
@@ -23,3 +23,4 @@ class Pago(Base):
     estado = Column(Enum(EstadoPago), default=EstadoPago.PENDIENTE, nullable=False)
 
     contrato = relationship("Contrato", back_populates="pagos")
+    fecha_baja = Column(DateTime(timezone=True), nullable=True)

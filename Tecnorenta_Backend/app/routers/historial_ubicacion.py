@@ -40,3 +40,9 @@ def actualizar(registro_id: int, data: HistorialUbicacionUpdate, db: Session = D
 @router.delete("/{registro_id}", status_code=204)
 def eliminar(registro_id: int, db: Session = Depends(get_db)):
     HistorialUbicacionService(HistorialUbicacionRepository(db)).eliminar(registro_id)
+
+
+@router.post("/{registro_id}/restaurar")
+def restaurar(registro_id: int, db: Session = Depends(get_db)):
+    HistorialUbicacionService(HistorialUbicacionRepository(db)).restaurar(registro_id)
+    return {"message": "Registro de ubicación restaurado exitosamente"}

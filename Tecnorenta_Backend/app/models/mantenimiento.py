@@ -31,6 +31,7 @@ class Mantenimiento(Base):
     __mapper_args__ = {"polymorphic_on": tipo, "polymorphic_identity": None}
 
     activo = relationship("Activo", back_populates="mantenimientos")
+    fecha_baja = Column(DateTime(timezone=True), nullable=True)
 
 
 class MantenimientoPreventivo(Mantenimiento):

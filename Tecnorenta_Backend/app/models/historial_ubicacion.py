@@ -14,3 +14,4 @@ class HistorialUbicacion(Base):
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
 
     asignacion = relationship("AsignacionActivo", back_populates="historial_ubicacion")
+    fecha_baja = Column(DateTime(timezone=True), nullable=True)

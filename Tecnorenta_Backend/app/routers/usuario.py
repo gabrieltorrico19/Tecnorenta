@@ -43,3 +43,9 @@ def actualizar(usuario_id: int, data: UsuarioUpdate, db: Session = Depends(get_d
 def eliminar(usuario_id: int, db: Session = Depends(get_db)):
     service = get_service(db)
     return service.eliminar(usuario_id)
+
+
+@router.post("/{usuario_id}/restaurar")
+def restaurar(usuario_id: int, db: Session = Depends(get_db)):
+    get_service(db).restaurar(usuario_id)
+    return {"message": "Usuario restaurado exitosamente"}

@@ -24,6 +24,8 @@ class MantenimientoService:
         m = self.repo.get_by_id(mantenimiento_id)
         if not m:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Mantenimiento no encontrado")
+        if m.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Mantenimiento no encontrado")
         return m
 
     def crear(self, data: MantenimientoCreate) -> Mantenimiento:
@@ -45,6 +47,13 @@ class MantenimientoService:
         m = self.obtener(mantenimiento_id)
         for field, value in data.model_dump(exclude_unset=True).items():
             setattr(m, field, value)
+        return self.repo.update(m)
+
+    def restaurar(self, mantenimiento_id: int) -> Mantenimiento:
+        m = self.repo.get_by_id(mantenimiento_id)
+        if not m or not m.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Mantenimiento no encontrado o no está eliminado")
+        m.fecha_baja = None
         return self.repo.update(m)
 
     def eliminar(self, mantenimiento_id: int) -> None:

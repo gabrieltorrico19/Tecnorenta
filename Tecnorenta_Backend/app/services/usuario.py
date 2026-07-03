@@ -19,6 +19,8 @@ class UsuarioService:
         usuario = self.repo.get_by_id(usuario_id)
         if not usuario:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+        if usuario.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
         return usuario
 
     def crear(self, data: UsuarioCreate) -> Usuario:
@@ -40,6 +42,13 @@ class UsuarioService:
             update_data["password_hash"] = hash_password(update_data.pop("password"))
         for field, value in update_data.items():
             setattr(usuario, field, value)
+        return self.repo.update(usuario)
+
+    def restaurar(self, usuario_id: int) -> Usuario:
+        usuario = self.repo.get_by_id(usuario_id)
+        if not usuario or not usuario.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado o no está eliminado")
+        usuario.fecha_baja = None
         return self.repo.update(usuario)
 
     def eliminar(self, usuario_id: int) -> None:

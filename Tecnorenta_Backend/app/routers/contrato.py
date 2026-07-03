@@ -61,3 +61,9 @@ async def subir_documento(contrato_id: int, file: UploadFile = File(...), db: Se
 @router.delete("/{contrato_id}", status_code=204)
 def eliminar(contrato_id: int, db: Session = Depends(get_db)):
     ContratoService(ContratoRepository(db)).eliminar(contrato_id)
+
+
+@router.post("/{contrato_id}/restaurar")
+def restaurar(contrato_id: int, db: Session = Depends(get_db)):
+    ContratoService(ContratoRepository(db)).restaurar(contrato_id)
+    return {"message": "Contrato restaurado exitosamente"}

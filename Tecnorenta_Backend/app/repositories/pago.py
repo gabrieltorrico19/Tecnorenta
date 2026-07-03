@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timezone
 
 from sqlalchemy.orm import Session
 
@@ -10,7 +10,7 @@ class PagoRepository:
         self.db = db
 
     def get_all(self) -> list[Pago]:
-        return self.db.query(Pago).all()
+        return self.db.query(Pago).filter(Pago.fecha_baja.is_(None)).all()
 
     def get_paginated(
         self,
@@ -21,7 +21,7 @@ class PagoRepository:
         fecha_desde: date | None = None,
         fecha_hasta: date | None = None,
     ) -> tuple[list[Pago], int]:
-        query = self.db.query(Pago)
+        query = self.db.query(Pago).filter(Pago.fecha_baja.is_(None))
         if estado is not None:
             query = query.filter(Pago.estado == estado)
         if id_contrato is not None:
@@ -38,7 +38,7 @@ class PagoRepository:
         return self.db.query(Pago).filter(Pago.id == pago_id).first()
 
     def get_by_contrato(self, contrato_id: int) -> list[Pago]:
-        return self.db.query(Pago).filter(Pago.id_contrato == contrato_id).all()
+        return self.db.query(Pago).filter(Pago.fecha_baja.is_(None), Pago.id_contrato == contrato_id).all()
 
     def create(self, pago: Pago) -> Pago:
         self.db.add(pago)
@@ -52,5 +52,5 @@ class PagoRepository:
         return pago
 
     def delete(self, pago: Pago) -> None:
-        self.db.delete(pago)
+        pago.fecha_baja = datetime.now(timezone.utc)
         self.db.commit()

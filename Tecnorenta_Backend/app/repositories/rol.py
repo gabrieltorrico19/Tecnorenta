@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 
 from app.models.rol import Rol, Permiso, rol_permiso
@@ -8,10 +10,10 @@ class RolRepository:
         self.db = db
 
     def get_all(self) -> list[Rol]:
-        return self.db.query(Rol).all()
+        return self.db.query(Rol).filter(Rol.fecha_baja.is_(None)).all()
 
     def get_paginated(self, skip: int, limit: int) -> tuple[list[Rol], int]:
-        query = self.db.query(Rol)
+        query = self.db.query(Rol).filter(Rol.fecha_baja.is_(None))
         total = query.count()
         items = query.order_by(Rol.id.desc()).offset(skip).limit(limit).all()
         return items, total
@@ -34,7 +36,7 @@ class RolRepository:
         return rol
 
     def delete(self, rol: Rol) -> None:
-        self.db.delete(rol)
+        rol.fecha_baja = datetime.now(timezone.utc)
         self.db.commit()
 
     def asignar_permiso(self, rol: Rol, permiso: Permiso) -> None:

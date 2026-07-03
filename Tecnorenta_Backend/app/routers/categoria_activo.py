@@ -35,3 +35,9 @@ def actualizar(categoria_id: int, data: CategoriaActivoUpdate, db: Session = Dep
 @router.delete("/{categoria_id}", status_code=204)
 def eliminar(categoria_id: int, db: Session = Depends(get_db)):
     CategoriaActivoService(CategoriaActivoRepository(db), db=db).eliminar(categoria_id)
+
+
+@router.post("/{categoria_id}/restaurar")
+def restaurar(categoria_id: int, db: Session = Depends(get_db)):
+    CategoriaActivoService(CategoriaActivoRepository(db)).restaurar(categoria_id)
+    return {"message": "Categoría restaurada exitosamente"}

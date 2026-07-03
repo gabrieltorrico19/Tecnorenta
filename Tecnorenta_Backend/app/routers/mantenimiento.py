@@ -53,3 +53,9 @@ def actualizar(mantenimiento_id: int, data: MantenimientoUpdate, db: Session = D
 @router.delete("/{mantenimiento_id}", status_code=204)
 def eliminar(mantenimiento_id: int, db: Session = Depends(get_db)):
     MantenimientoService(MantenimientoRepository(db)).eliminar(mantenimiento_id)
+
+
+@router.post("/{mantenimiento_id}/restaurar")
+def restaurar(mantenimiento_id: int, db: Session = Depends(get_db)):
+    MantenimientoService(MantenimientoRepository(db)).restaurar(mantenimiento_id)
+    return {"message": "Mantenimiento restaurado exitosamente"}

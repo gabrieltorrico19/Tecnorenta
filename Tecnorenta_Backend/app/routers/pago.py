@@ -64,3 +64,9 @@ def actualizar(pago_id: int, data: PagoUpdate, db: Session = Depends(get_db)):
 @router.delete("/{pago_id}", status_code=204)
 def eliminar(pago_id: int, db: Session = Depends(get_db)):
     PagoService(PagoRepository(db)).eliminar(pago_id)
+
+
+@router.post("/{pago_id}/restaurar")
+def restaurar(pago_id: int, db: Session = Depends(get_db)):
+    PagoService(PagoRepository(db)).restaurar(pago_id)
+    return {"message": "Pago restaurado exitosamente"}

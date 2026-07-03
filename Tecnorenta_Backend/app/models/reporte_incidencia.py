@@ -32,6 +32,7 @@ class ReporteIncidencia(Base):
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
     modificado_por = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
     fecha_modificacion = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    fecha_baja = Column(DateTime(timezone=True), nullable=True)
 
     activo = relationship("Activo", back_populates="reportes")
     mantenimiento_correctivo = relationship("MantenimientoCorrectivo", back_populates="reporte_origen")

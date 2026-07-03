@@ -16,5 +16,6 @@ class Usuario(Base):
     id_rol = Column(Integer, ForeignKey("roles.id"), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    fecha_baja = Column(DateTime(timezone=True), nullable=True)
 
     rol = relationship("Rol", back_populates="usuarios")

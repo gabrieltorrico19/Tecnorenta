@@ -16,6 +16,8 @@ class ReporteIncidenciaService:
         reporte = self.repo.get_by_id(reporte_id)
         if not reporte:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reporte no encontrado")
+        if reporte.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reporte no encontrado")
         return reporte
 
     def crear(self, data: ReporteIncidenciaCreate) -> ReporteIncidencia:
@@ -25,6 +27,13 @@ class ReporteIncidenciaService:
         reporte = self.obtener(reporte_id)
         for field, value in data.model_dump(exclude_unset=True).items():
             setattr(reporte, field, value)
+        return self.repo.update(reporte)
+
+    def restaurar(self, reporte_id: int) -> ReporteIncidencia:
+        reporte = self.repo.get_by_id(reporte_id)
+        if not reporte or not reporte.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reporte no encontrado o no está eliminado")
+        reporte.fecha_baja = None
         return self.repo.update(reporte)
 
     def eliminar(self, reporte_id: int) -> None:

@@ -19,6 +19,8 @@ class PagoService:
         pago = self.repo.get_by_id(pago_id)
         if not pago:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pago no encontrado")
+        if pago.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pago no encontrado")
         return pago
 
     def crear(self, data: PagoCreate) -> Pago:
@@ -28,6 +30,13 @@ class PagoService:
         pago = self.obtener(pago_id)
         for field, value in data.model_dump(exclude_unset=True).items():
             setattr(pago, field, value)
+        return self.repo.update(pago)
+
+    def restaurar(self, pago_id: int) -> Pago:
+        pago = self.repo.get_by_id(pago_id)
+        if not pago or not pago.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pago no encontrado o no está eliminado")
+        pago.fecha_baja = None
         return self.repo.update(pago)
 
     def eliminar(self, pago_id: int) -> None:

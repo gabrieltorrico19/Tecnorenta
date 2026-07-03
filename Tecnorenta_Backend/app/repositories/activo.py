@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
@@ -9,7 +11,7 @@ class ActivoRepository:
         self.db = db
 
     def get_all(self) -> list[Activo]:
-        return self.db.query(Activo).all()
+        return self.db.query(Activo).filter(Activo.fecha_baja.is_(None)).all()
 
     def get_paginated(
         self,
@@ -19,7 +21,7 @@ class ActivoRepository:
         id_categoria: int | None = None,
         q: str | None = None,
     ) -> tuple[list[Activo], int]:
-        query = self.db.query(Activo)
+        query = self.db.query(Activo).filter(Activo.fecha_baja.is_(None))
         if estado is not None:
             query = query.filter(Activo.estado == estado)
         if id_categoria is not None:
@@ -56,5 +58,5 @@ class ActivoRepository:
         return activo
 
     def delete(self, activo: Activo) -> None:
-        self.db.delete(activo)
+        activo.fecha_baja = datetime.now(timezone.utc)
         self.db.commit()

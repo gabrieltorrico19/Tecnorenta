@@ -28,6 +28,7 @@ class Contrato(Base):
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
     modificado_por = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
     fecha_modificacion = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    fecha_baja = Column(DateTime(timezone=True), nullable=True)
 
     cliente = relationship("Cliente", backref="contratos")
     asignaciones = relationship("AsignacionActivo", back_populates="contrato")

@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 
 from app.models.reporte_incidencia import ReporteIncidencia, GravedadIncidencia, EstadoIncidencia
@@ -8,7 +10,7 @@ class ReporteIncidenciaRepository:
         self.db = db
 
     def get_all(self) -> list[ReporteIncidencia]:
-        return self.db.query(ReporteIncidencia).all()
+        return self.db.query(ReporteIncidencia).filter(ReporteIncidencia.fecha_baja.is_(None)).all()
 
     def get_paginated(
         self,
@@ -18,7 +20,7 @@ class ReporteIncidenciaRepository:
         estado: EstadoIncidencia | None = None,
         id_activo: int | None = None,
     ) -> tuple[list[ReporteIncidencia], int]:
-        query = self.db.query(ReporteIncidencia)
+        query = self.db.query(ReporteIncidencia).filter(ReporteIncidencia.fecha_baja.is_(None))
         if gravedad is not None:
             query = query.filter(ReporteIncidencia.gravedad == gravedad)
         if estado is not None:
@@ -44,5 +46,5 @@ class ReporteIncidenciaRepository:
         return reporte
 
     def delete(self, reporte: ReporteIncidencia) -> None:
-        self.db.delete(reporte)
+        reporte.fecha_baja = datetime.now(timezone.utc)
         self.db.commit()

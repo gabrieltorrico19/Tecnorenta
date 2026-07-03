@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 
 from app.models.historial_ubicacion import HistorialUbicacion
@@ -8,10 +10,10 @@ class HistorialUbicacionRepository:
         self.db = db
 
     def get_all(self) -> list[HistorialUbicacion]:
-        return self.db.query(HistorialUbicacion).all()
+        return self.db.query(HistorialUbicacion).filter(HistorialUbicacion.fecha_baja.is_(None)).all()
 
     def get_paginated(self, skip: int, limit: int) -> tuple[list[HistorialUbicacion], int]:
-        query = self.db.query(HistorialUbicacion)
+        query = self.db.query(HistorialUbicacion).filter(HistorialUbicacion.fecha_baja.is_(None))
         total = query.count()
         items = query.order_by(HistorialUbicacion.id.desc()).offset(skip).limit(limit).all()
         return items, total
@@ -20,7 +22,7 @@ class HistorialUbicacionRepository:
         return self.db.query(HistorialUbicacion).filter(HistorialUbicacion.id == registro_id).first()
 
     def get_by_asignacion(self, asignacion_id: int) -> list[HistorialUbicacion]:
-        return self.db.query(HistorialUbicacion).filter(HistorialUbicacion.id_asignacion == asignacion_id).all()
+        return self.db.query(HistorialUbicacion).filter(HistorialUbicacion.fecha_baja.is_(None), HistorialUbicacion.id_asignacion == asignacion_id).all()
 
     def create(self, registro: HistorialUbicacion) -> HistorialUbicacion:
         self.db.add(registro)
@@ -34,5 +36,5 @@ class HistorialUbicacionRepository:
         return registro
 
     def delete(self, registro: HistorialUbicacion) -> None:
-        self.db.delete(registro)
+        registro.fecha_baja = datetime.now(timezone.utc)
         self.db.commit()

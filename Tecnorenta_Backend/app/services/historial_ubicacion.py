@@ -19,6 +19,8 @@ class HistorialUbicacionService:
         registro = self.repo.get_by_id(registro_id)
         if not registro:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Registro de ubicación no encontrado")
+        if registro.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Registro de ubicación no encontrado")
         return registro
 
     def crear(self, data: HistorialUbicacionCreate) -> HistorialUbicacion:
@@ -28,6 +30,13 @@ class HistorialUbicacionService:
         registro = self.obtener(registro_id)
         for field, value in data.model_dump(exclude_unset=True).items():
             setattr(registro, field, value)
+        return self.repo.update(registro)
+
+    def restaurar(self, registro_id: int) -> HistorialUbicacion:
+        registro = self.repo.get_by_id(registro_id)
+        if not registro or not registro.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Registro de ubicación no encontrado o no está eliminado")
+        registro.fecha_baja = None
         return self.repo.update(registro)
 
     def eliminar(self, registro_id: int) -> None:

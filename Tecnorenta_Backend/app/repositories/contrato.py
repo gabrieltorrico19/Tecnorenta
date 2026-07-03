@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 
 from app.models.contrato import Contrato, EstadoContrato
@@ -8,7 +10,7 @@ class ContratoRepository:
         self.db = db
 
     def get_all(self) -> list[Contrato]:
-        return self.db.query(Contrato).all()
+        return self.db.query(Contrato).filter(Contrato.fecha_baja.is_(None)).all()
 
     def get_paginated(
         self,
@@ -17,7 +19,7 @@ class ContratoRepository:
         estado: EstadoContrato | None = None,
         id_cliente: int | None = None,
     ) -> tuple[list[Contrato], int]:
-        query = self.db.query(Contrato)
+        query = self.db.query(Contrato).filter(Contrato.fecha_baja.is_(None))
         if estado is not None:
             query = query.filter(Contrato.estado == estado)
         if id_cliente is not None:
@@ -41,5 +43,5 @@ class ContratoRepository:
         return contrato
 
     def delete(self, contrato: Contrato) -> None:
-        self.db.delete(contrato)
+        contrato.fecha_baja = datetime.now(timezone.utc)
         self.db.commit()

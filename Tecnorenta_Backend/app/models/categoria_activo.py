@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
 
 from app.models.base import Base
@@ -15,3 +15,4 @@ class CategoriaActivo(Base):
 
     subcategorias = relationship("CategoriaActivo", backref="categoria_padre", remote_side=[id])
     activos = relationship("Activo", back_populates="categoria")
+    fecha_baja = Column(DateTime(timezone=True), nullable=True)

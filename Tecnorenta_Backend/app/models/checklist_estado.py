@@ -34,3 +34,4 @@ class ChecklistEstado(Base):
 
     asignacion = relationship("AsignacionActivo", back_populates="checklists")
     usuario = relationship("Usuario", backref="checklists")
+    fecha_baja = Column(DateTime(timezone=True), nullable=True)

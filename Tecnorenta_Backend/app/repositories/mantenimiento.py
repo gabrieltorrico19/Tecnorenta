@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timezone
 
 from sqlalchemy.orm import Session
 
@@ -10,7 +10,7 @@ class MantenimientoRepository:
         self.db = db
 
     def get_all(self) -> list[Mantenimiento]:
-        return self.db.query(Mantenimiento).all()
+        return self.db.query(Mantenimiento).filter(Mantenimiento.fecha_baja.is_(None)).all()
 
     def get_paginated(
         self,
@@ -21,7 +21,7 @@ class MantenimientoRepository:
         fecha_desde: date | None = None,
         fecha_hasta: date | None = None,
     ) -> tuple[list[Mantenimiento], int]:
-        query = self.db.query(Mantenimiento)
+        query = self.db.query(Mantenimiento).filter(Mantenimiento.fecha_baja.is_(None))
         if tipo is not None:
             query = query.filter(Mantenimiento.tipo == tipo)
         if id_activo is not None:
@@ -38,7 +38,7 @@ class MantenimientoRepository:
         return self.db.query(Mantenimiento).filter(Mantenimiento.id == mantenimiento_id).first()
 
     def get_by_activo(self, activo_id: int) -> list[Mantenimiento]:
-        return self.db.query(Mantenimiento).filter(Mantenimiento.id_activo == activo_id).all()
+        return self.db.query(Mantenimiento).filter(Mantenimiento.fecha_baja.is_(None), Mantenimiento.id_activo == activo_id).all()
 
     def create(self, mantenimiento: Mantenimiento) -> Mantenimiento:
         self.db.add(mantenimiento)
@@ -52,5 +52,5 @@ class MantenimientoRepository:
         return mantenimiento
 
     def delete(self, mantenimiento: Mantenimiento) -> None:
-        self.db.delete(mantenimiento)
+        mantenimiento.fecha_baja = datetime.now(timezone.utc)
         self.db.commit()

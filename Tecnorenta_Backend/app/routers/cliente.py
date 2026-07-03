@@ -42,3 +42,9 @@ def actualizar(cliente_id: int, data: ClienteUpdate, db: Session = Depends(get_d
 @router.delete("/{cliente_id}", status_code=204)
 def eliminar(cliente_id: int, db: Session = Depends(get_db)):
     ClienteService(ClienteRepository(db)).eliminar(cliente_id)
+
+
+@router.post("/{cliente_id}/restaurar")
+def restaurar(cliente_id: int, db: Session = Depends(get_db)):
+    ClienteService(ClienteRepository(db)).restaurar(cliente_id)
+    return {"message": "Cliente restaurado exitosamente"}

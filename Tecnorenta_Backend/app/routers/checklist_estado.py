@@ -32,3 +32,9 @@ def crear(data: ChecklistEstadoCreate, db: Session = Depends(get_db)):
 @router.delete("/{checklist_id}", status_code=204)
 def eliminar(checklist_id: int, db: Session = Depends(get_db)):
     ChecklistEstadoService(ChecklistEstadoRepository(db)).eliminar(checklist_id)
+
+
+@router.post("/{checklist_id}/restaurar")
+def restaurar(checklist_id: int, db: Session = Depends(get_db)):
+    ChecklistEstadoService(ChecklistEstadoRepository(db)).restaurar(checklist_id)
+    return {"message": "Checklist restaurado exitosamente"}

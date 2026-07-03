@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, DateTime, func
 
 from app.models.base import Base
 
@@ -13,3 +13,4 @@ class Cliente(Base):
     latitud = Column(Float, nullable=True)
     longitud = Column(Float, nullable=True)
     sector = Column(String(100), nullable=True)
+    fecha_baja = Column(DateTime(timezone=True), nullable=True)

@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
@@ -9,7 +11,7 @@ class ClienteRepository:
         self.db = db
 
     def get_all(self) -> list[Cliente]:
-        return self.db.query(Cliente).all()
+        return self.db.query(Cliente).filter(Cliente.fecha_baja.is_(None)).all()
 
     def get_paginated(
         self,
@@ -18,7 +20,7 @@ class ClienteRepository:
         q: str | None = None,
         sector: str | None = None,
     ) -> tuple[list[Cliente], int]:
-        query = self.db.query(Cliente)
+        query = self.db.query(Cliente).filter(Cliente.fecha_baja.is_(None))
         if q:
             like = f"%{q}%"
             query = query.filter(or_(
@@ -49,5 +51,5 @@ class ClienteRepository:
         return cliente
 
     def delete(self, cliente: Cliente) -> None:
-        self.db.delete(cliente)
+        cliente.fecha_baja = datetime.now(timezone.utc)
         self.db.commit()

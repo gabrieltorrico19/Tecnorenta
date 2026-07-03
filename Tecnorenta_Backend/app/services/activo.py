@@ -28,6 +28,8 @@ class ActivoService:
         activo = self.repo.get_by_id(activo_id)
         if not activo:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activo no encontrado")
+        if activo.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activo no encontrado")
         activo.categoria_nombre = activo.categoria.nombre if activo.categoria else None
         return activo
 
@@ -45,6 +47,13 @@ class ActivoService:
         activo = self.obtener(activo_id)
         for field, value in data.model_dump(exclude_unset=True).items():
             setattr(activo, field, value)
+        return self.repo.update(activo)
+
+    def restaurar(self, activo_id: int) -> Activo:
+        activo = self.repo.get_by_id(activo_id)
+        if not activo or not activo.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activo no encontrado o no está eliminado")
+        activo.fecha_baja = None
         return self.repo.update(activo)
 
     def eliminar(self, activo_id: int) -> None:

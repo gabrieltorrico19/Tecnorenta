@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Table, ForeignKey
+from sqlalchemy import Column, Integer, String, Table, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
 
 from app.models.base import Base
@@ -17,6 +17,7 @@ class Rol(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String(50), unique=True, nullable=False)
+    fecha_baja = Column(DateTime(timezone=True), nullable=True)
 
     permisos = relationship("Permiso", secondary=rol_permiso, back_populates="roles")
     usuarios = relationship("Usuario", back_populates="rol")

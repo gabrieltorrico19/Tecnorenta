@@ -19,6 +19,8 @@ class CategoriaActivoService:
         cat = self.repo.get_by_id(categoria_id)
         if not cat:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Categoría no encontrada")
+        if cat.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Categoría no encontrada")
         return cat
 
     def crear(self, data: CategoriaActivoCreate) -> CategoriaActivo:
@@ -32,6 +34,13 @@ class CategoriaActivoService:
         cat = self.obtener(categoria_id)
         for field, value in data.model_dump(exclude_unset=True).items():
             setattr(cat, field, value)
+        return self.repo.update(cat)
+
+    def restaurar(self, categoria_id: int) -> CategoriaActivo:
+        cat = self.repo.get_by_id(categoria_id)
+        if not cat or not cat.fecha_baja:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Categoría no encontrada o no está eliminada")
+        cat.fecha_baja = None
         return self.repo.update(cat)
 
     def eliminar(self, categoria_id: int) -> None:
